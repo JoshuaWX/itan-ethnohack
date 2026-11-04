@@ -11,7 +11,6 @@ import {
 import { SearchBox } from "@/components/search";
 import { Scanner } from "@/components/scanner";
 import { getProductData } from "@/lib/product-data";
-import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -51,10 +50,6 @@ export default function Home() {
               <span>Guided by evidence.</span>
             </div>
           </div>
-          <figure className="hero-photo">
-            <Image src="/plants/hibiscus.webp" alt="Fresh roselle calyces" width={800} height={600} priority sizes="(max-width: 700px) 100vw, 480px" />
-            <figcaption>Roselle calyces · <a href="https://commons.wikimedia.org/wiki/File:Roselle_Calyces.jpg" target="_blank" rel="noreferrer">SarKaLay</a> · <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">CC0</a> · resized</figcaption>
-          </figure>
           <div className="hero-art" aria-hidden="true">
             <div className="art-orbit orbit-one" />
             <div className="art-orbit orbit-two" />

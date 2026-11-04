@@ -1408,11 +1408,7 @@ input:focus-visible {
 
 /* Botanical editorial refresh */
 .hero-inner { grid-template-columns: minmax(0, 1fr) minmax(260px, .85fr); gap: 36px; align-items: center; }
-.hero-art { opacity: .14; pointer-events: none; }
-.hero-photo { position: relative; z-index: 1; margin: 0; align-self: center; }
-.hero-photo img { display: block; width: 100%; height: clamp(300px, 36vw, 460px); object-fit: cover; border-radius: 48% 48% 18px 18px; }
-.hero-photo figcaption { color: #d2dfcb; font-size: 11px; margin-top: 8px; line-height: 1.4; }
-.hero-photo figcaption a { text-decoration: underline; }
+.hero-art { pointer-events: none; }
 .hero-actions { flex-wrap: wrap; gap: 12px; }
 .hero-actions .hero-link { min-height: 44px; padding: 10px 14px; border: 1px solid #91af98; border-radius: 999px; }
 .button, .scanner-toggle, .header-search { border-radius: 999px; }
@@ -1423,13 +1419,12 @@ input:focus-visible {
 .button, .hero-link, .scanner-toggle, .plant-row, .compare-result-card { transition: transform .18s ease, background-color .18s ease, border-color .18s ease; }
 @media (hover: hover) { .button:hover, .hero-link:hover, .scanner-toggle:hover { transform: translateY(-2px); } .plant-row:hover { background: #edf3e9; } }
 @media (max-width: 700px) {
-  .hero-inner { display: flex; flex-direction: column; align-items: stretch; padding: 48px 20px 28px; gap: 28px; }
+  .hero-inner { display: flex; flex-direction: column; justify-content: center; align-items: stretch; min-height: calc(100vh - 124px - env(safe-area-inset-bottom)); min-height: calc(100svh - 124px - env(safe-area-inset-bottom)); padding: 40px 20px 32px; }
   .hero h1 { font-size: clamp(44px, 12vw, 62px); margin: 24px 0 16px; }
   .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .hero-actions .button { grid-column: 1 / -1; }
   .hero-actions .hero-link { justify-content: center; text-align: center; }
   .hero-foot { margin-top: 28px; }
-  .hero-photo img { height: 240px; border-radius: 110px 110px 16px 16px; }
   .hero-art { display: none; }
 }
 @media (max-width: 360px) { .hero-actions { grid-template-columns: 1fr; } .hero-actions .button { grid-column: auto; } }
