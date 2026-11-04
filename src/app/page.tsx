@@ -11,6 +11,7 @@ import {
 import { SearchBox } from "@/components/search";
 import { Scanner } from "@/components/scanner";
 import { getProductData } from "@/lib/product-data";
+import Image from "next/image";
 
 export const dynamic = "force-dynamic";
 
@@ -26,16 +27,17 @@ export default function Home() {
               Nigeria
             </div>
             <h1>
-              There’s more to
+              Plant knowledge,
               <br />
-              <em>what’s inside.</em>
+              <em>made clearer.</em>
             </h1>
             <p>
-              Understand the plants in herbal products, the knowledge behind
-              them, and what the evidence actually says.
+              Identify plants, understand herbal product labels, and explore
+              the evidence behind the ingredients.
             </p>
             <div className="hero-actions">
-              <Link className="button light" href="/compare#scan">
+              <Link className="button light" href="/identify">Identify a plant <ArrowUpRight size={16} /></Link>
+              <Link className="hero-link" href="/compare#scan">
                 Scan a herbal product <ArrowRight size={18} />
               </Link>
               <Link className="hero-link" href="/compare">Compare herbal products <ArrowUpRight size={16} /></Link>
@@ -49,6 +51,10 @@ export default function Home() {
               <span>Guided by evidence.</span>
             </div>
           </div>
+          <figure className="hero-photo">
+            <Image src="/plants/hibiscus.webp" alt="Fresh roselle calyces" width={800} height={600} priority sizes="(max-width: 700px) 100vw, 480px" />
+            <figcaption>Roselle calyces · <a href="https://commons.wikimedia.org/wiki/File:Roselle_Calyces.jpg" target="_blank" rel="noreferrer">SarKaLay</a> · <a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noreferrer">CC0</a> · resized</figcaption>
+          </figure>
           <div className="hero-art" aria-hidden="true">
             <div className="art-orbit orbit-one" />
             <div className="art-orbit orbit-two" />

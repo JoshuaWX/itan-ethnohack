@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { BookOpen, Compass, Leaf, Search } from "lucide-react";
+import { AskItan } from "./ask-itan";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -56,6 +57,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main id="main">{children}</main>
+      <AskItan />
       <footer className="footer">
         <div className="footer-inner">
           <div>

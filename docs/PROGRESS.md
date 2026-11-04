@@ -34,6 +34,16 @@ expert interviews, model training, or clinical validation have been performed.
 
 ## Reliability audit — 4 November 2026
 
+- Local implementation adds a Pl@ntNet photo workflow with explicit consent,
+  local image resizing, an existing shared daily quota and catalog matching. A
+  live request using the licensed roselle photograph returned a roselle candidate
+  linked to the catalog. This single example is not an accuracy evaluation.
+  Invalid file and missing-consent requests were rejected. The navigation helper
+  answers using fixed local rules and is not an unrestricted Gemini chatbot.
+  Gemini remains limited to selection of curated evidence records. Teammate
+  setup and limitations are documented in README and HANDOFF. A 375px browser
+  check covered guidance, consent, a live image request and comparison.
+
 - Supabase ITAN has a new catalog migration and seed, with five published taxa,
   three evidence sources, two evidence records, five photo records and one
   interaction record. Anonymous SELECT is granted under RLS; anonymous write

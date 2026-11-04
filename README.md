@@ -3,8 +3,12 @@
 Nigeria-first TCIM and ethnopharmacology research prototype for **Track 4: Digital
 Health & Phytotherapy**, November 2–8, 2026. The working title is Ìtàn.
 
-The application demonstrates a curated product-to-plant journey and separate
-public-health awareness sections. It does not provide live regulatory checks.
+Ìtàn helps people explore medicinal plant names, scan herbal-product ingredient
+labels and compare ingredients with source-linked evidence. It includes separate
+Nigerian public-health awareness sections.
+
+On mobile, start from Identify a plant, Scan a herbal product or Compare herbal
+products. Ask Ìtàn offers navigation guidance and selected source-linked records.
 
 Open this directory in WebStorm. In its PowerShell terminal, with Node.js 24
 installed:
@@ -18,8 +22,20 @@ Open the local URL printed in the terminal. Run `npm test` for the matching and
 evidence checks, and `npm run build` for a production build. No database is
 required for the current read-only catalog.
 
-Vercel builds from the connected GitHub repository using the fictional product
-by default. No database, API credentials, or environment variables are required.
+The catalog can read published names from Supabase and falls back to versioned
+local data when configuration or network access is missing. Scientific evidence,
+photographs and interactions are currently curated in application files.
+
+Optional server-only environment variables are `SUPABASE_URL`,
+`SUPABASE_PUBLISHABLE_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`, and
+`PLANTNET_API_KEY`. Set these in an ignored `.env.local`; never commit values.
+Pl@ntNet identification requires its key, explicit user consent and network
+access. Its photo results are candidates and do not establish safety. Gemini is
+used only to select from a small set of curated evidence records. Ask Ìtàn's
+navigation guidance runs locally and is not an open-ended chatbot. Both services
+share a 30-request-per-UTC-day demo counter when configured with Supabase.
+
+See [teammate handoff](HANDOFF.md) for setup, source data and remaining work.
 
 The comparison page accepts manual ingredient lists and offers optional on-device
 OCR. Its Tesseract.js worker and English language data are served locally from
