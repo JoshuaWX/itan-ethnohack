@@ -18,6 +18,9 @@ Open the local URL printed in the terminal. Run `npm test` for the matching and
 evidence checks, and `npm run build` for a production build. No database is
 required for the current read-only catalog.
 
+Vercel builds from the connected GitHub repository using the fictional product
+by default. No database, API credentials, or environment variables are required.
+
 The public-reproducible default uses a **fictional** example product with no
 regulatory record. A separately sourced local snapshot can be enabled with
 `ITAN_LOCAL_NAFDAC_SNAPSHOT=1` and an independently authorized
