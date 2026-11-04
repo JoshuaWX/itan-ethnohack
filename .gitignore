@@ -1,0 +1,45 @@
+# Credentials and private data
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/data/
+/private/
+
+# Local environments and generated artifacts
+node_modules/
+.next/
+.vercel/
+.playwright-mcp/
+*.tsbuildinfo
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+coverage/
+/outputs/
+/mlruns/
+/mlartifacts/
+*.log
+
+# Editor / OS state
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Obsidian local state, caches, and executable community plugins
+docs/.obsidian/*
+!docs/.obsidian/app.json
+!docs/.obsidian/core-plugins.json
+docs/.trash/
+
+# Version-control .agents/skills, skills-lock.json, and research Markdown.
