@@ -34,20 +34,16 @@ export default function Home() {
               Identify plants, understand herbal product labels, and explore
               the evidence behind the ingredients.
             </p>
-            <div className="hero-actions">
+            <div className="hero-actions" aria-label="Start here">
               <Link className="button light" href="/identify">Identify a plant <ArrowUpRight size={16} /></Link>
               <Link className="hero-link" href="/compare#scan">
                 Scan a herbal product <ArrowRight size={18} />
               </Link>
               <Link className="hero-link" href="/compare">Compare herbal products <ArrowUpRight size={16} /></Link>
-              <Link className="hero-link" href="/plants">Explore medicinal plants <ArrowUpRight size={16} /></Link>
-              <Link className="hero-link" href="/awareness">
-                Explore public health <ArrowUpRight size={16} />
-              </Link>
             </div>
             <div className="hero-foot">
-              <span>Rooted in knowledge.</span>
-              <span>Guided by evidence.</span>
+              <Link href="/plants">Plant library <ArrowUpRight size={14} /></Link>
+              <Link href="/awareness">Health awareness <ArrowUpRight size={14} /></Link>
             </div>
           </div>
           <div className="hero-art" aria-hidden="true">

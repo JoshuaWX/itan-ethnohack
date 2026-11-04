@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readCatalog } from "@/lib/catalog-server";
 import { mapPlantCandidates } from "@/lib/plant-identification";
+import { reserveProviderCalls } from "@/lib/provider-quota";
 
 export const runtime = "nodejs";
 export async function POST(request: Request) {
@@ -17,10 +18,9 @@ export async function POST(request: Request) {
     const jpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
     const png = [137,80,78,71,13,10,26,10].every((byte, index) => bytes[index] === byte);
     if ((!jpeg || file.type !== "image/jpeg") && (!png || file.type !== "image/png")) return NextResponse.json({ error: "The file is not a valid JPEG or PNG." }, { status: 400 });
-    const dbUrl = process.env.SUPABASE_URL, dbKey = process.env.SUPABASE_PUBLISHABLE_KEY;
-    if (!dbUrl || !dbKey) return NextResponse.json({ error: "Identification is temporarily unavailable. Try manual plant search." }, { status: 503 });
-    const quota = await fetch(`${dbUrl}/rest/v1/rpc/itan_reserve_assistant_request`, { method: "POST", headers: { apikey: dbKey, Authorization: `Bearer ${dbKey}`, "Content-Type": "application/json" }, body: "{}", signal: AbortSignal.timeout(4000), cache: "no-store" });
-    if (!quota.ok || await quota.json() !== true) return NextResponse.json({ error: "The daily demo limit has been reached. Try plant search." }, { status: 429 });
+    const quota = await reserveProviderCalls(request, 1);
+    if (quota === "unavailable") return NextResponse.json({ error: "Identification is temporarily unavailable. Try manual plant search." }, { status: 503 });
+    if (quota === "limited") return NextResponse.json({ error: "The daily demo limit has been reached. Try plant search." }, { status: 429 });
     const providerForm = new FormData();
     providerForm.append("images", new Blob([bytes], { type: file.type }), "plant-image");
     providerForm.append("organs", organ);

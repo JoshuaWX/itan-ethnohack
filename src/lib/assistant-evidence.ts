@@ -1,5 +1,0 @@
-export const assistantEvidence = [
-  { id: "roselle-interaction", plant: "hibiscus", topic: "research", label: "Human pharmacokinetic study", text: "A small crossover study of six healthy volunteers measured lower simvastatin exposure with an aqueous roselle calyx beverage. It does not establish the effect of other preparations or in other people.", url: "https://pubmed.ncbi.nlm.nih.gov/28925046/" },
-  { id: "ginger-traditional", plant: "ginger", topic: "traditional", label: "Traditional use · EMA", text: "The EMA describes traditional uses of specified ginger rhizome preparations, including relief of mild digestive complaints. This does not establish the effects of a particular product.", url: "https://www.ema.europa.eu/en/medicines/herbal/zingiberis-rhizoma" },
-  { id: "guava-laboratory", plant: "guava", topic: "research", label: "Laboratory research", text: "A laboratory study examined guava leaf extract and mechanisms associated with infectious diarrhoea. It did not establish a treatment for people.", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC2911405/" },
-];

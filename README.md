@@ -8,7 +8,9 @@ labels and compare ingredients with source-linked evidence. It includes separate
 Nigerian public-health awareness sections.
 
 On mobile, start from Identify a plant, Scan a herbal product or Compare herbal
-products. Ask Ìtàn offers navigation guidance and selected source-linked records.
+products. Ask Ìtàn searches a versioned collection of 10 cited records across five
+plants and public-health guidance. Navigation help runs locally. Google Gemini
+can explain retrieved evidence when the user opts in and the provider is configured.
 
 Open this directory in WebStorm. In its PowerShell terminal, with Node.js 24
 installed:
@@ -23,17 +25,20 @@ evidence checks, and `npm run build` for a production build. No database is
 required for the current read-only catalog.
 
 The catalog can read published names from Supabase and falls back to versioned
-local data when configuration or network access is missing. Scientific evidence,
-photographs and interactions are currently curated in application files.
+local data when configuration or network access is missing. Plant pages and Ask
+Ìtàn share the bundled evidence collection. Each entry identifies its source,
+study type, preparation and limitations. Source checking and specialist review
+are tracked separately. Specialist review is pending.
 
-Optional server-only environment variables are `SUPABASE_URL`,
-`SUPABASE_PUBLISHABLE_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`, and
-`PLANTNET_API_KEY`. Set these in an ignored `.env.local`; never commit values.
-Pl@ntNet identification requires its key, explicit user consent and network
-access. Its photo results are candidates and do not establish safety. Gemini is
-used only to select from a small set of curated evidence records. Ask Ìtàn's
-navigation guidance runs locally and is not an open-ended chatbot. Both services
-share a 30-request-per-UTC-day demo counter when configured with Supabase.
+Optional server environment variables are `SUPABASE_URL`,
+`SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`,
+and `PLANTNET_API_KEY`. Set values in an ignored `.env.local`. Use a Supabase
+secret key for `SUPABASE_SECRET_KEY`, or an existing legacy service-role key.
+Keep it server-side. Apply the quota migration in an authorized test project
+before enabling external calls. Gemini uses up to two reserved calls per answer,
+and Pl@ntNet uses one per identification. They share a 30-call UTC-day cap and
+an eight-call cap per client. The bundled evidence and manual search are available
+without external provider credentials.
 
 See [teammate handoff](HANDOFF.md) for setup, source data and remaining work.
 

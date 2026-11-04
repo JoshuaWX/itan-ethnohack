@@ -1,168 +1,48 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Leaf } from "lucide-react";
-import { evidenceRecords, sources } from "@/lib/catalog";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { readCatalog } from "@/lib/catalog-server";
-import { getProductData } from "@/lib/product-data";
-import { classifyEvidence } from "@/lib/evidence";
+import { evidenceVersion, researchCollection } from "@/lib/research-collection";
 import { PlantPhoto } from "@/components/plant-photo";
-import { EvidenceExplorer } from "@/components/evidence-explorer";
+import { ResearchCard } from "@/components/research-card";
+import { AskTrigger } from "@/components/ask-itan";
 
-export default async function PlantPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function PlantPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { product } = getProductData();
   const catalog = await readCatalog();
   const plant = catalog.taxa.find((row) => row.id === id);
   if (!plant) notFound();
-  const evidence = evidenceRecords.find((record) => record.taxonId === id);
-  const evidenceClass = classifyEvidence(evidence?.studyType ?? "");
-  return (
-    <div className="container page">
-      <Link href="/plants" className="back">
-        <ArrowLeft size={16} /> All plants
-      </Link>
+  const records = researchCollection.filter((record) => record.taxa.includes(id));
+  const name = id === "hibiscus" ? "Roselle (hibiscus)" : plant.common;
+  return <div className="container page plant-record">
+    <Link href="/plants" className="back"><ArrowLeft size={16} /> All plants</Link>
+    <div className="plant-feature">
       <div className="plant-hero">
         <div>
-          <p className="overline">Botanical identity</p>
-          <h1>{plant.common}</h1>
+          <p className="overline">Plant record</p>
+          <h1>{name}</h1>
           <p className="scientific-name">{plant.name}</p>
-          <p className="detail-lead">
-            A closer look at the name, the source and the evidence available in
-            this collection.
-          </p>
-        </div>
-        <div className="plant-mark">
-          <Leaf size={96} strokeWidth={0.7} />
+          <p className="detail-lead">Explore the plant’s names, what researchers studied, and what remains uncertain.</p>
+          <div className="research-links"><a className="source-link" href="#research">Jump to evidence <ArrowUpRight size={16} /></a><AskTrigger className="source-link" /></div>
         </div>
       </div>
-      <PlantPhoto id={plant.id} name={plant.common} />
-      <EvidenceExplorer initialPlant={plant.id} />
-      {catalog.source === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
-      <div className="detail-layout">
-        <div>
-          <section className="detail-section">
-            <p className="overline">Identity</p>
-            <h2>Understanding the name</h2>
-            <p>Expert botanical and pharmacy review is pending.</p>
-            <p>Names in this catalog: {[plant.name, ...plant.aliases].join(", ")}.</p>
-            <p className="prose">
-              {id === "hibiscus"
-                ? "The product record uses Hibiscus sabdariffa. Kew currently treats that name as a synonym of Sabdariffa gossypiifolia, while noting alternative taxonomic treatments."
-                : `${plant.name} is the name associated with this catalog entry.`}{" "}
-              Common names can refer to more than one species, and a name on a
-              product record does not identify its preparation or effects.
-            </p>
-            <a
-              className="source-link"
-              href={plant.source}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View botanical source <ArrowUpRight size={16} />
-            </a>
-          </section>
-          <section className="detail-section">
-            <p className="overline">Evidence &amp; context</p>
-            <h2>What has been studied</h2>
-            {id === "hibiscus" ? (
-              <article className="evidence">
-                <span className="evidence-label">Human pharmacokinetic research · six volunteers</span>
-                <h3>Roselle beverage and simvastatin</h3>
-                <p>A small crossover study measured simvastatin exposure after a single dose, with and without an aqueous beverage made from roselle calyces. The study also included separate animal experiments.</p>
-                <p className="evidence-limit">The preparation and conditions studied may differ from a product on a label. This finding does not establish an effect for every preparation or person. A pharmacist can help interpret questions about medicines.</p>
-                <a className="source-link" href="https://pubmed.ncbi.nlm.nih.gov/28925046/" target="_blank" rel="noreferrer">Read the study <ArrowUpRight size={16} /></a>
-              </article>
-            ) : id === "ginger" ? (
-              <article className="evidence">
-                <span className="evidence-label">
-                  {evidenceClass === "traditional"
-                    ? "Traditional use · EMA assessment"
-                    : "Evidence not classified"}
-                </span>
-                <h3>Ginger rhizome in herbal preparations</h3>
-                <p>
-                  The European Medicines Agency describes traditional uses of
-                  certain ginger rhizome preparations, including relief of mild
-                  digestive complaints. Its assessment concerns particular
-                  preparations and uses.
-                </p>
-                <p className="evidence-limit">
-                  This assessment does not establish the effects or safety of
-                  any specific tea product, and is not a recommendation to use
-                  it.
-                </p>
-                <a
-                  className="source-link"
-                  href={sources.ema}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Read the EMA assessment <ArrowUpRight size={16} />
-                </a>
-              </article>
-            ) : id === "guava" ? (
-              <article className="evidence">
-                <span className="evidence-label">
-                  {evidenceClass === "laboratory"
-                    ? "Laboratory research · Not clinical evidence"
-                    : "Evidence not classified"}
-                </span>
-                <h3>Guava leaf research and cholera bacteria</h3>
-                <p>
-                  A laboratory study examined a water extract of guava leaves
-                  against mechanisms associated with infectious diarrhoea,
-                  including cholera bacteria and toxin.
-                </p>
-                <p className="evidence-limit">
-                  Laboratory findings do not establish effectiveness or safety
-                  in people. Guava is not a proven cholera treatment.
-                </p>
-                <a
-                  className="source-link"
-                  href={sources.paper}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Read the study <ArrowUpRight size={16} />
-                </a>
-              </article>
-            ) : (
-              <article className="evidence">
-                <span className="evidence-label">Evidence not yet curated</span>
-                <h3>More context is needed</h3>
-                <p>
-                  We have not yet reviewed an evidence summary for this plant in
-                  this small collection. A missing summary does not mean
-                  evidence does not exist.
-                </p>
-              </article>
-            )}
-          </section>
-        </div>
-        <aside className="detail-aside">
-          <div className="aside-box">
-            <h3>Keep the context</h3>
-            <p>
-              Plant part, preparation, dose and the people studied matter. A
-              result for one preparation cannot automatically be applied to
-              another product.
-            </p>
-          </div>
-          {id === "guava" ? (
-            <Link className="aside-return" href="/awareness#outbreak">
-              Explore cholera awareness <ArrowUpRight size={16} />
-            </Link>
-          ) : (
-            <Link className="aside-return" href={`/products/${product.id}`}>
-              Explore the product record <ArrowUpRight size={16} />
-            </Link>
-          )}
-        </aside>
-      </div>
+      <PlantPhoto id={plant.id} name={name} />
     </div>
-  );
+    <div className="plant-reading">
+      <details className="botanical-disclosure">
+        <summary>Botanical names and identity</summary>
+        <p>{id === "hibiscus" && <>Kew treats <i>Hibiscus sabdariffa</i> as a synonym of <i>Sabdariffa gossypiifolia</i> and notes alternative taxonomic treatments. </>}Common names on labels can refer to multiple species.</p>
+        {plant.aliases.length > 0 && <p>Also encountered as {plant.aliases.join(", ")}.</p>}
+        <a className="source-link" href={plant.source} target="_blank" rel="noreferrer">View the botanical source <ArrowUpRight size={16} /></a>
+        {catalog.source === "fallback" && <p>Identity from the bundled catalog.</p>}
+      </details>
+      <section className="detail-section" id="research">
+        <h2>What has been studied</h2>
+        <p className="research-meta">Collection v{evidenceVersion} · source checked · specialist review pending</p>
+        <p>Plant part, preparation and who or what was studied all affect how a finding applies.</p>
+        {records.length ? records.map((record) => <ResearchCard key={record.id} record={record} />) : <p>We have no evidence summary for this plant in the current collection.</p>}
+        {id === "guava" && <Link className="source-link" href="/awareness#outbreak">Read official cholera guidance <ArrowUpRight size={16} /></Link>}
+      </section>
+    </div>
+  </div>;
 }

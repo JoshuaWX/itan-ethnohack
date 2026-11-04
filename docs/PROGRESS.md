@@ -2,7 +2,40 @@
 
 Last updated: 2026-11-04 (Africa/Lagos).
 
-## Current state
+## Evidence assistant and mobile update
+
+The local build searches 10 source-checked evidence records across five plants
+and two public-health guidance topics. The homepage, assistant and plant
+records have updated mobile layouts. Comparison context comes from the actual
+matcher output. Gemini generation and its separate claim check are integrated
+behind consent and a new server-only quota. Specialist review is pending.
+
+The 12 retrieval fixtures returned the expected ranked records, including
+three abstentions. Automated cases also exercised ambiguous names, evidence
+types, follow-ups, injected instructions, invalid citations, a simulated
+contradiction and provider/quota failure. The original botanical fixtures
+remain in place. The production build and 15 tests passed.
+
+The quota SQL passed in disposable, in-memory PostgreSQL via PGlite. The test
+checked role grants, the removed anonymous RPC, reservation accounting, and
+the global and per-client caps. Hosted RPC authentication and concurrent
+requests still need an integration check.
+
+The production build's file traces excluded the local NAFDAC snapshot,
+private context and local environment file after explicit exclusions were added.
+
+Browser checks covered five routes at 320, 375, 768 and 1440 CSS pixels. At
+320 px the assistant opened by keyboard, narrowed a follow-up to human studies,
+showed the unconfigured-provider fallback, and cleared history on withdrawal.
+The existing Tesseract worker read one synthetic label and accepted a manual
+correction into comparison. The demo product, archived advisory, separate
+malaria section, manifest and offline navigation fallback were observed.
+
+Live Gemini and Pl@ntNet calls require the quota migration and a server-only
+Supabase key in an authorized environment. Physical phone/camera tests and
+specialist review are outstanding.
+
+## Earlier milestones
 
 Environment setup is complete with the limitations recorded in
 [setup](SETUP.md). The working directory was empty and had no Git repository at

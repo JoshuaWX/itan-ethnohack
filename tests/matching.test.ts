@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { identifyIngredient, normalizeName } from "../src/lib/matching.ts";
-import { evidenceRecords, taxa } from "../src/lib/catalog.ts";
+import { taxa } from "../src/lib/catalog.ts";
+import { researchCollection } from "../src/lib/research-collection.ts";
 import { classifyEvidence } from "../src/lib/evidence.ts";
 
 const cases = [
@@ -61,13 +62,13 @@ test("evidence classification requires explicit study metadata", () => {
   }
   assert.equal(
     classifyEvidence(
-      evidenceRecords.find((row) => row.taxonId === "guava")?.studyType ?? "",
+      researchCollection.find((row) => row.id === "guava-lab")?.type ?? "",
     ),
     "laboratory",
   );
   assert.equal(
     classifyEvidence(
-      evidenceRecords.find((row) => row.taxonId === "ginger")?.studyType ?? "",
+      researchCollection.find((row) => row.id === "ginger-ema")?.type ?? "",
     ),
     "traditional",
   );

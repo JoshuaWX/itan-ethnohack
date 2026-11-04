@@ -1,5 +1,19 @@
 # Decisions
 
+## Ìtàn evidence retrieval and provider quota
+
+- Use a versioned, source-checked corpus and deterministic lexical ranking over
+  botanical names, topics and source identifiers. Import is manual and expert
+  appraisal is tracked separately. This keeps claims, study scope and citations
+  auditable within the MVP.
+- Require opt-in before Gemini receives a question. Keep conversation turns in
+  memory and send prior source IDs to Ìtàn for follow-ups. Validate each model
+  claim's citations and run a separate model check using only the cited records.
+  Use curated summaries for public-health guidance and failed verification.
+- Reserve Gemini draft and review calls together under the same atomic budget
+  used by photo identification. Keep the reservation RPC restricted to the
+  server role and key client counters with short-lived pseudonyms.
+
 ## D003 — On-device label transcription and comparison (2026-11-04)
 
 Use browser OCR with same-origin Tesseract assets and explicit review before

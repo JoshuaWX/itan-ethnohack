@@ -56,24 +56,6 @@ export const taxa: Taxon[] = [
   },
 ];
 
-// Study type is curated from the cited source, rather than inferred from a title.
-export const evidenceRecords = [
-  {
-    taxonId: "ginger",
-    studyType: "traditional use",
-    source: sources.ema,
-    plantPart: "rhizome",
-    preparation: "specified powdered or tincture preparations",
-  },
-  {
-    taxonId: "guava",
-    studyType: "in vitro",
-    source: sources.paper,
-    plantPart: "leaf",
-    preparation: "hot aqueous extract",
-  },
-];
-
 export function getTaxon(id: string) {
   return taxa.find((taxon) => taxon.id === id);
 }
