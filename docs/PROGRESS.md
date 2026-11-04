@@ -2,6 +2,22 @@
 
 Last updated: 2026-11-04 (Africa/Lagos).
 
+## Six-screen UI refinement
+
+The homepage now links to the dedicated `/scan` flow. The scanner groups
+confirmed label entries by match certainty and transfers the reviewed text
+into Compare in memory. Identify leads with the camera and gallery, then
+requests consent for the selected photo. Compare puts overlap before
+expandable matching details, the plant records summarize evidence types,
+and Ask Ìtàn uses a full-height mobile dialog.
+
+The 15 tests and production build passed. Browser checks covered the six
+screens at 320, 375, 768 and 1440 CSS pixels, including focus restoration,
+consent withdrawal and the PWA offline fallback. An unreadable test image
+left scanning unconfirmed. A synthetic label was read, corrected and passed
+to the first comparison slot. Identification retry and result links used
+simulated provider responses. Physical-phone camera testing is pending.
+
 ## Evidence assistant and mobile update
 
 The local build searches 10 source-checked evidence records across five plants

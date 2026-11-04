@@ -11,6 +11,10 @@ export type Match = {
   explanation: string;
 };
 
+export function splitIngredients(text: string): string[] {
+  return text.split(/[\n,]/).map((value) => value.trim()).filter(Boolean);
+}
+
 export function normalizeName(value: string): string {
   return value
     .normalize("NFKC")

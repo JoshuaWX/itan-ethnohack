@@ -1,5 +1,12 @@
 # Decisions
 
+## Standalone label scanning
+
+Use `/scan` for a single label and leave the comparison form as a separate
+task. Reuse on-device OCR and the comparison matcher. Pass only confirmed
+ingredient text in memory so the photo and OCR transcript stay on the scan
+screen. Keep QR and registration lookup on its existing path.
+
 ## Ìtàn evidence retrieval and provider quota
 
 - Use a versioned, source-checked corpus and deterministic lexical ranking over

@@ -14,11 +14,12 @@ export function ResearchCard({ record, number }: { record: ResearchRecord; numbe
         {record.type !== "guidance" && <><dt>Plant part</dt><dd>{record.part}</dd></>}
         <dt>Preparation</dt><dd>{record.preparation}</dd>
         <dt>Source</dt><dd>{record.sourceId} · {record.location}</dd>
-        <dt>Verification</dt><dd>Source checked · specialist review pending</dd>
+        <dt>Source verification</dt><dd>{record.sourceVerification}</dd>
+        <dt>Specialist review</dt><dd>{record.expertReview}</dd>
       </dl>
+      <a className="source-link" href={record.url} target="_blank" rel="noreferrer">Read the original source ↗</a>
     </details>
     <div className="research-links">
-      <a className="source-link" href={record.url} target="_blank" rel="noreferrer">Read the original source ↗</a>
       {number && record.href && <Link className="source-link" href={record.href}>Read awareness guidance ↗</Link>}
       {number && record.taxa.map((id) => <Link className="source-link" key={id} href={`/plants/${id}`}>Explore {id === "hibiscus" ? "roselle" : id === "cinnamon-verum" ? "Ceylon cinnamon" : id === "cinnamon-cassia" ? "Java cinnamon" : id} ↗</Link>)}
     </div>

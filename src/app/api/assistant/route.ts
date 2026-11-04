@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   const comparisonIds = validatedIds(body.comparisonIds, taxonIds);
   if (!priorIds || !comparisonIds) return json({ error: "Invalid evidence context." }, 400);
   const path = body.path ?? "/";
-  if (typeof path !== "string" || path.length > 120 || !/^\/(?:identify|compare|plants(?:\/[a-z0-9-]+)?|products\/[a-z0-9-]+|awareness(?:#(?:outbreak|seasonal))?)?$/.test(path)) return json({ error: "Invalid page context." }, 400);
+  if (typeof path !== "string" || path.length > 120 || !/^\/(?:identify|scan|compare|plants(?:\/[a-z0-9-]+)?|products\/[a-z0-9-]+|awareness(?:#(?:outbreak|seasonal))?)?$/.test(path)) return json({ error: "Invalid page context." }, 400);
   const plantId = path.startsWith("/plants/") ? path.slice(8) : "";
   let focus = taxonIds.has(plantId) ? [plantId] : path === "/compare" ? comparisonIds : [];
   if (path.startsWith("/products/")) {

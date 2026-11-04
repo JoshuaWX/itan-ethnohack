@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { BookOpen, Compass, Leaf, Search } from "lucide-react";
 import { AskItan } from "./ask-itan";
+import { ScanTransferProvider } from "./scan-transfer";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -20,7 +21,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isCurrent = (href: string) =>
     href === "/" ? pathname === "/" || pathname.startsWith("/products/") : pathname.startsWith(href);
   return (
-    <>
+    <ScanTransferProvider>
       <a className="skip" href="#main">
         Skip to content
       </a>
@@ -97,6 +98,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
         ))}
       </nav>
-    </>
+    </ScanTransferProvider>
   );
 }

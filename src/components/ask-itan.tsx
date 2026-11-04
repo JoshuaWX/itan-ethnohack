@@ -20,7 +20,7 @@ export function shareComparison(value: Comparison | null) {
 }
 
 export function AskTrigger({ className, label = "Ask Ìtàn" }: { className?: string; label?: string }) {
-  return <button type="button" className={className} onClick={() => window.dispatchEvent(new Event(openEvent))}>{label} <ArrowUpRight size={15} aria-hidden="true" /></button>;
+  return <button type="button" className={className} onClick={(event) => window.dispatchEvent(new CustomEvent(openEvent, { detail: event.currentTarget }))}>{label} <ArrowUpRight size={15} aria-hidden="true" /></button>;
 }
 
 function navigation(question: string, path: string, comparison: Comparison | null): Turn["guidance"] {
@@ -29,7 +29,7 @@ function navigation(question: string, path: string, comparison: Comparison | nul
   if (!/^(?:how (?:do|can|to|should)|where (?:is|can|do)|help me|what can (?:i|manufacturers|ìtàn|itan))\b/.test(text)) return;
   if (/manufactur|register|nafdac|authentic/.test(text)) return { text: "Use Ìtàn to explore ingredient names and evidence. For regulatory checks, consult NAFDAC. A record match cannot authenticate the physical package.", href: "/#explore", label: "Explore product records" };
   if (/identify|photograph|photo of a plant|picture/.test(text)) return { text: "Open Identify a plant, add a clear photo, check the preview and consent before submitting. You can search the plant collection by name instead.", href: "/identify", label: "Identify a plant" };
-  if (/scan|ocr|label|correct/.test(text)) return { text: "Photograph the ingredient list, then review and correct the extracted text before confirming it. You can also type the ingredients.", href: "/compare#scan", label: "Scan or enter ingredients" };
+  if (/scan|ocr|label|correct/.test(text)) return { text: "Photograph the ingredient list, then review and correct the extracted text before confirming it. You can also type the ingredients.", href: "/scan", label: "Scan or enter ingredients" };
   if (/compar/.test(text)) return { text: "Enter the ingredients from two or three labels and choose Compare ingredients. Ìtàn groups shared taxa, possible matches and unresolved names.", href: "/compare", label: "Compare products" };
   if (/start|navigate|use ìtàn|use itan|what can (?:ìtàn|itan)/.test(text)) return { text: "Start with a plant photo or a herbal product label. You can compare labels or browse plant studies by name.", href: "/", label: "Back to Discover" };
 }
@@ -39,6 +39,7 @@ const exampleQuestions = (path: string) => path.startsWith("/plants/") ? ["What 
   : path.startsWith("/awareness") ? ["What does NCDC say about cholera?", "What does WHO say about Artemisia?"]
   : path.startsWith("/products/") ? ["What research is available on these ingredients?", "How do I scan a label?"]
   : path === "/identify" ? ["How do I identify a plant?", "What research exists on ginger?"]
+  : path === "/scan" ? ["How do I scan a label?", "How do I compare products?"]
   : ["What research exists on ginger?", "How do I scan a label?"];
 
 function ReplyView({ reply }: { reply: Reply }) {
@@ -67,12 +68,17 @@ export function AskItan() {
   const comparison = useRef<Comparison | null>(null);
   const request = useRef<AbortController | null>(null);
   const button = useRef<HTMLButtonElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const conversation = useRef<HTMLDivElement>(null);
   const lastTurn = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const show = () => setOpen(true);
+    const show = (event: Event) => {
+      opener.current = (event as CustomEvent<HTMLElement>).detail;
+      setOpen(true);
+    };
     const update = (event: Event) => { comparison.current = (event as CustomEvent<Comparison | null>).detail; };
     window.addEventListener(openEvent, show);
     window.addEventListener(comparisonEvent, update);
@@ -82,7 +88,22 @@ export function AskItan() {
       request.current?.abort();
     };
   }, []);
-  useEffect(() => { if (open) heading.current?.focus(); }, [open]);
+  useEffect(() => {
+    const panel = dialog.current;
+    if (!panel) return;
+    if (!open) { if (panel.open) panel.close(); return; }
+    const mobile = window.matchMedia("(max-width: 700px)");
+    function show() {
+      if (!panel) return;
+      if (panel.open) panel.close();
+      if (mobile.matches) panel.showModal();
+      else panel.show();
+      heading.current?.focus();
+    }
+    show();
+    mobile.addEventListener("change", show);
+    return () => mobile.removeEventListener("change", show);
+  }, [open]);
   useEffect(() => {
     const panel = conversation.current;
     const turn = lastTurn.current;
@@ -96,7 +117,19 @@ export function AskItan() {
     setQuestion("");
     setBusy(false);
   }
-  function close() { setOpen(false); button.current?.focus(); }
+  function close() {
+    dialog.current?.close();
+    setOpen(false);
+    const target = opener.current?.isConnected ? opener.current : button.current;
+    target?.focus();
+  }
+
+  function renderTurn(turn: Turn) {
+    return <>
+      {turn.guidance && <div><p>{turn.guidance.text}</p><Link href={turn.guidance.href}>{turn.guidance.label} ↗</Link></div>}
+      {turn.reply && <ReplyView reply={turn.reply} />}
+    </>;
+  }
 
   async function ask(input: string) {
     const prompt = input.trim();
@@ -134,21 +167,23 @@ export function AskItan() {
   }
 
   return <div className="ask-itan" onKeyDown={(event) => { if (event.key === "Escape" && open) close(); }}>
-    <button type="button" className="ask-launch" aria-expanded={open} aria-controls="ask-panel" ref={button} onClick={() => open ? close() : setOpen(true)}><MessageCircle size={17} aria-hidden="true" /> Ask Ìtàn</button>
-    <section className="ask-panel" id="ask-panel" aria-labelledby="ask-title" hidden={!open}>
+    <button type="button" className="ask-launch" aria-expanded={open} aria-controls="ask-panel" ref={button} onClick={(event) => { if (open) close(); else { opener.current = event.currentTarget; setOpen(true); } }}><MessageCircle size={17} aria-hidden="true" /> Ask Ìtàn</button>
+    <dialog ref={dialog} className="ask-panel" id="ask-panel" aria-labelledby="ask-title" onCancel={(event) => { event.preventDefault(); close(); }} onClick={(event) => {
+      if (event.target instanceof Element && event.target.closest('a[href^="/"]') && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) close();
+    }}>
       <div className="ask-header"><h2 id="ask-title" ref={heading} tabIndex={-1}>Ask Ìtàn</h2><button type="button" className="ask-close" onClick={close} aria-label="Close Ask Ìtàn"><X size={20} /></button></div>
       <div className="ask-conversation" ref={conversation} aria-live="polite" tabIndex={0} aria-label="Conversation">
-        {!turns.length && <div className="ask-intro"><p>Find plant studies, make sense of a comparison, or get help using Ìtàn.</p><div className="ask-suggestions">{exampleQuestions(path).map((example) => <button key={example} type="button" disabled={busy} onClick={() => void ask(example)}>{example}</button>)}</div></div>}
-        {turns.map((turn, index) => <div className="ask-turn" key={`${index}-${turn.question}`} ref={index === turns.length - 1 ? lastTurn : undefined}><p className="ask-question-text">{turn.question}</p>{turn.guidance && <div><p>{turn.guidance.text}</p><Link href={turn.guidance.href} onClick={close}>{turn.guidance.label} ↗</Link></div>}{turn.reply && <ReplyView reply={turn.reply} />}</div>)}
+        {!turns.length && <div className="ask-intro"><h3>What would you like to explore?</h3><p>Pick a question or ask your own about plants, labels or evidence.</p><div className="ask-suggestions">{exampleQuestions(path).map((example) => <button key={example} type="button" disabled={busy} onClick={() => void ask(example)}>{example}<ArrowUpRight size={16} aria-hidden="true" /></button>)}</div></div>}
+        {turns.map((turn, index) => index === turns.length - 1 ? <div className="ask-turn" key={`${index}-${turn.question}`} ref={lastTurn}><p className="ask-question-text">{turn.question}</p>{renderTurn(turn)}</div> : <details className="ask-previous" key={`${index}-${turn.question}`}><summary>{turn.question}</summary>{renderTurn(turn)}</details>)}
         {busy && <p role="status">Finding relevant evidence…</p>}
       </div>
       <form className="ask-form" onSubmit={(event) => { event.preventDefault(); void ask(question); }}>
+        <div className="ask-privacy"><label><input type="checkbox" checked={consent} aria-describedby="ask-consent-info" onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} /> Allow Google Gemini to explain evidence</label><p id="ask-consent-info">Sends your question and selected evidence to Google when enabled. Turning it off clears this conversation.</p></div>
         <label htmlFor="ask-question">Your question</label>
-        <div className="ask-compose"><textarea id="ask-question" rows={2} maxLength={maxQuestionLength} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask about a plant or study" /><button className="button" type="submit" disabled={busy || !question.trim()}>Ask</button></div>
-        <p className="ask-note">Keep personal or medical details out of questions.</p>
-        <details className="ask-privacy"><summary>AI processing {consent ? "on" : "off"}</summary><p>When enabled, Google Gemini receives your question and selected evidence. Turn it off to withdraw consent and clear this conversation. Ìtàn keeps up to three turns in this page’s memory.</p><label><input type="checkbox" checked={consent} onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} /> Allow Google Gemini to explain evidence</label></details>
+        <div className="ask-compose"><textarea id="ask-question" rows={2} maxLength={maxQuestionLength} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask about a plant or study" aria-describedby="ask-private-note" /><button className="button" type="submit" disabled={busy || !question.trim()}>Ask</button></div>
+        <p className="ask-note" id="ask-private-note">Leave out personal or medical details.</p>
         {turns.length > 0 && <button type="button" className="ask-clear" onClick={reset}>Clear conversation</button>}
       </form>
-    </section>
+    </dialog>
   </div>;
 }

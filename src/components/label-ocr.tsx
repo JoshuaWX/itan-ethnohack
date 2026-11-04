@@ -1,21 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { splitIngredients } from "@/lib/matching";
+import { PhotoPicker } from "./photo-picker";
 
-export function LabelOcr({ onConfirm }: { onConfirm: (ingredients: string) => void }) {
+export function LabelOcr({ onConfirm, onEdit, standalone = false }: {
+  onConfirm: (ingredients: string) => void;
+  onEdit?: () => void;
+  standalone?: boolean;
+}) {
   const [original, setOriginal] = useState("");
   const [draft, setDraft] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
+  const [photoName, setPhotoName] = useState("");
 
   async function scan(file: File | undefined) {
     if (!file) return;
-    setOriginal("");
-    setDraft("");
     if (!file.type.startsWith("image/") || file.size > 12 * 1024 * 1024) {
       setStatus("Choose an image smaller than 12 MB, or enter ingredients manually.");
       return;
     }
+    onEdit?.();
+    setOriginal("");
+    setDraft("");
+    setPhotoName(file.name);
     setBusy(true);
     setStatus("Reading the label on this device…");
     let worker: Awaited<ReturnType<typeof import("tesseract.js")["createWorker"]>> | undefined;
@@ -31,15 +40,26 @@ export function LabelOcr({ onConfirm }: { onConfirm: (ingredients: string) => vo
       const text = result.data.text;
       setOriginal(text);
       const ingredientLine = text.match(/(?:ingredients|composition)\s*[:\-]\s*([^\n]+)/i)?.[1] ?? "";
-      setDraft(ingredientLine);
+      if (ingredientLine) setDraft(ingredientLine);
       setStatus(ingredientLine ? "Check and correct the suggested ingredients before using them." : "No clear ingredient line found. Copy or type the ingredients below, or retake the photo.");
     } catch {
       setStatus("The image could not be read. Try a clearer photo or enter ingredients manually.");
     } finally {
-      await worker?.terminate();
+      await worker?.terminate().catch(() => {});
       setBusy(false);
     }
   }
 
-  return <div className="label-ocr"><label>Read a label photo <input type="file" accept="image/*" capture="environment" disabled={busy} onChange={(event) => { void scan(event.target.files?.[0]); event.target.value = ""; }} /></label><p role="status">{status}</p>{original && <><details><summary>Original extracted text</summary><pre>{original}</pre></details><label>Review ingredients<textarea rows={3} value={draft} onChange={(event) => setDraft(event.target.value)} /></label><button type="button" className="compare-secondary" disabled={!draft.trim()} onClick={() => { onConfirm(draft); setStatus("Ingredients added. You can still edit them above."); }}>Confirm ingredients</button></>}</div>;
+  return <div className="label-ocr">
+    <PhotoPicker accept="image/*" disabled={busy} replacing={Boolean(photoName)} onPick={(file) => void scan(file)} />
+    {photoName && <p className="photo-file">{photoName}</p>}
+    <p role="status">{status}</p>
+    {original && <details><summary>Original extracted text</summary><pre>{original}</pre></details>}
+    {(standalone || original) && <>
+      <label className="scan-field">{standalone ? "Review or type ingredients" : "Review ingredients"}
+        <textarea rows={standalone ? 4 : 3} value={draft} disabled={busy} placeholder="Enter one ingredient per line, or separate them with commas" onChange={(event) => { setDraft(event.target.value); onEdit?.(); }} />
+      </label>
+      <button type="button" className={standalone ? "button" : "compare-secondary"} disabled={busy || !splitIngredients(draft).length} onClick={() => { onConfirm(draft.trim()); setStatus(standalone ? "Ingredients confirmed." : "Ingredients added. You can still edit them above."); }}>Confirm ingredients</button>
+    </>}
+  </div>;
 }

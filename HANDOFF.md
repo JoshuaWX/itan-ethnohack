@@ -19,13 +19,18 @@ identification provider is named in the photo-consent text; results remain
 uncertain candidates. Local `.env.local` values are not automatically deployed
 to Vercel, so production integration settings need separate configuration.
 
-The design references informed specific choices. Oura’s quiet typography and
-clear hierarchy shaped the opening screen. PictureThis’s capture-first view
-informed the photo prompt and preview. Yuka’s results hierarchy informed the
-scan and correction labels. SkinSort’s comparison groups become stacked
-sections on phones. Examine’s distinction between summary and study details
-appears on plant pages. Ada’s onboarding example informed the assistant’s
-short introduction and suggested next steps.
+The homepage borrows Oura’s restrained typography and clear action hierarchy.
+Identify takes its capture, preview and candidate sequence from PictureThis.
+The Yuka-inspired `/scan` entry point handles one label at a time. Users confirm
+OCR or typed ingredients before seeing exact matches, possible identities and
+unresolved entries. Compare imports only the confirmed text into its first slot
+through in-memory state. A reload returns Compare to the example products.
+The existing QR and registration lookup stays linked separately.
+
+SkinSort inspired the product columns and the shared, unique and possible
+overlap sections. Examine inspired the evidence overview and expandable study
+details. Ada’s guided choices appear in Ask Ìtàn, which fills the phone viewport
+and opens as a compact panel on wider screens. The consent toggle stays visible.
 
 ## Structure and data
 

@@ -36,10 +36,10 @@ export default function Home() {
             </p>
             <div className="hero-actions" aria-label="Start here">
               <Link className="button light" href="/identify">Identify a plant <ArrowUpRight size={16} /></Link>
-              <Link className="hero-link" href="/compare#scan">
+              <Link className="hero-link" href="/scan">
                 Scan a herbal product <ArrowRight size={18} />
               </Link>
-              <Link className="hero-link" href="/compare">Compare herbal products <ArrowUpRight size={16} /></Link>
+              <Link className="hero-link" href="/compare">Compare products <ArrowUpRight size={16} /></Link>
             </div>
             <div className="hero-foot">
               <Link href="/plants">Plant library <ArrowUpRight size={14} /></Link>
