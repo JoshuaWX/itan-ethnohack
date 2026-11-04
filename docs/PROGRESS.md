@@ -1,0 +1,88 @@
+# Progress
+
+Last updated: 2026-11-04 (Africa/Lagos).
+
+## Current state
+
+Environment setup is complete with the limitations recorded in
+[setup](SETUP.md). The working directory was empty and had no Git repository at
+inspection. A local `main` repository has been initialized; no GitHub remote,
+commit, or publication has been created.
+
+The local application uses Next.js, React, TypeScript, and a small, versioned
+curated catalog. The current working title is Ìtàn. Product search connects the
+Rhimza source records to hibiscus, ginger, and ambiguous cinnamon matches.
+Separate awareness sections connect an archived cholera advisory to guava
+laboratory research, and malaria context to WHO's Artemisia guidance.
+
+On 2026-11-04 the production build passed, and the matching and evidence tests
+passed. Eight hand-authored matching cases yielded 8/8 expected outcomes versus
+4/8 for an exact-name-only baseline. This is a small development fixture set, not
+independent clinical validation. A mobile browser check followed search → product
+→ ginger evidence and inspected the awareness content. The service worker and
+cached offline fallback were present, and a simulated offline navigation returned
+the fallback. Installation behavior has not been verified on a physical mobile device.
+
+The registration records are a dated curated snapshot, not live verification.
+QR scanning is available in browsers with the native BarcodeDetector API, with a
+labeled demo QR and manual-search fallback. The unsupported-browser path and a
+mocked successful scan were tested; a physical camera scan remains unverified.
+Seller discovery, reviews, and real-time outbreak ingestion are not implemented.
+The six-feature product vision remains in the project context pack.
+NAFDAC data redistribution terms require review before public publication. No
+expert interviews, model training, or clinical validation have been performed.
+
+## Reliability audit — 4 November 2026
+
+- Local enhancement: comparison handles two or three editable products,
+  confirmed and possible overlaps, unresolved names and a separately sourced
+  roselle–simvastatin research example. Images have source and license credits.
+  Local OCR was exercised in a browser against two clean synthetic label images;
+  these are not representative real-world accuracy measurements. A 375px browser
+  run followed scan, confirmation, comparison, evidence and awareness. Seven test
+  cases and the production build passed. Real-camera OCR and installation remain
+  untested. The new work is local and has not been committed or deployed.
+
+- GitHub repository `JoshuaWX/itan-ethnohack` is private and connected to Vercel.
+  Production deployment from commit `1241a4a` is ready at
+  https://itan-ethnohack-joshuawxs-projects.vercel.app. Anonymous HTTP checks
+  confirmed the fictional product, ginger search, and archived-awareness label;
+  the local NAFDAC snapshot was absent from the returned home page. Production
+  is public; preview deployments retain Vercel Authentication. No database was
+  provisioned. A physical-phone PWA and camera check remains outstanding.
+
+- The local Rhimza source snapshot is now in ignored `data/` and enabled only
+  by ignored local configuration. The default application uses an explicitly
+  fictional product. Rights to redistribute the snapshot remain unresolved;
+  check build and deployment configuration before any release.
+- Browser-checked local journey: search, product, three ingredient matches,
+  ginger evidence and both awareness sections. The evidence is curated; no live
+  regulatory lookup, live outbreak feed, OCR, seller directory or reviews exist.
+- Corrected a cinnamon taxon/source mismatch: the second candidate is Java
+  cinnamon, *Cinnamomum burmanni*. Common-name identification remains uncertain.
+- The separate 24-case challenge fixture recorded 12 correct single matches,
+  zero incorrect single matches, two correct ambiguous outcomes and ten correct
+  abstentions. These are developer-authored, catalog-specific examples, not an
+  independent or representative accuracy assessment. Duplicate exact names now
+  produce an ambiguous result.
+- Production build and tests pass; a clean configuration returned fictional data,
+  an unknown plant returned 404, an overlong search returned 400, and npm audit
+  reported zero production vulnerabilities. Home layout showed no horizontal
+  overflow at 320, 375, 768 and 1440 CSS pixels. A basic check found no unlabeled
+  buttons or missing image alt attributes on the home page; this is not a full
+  accessibility audit. Unsupported camera fallback and offline fallback were
+  observed locally. Physical installation and camera testing remain outstanding.
+
+## Next project actions
+
+1. Verify record reuse terms and have the team review scientific wording.
+2. Check the complete experience on an actual phone, including offline behavior.
+3. Test QR scanning with a physical supported device and camera.
+4. Consider seller and review demonstrations only after the core workflow passes.
+
+## Blockers / unknowns
+
+Team roles, source reuse permissions, and budget: TBD.
+Tool-specific remaining actions belong in [setup](SETUP.md).
+
+See the proposed [milestones](DEVELOPMENT_PLAN.md) and [decision log](DECISIONS.md).

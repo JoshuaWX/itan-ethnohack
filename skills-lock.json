@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "skills": {
+    "clinical-decision-support": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/clinical-decision-support/SKILL.md",
+      "computedHash": "42f80533c9ea123de2c66f91fbfe78cf0425fefbf7fb6257d8577629b23c4618"
+    },
+    "database-lookup": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/database-lookup/SKILL.md",
+      "computedHash": "377c98aa3da69a21be0f7688beb1794cad6b1de7bf95a4a48867682fcd6a4cc6"
+    },
+    "exploratory-data-analysis": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/exploratory-data-analysis/SKILL.md",
+      "computedHash": "b6c8bd8ccfb65cb9b5d702030052efe95c7aa465192081527cb6e85567764625"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "ref": "ca45fc496a3436251f191354091d557da31c15b5",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "literature-review": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/literature-review/SKILL.md",
+      "computedHash": "298b16aef7fab5f7b8c5de2313e5feae71373a8f5bf6837ac38c07fb181b5579"
+    },
+    "mlflow-evaluation": {
+      "source": "mlflow/skills",
+      "ref": "6a505d8f30b7fbf93533cdf4e7d88fc30d66ba8b",
+      "sourceType": "github",
+      "skillPath": "mlflow-evaluation/SKILL.md",
+      "computedHash": "84f1ea35d9172c53b4e2ff6e1b92f2234889b7c7ea793280c1cad4c36d6dc6e7"
+    },
+    "mlflow-onboarding": {
+      "source": "mlflow/skills",
+      "ref": "6a505d8f30b7fbf93533cdf4e7d88fc30d66ba8b",
+      "sourceType": "github",
+      "skillPath": "mlflow-onboarding/SKILL.md",
+      "computedHash": "701dac715c38ddec1301c016c4a605e392e7608a81a7f5d197db2dadf9280162"
+    },
+    "paper-lookup": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/paper-lookup/SKILL.md",
+      "computedHash": "3d2966bf31d9ab0d463b98e548af3c98c0b6ce15dbe1b46cfa473e67d47f1838"
+    },
+    "pytorch-lightning": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/pytorch-lightning/SKILL.md",
+      "computedHash": "c34df430e06a072ada5ab9db3a09e8fb6f1c630a2405b4f041405cc715f4733e"
+    },
+    "scientific-brainstorming": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-brainstorming/SKILL.md",
+      "computedHash": "52402bc8dbd22b816f98999b3ba5818de1528f4f6868cc689d7944a48687e377"
+    },
+    "scientific-critical-thinking": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-critical-thinking/SKILL.md",
+      "computedHash": "5f432576778e12aa04e722fa56c7c801cd644beed162d1c516b43721e5469d69"
+    },
+    "scientific-writing": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/scientific-writing/SKILL.md",
+      "computedHash": "2d2433026204b29df1de362af24e0279e0a8fe927cf34eb6b19b950b94ad4636"
+    },
+    "scikit-learn": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/scikit-learn/SKILL.md",
+      "computedHash": "124b80e65a64ec6b763d0dcf469b8314c3f06ef3065e0b488707f8978085ef25"
+    },
+    "shap": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/shap/SKILL.md",
+      "computedHash": "c09a1f05c14e1bf428ae5602b1719bd69aaad0d1b8094966fa469bc5755ca969"
+    },
+    "statistical-analysis": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/statistical-analysis/SKILL.md",
+      "computedHash": "58fe533547c45096fe784f043609fe07742b5390f056ce850ab9ecb239f04c73"
+    },
+    "transformers": {
+      "source": "K-Dense-AI/scientific-agent-skills",
+      "ref": "a25cf9ec00e2745d03f8704acf6f6919694ccd9a",
+      "sourceType": "github",
+      "skillPath": "skills/transformers/SKILL.md",
+      "computedHash": "3d7211c0cc0b7e090679e7fce31ab7e0d3d99d63fe354e286066ad4224fbd562"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "ref": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "3219a1944e404ffc14d1d9d6aef6dd2e3855b81387ee0a044ccbfe14d34c2357"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "ref": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
+    },
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "ref": "ca45fc496a3436251f191354091d557da31c15b5",
+      "sourceType": "github",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "computedHash": "ad5b1fc52807e9afa4635e59218a026b164dc58b6c3f41b0f7c644dcd6ccf572"
+    }
+  }
+}

@@ -35,9 +35,11 @@ export default function Home() {
               them, and what the evidence actually says.
             </p>
             <div className="hero-actions">
-              <a className="button light" href="#explore">
-                Explore the guide <ArrowRight size={18} />
-              </a>
+              <Link className="button light" href="/compare#scan">
+                Scan a herbal product <ArrowRight size={18} />
+              </Link>
+              <Link className="hero-link" href="/compare">Compare herbal products <ArrowUpRight size={16} /></Link>
+              <Link className="hero-link" href="/plants">Explore medicinal plants <ArrowUpRight size={16} /></Link>
               <Link className="hero-link" href="/awareness">
                 Explore public health <ArrowUpRight size={16} />
               </Link>

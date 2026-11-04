@@ -1,0 +1,5 @@
+# Technical plan
+
+Inspect the existing repository and adapt to its stack. A useful vertical slice links a small curated product record and its declared ingredient to a normalized plant name, sourced evidence, an honestly labeled registration record, and sample seller and review records. Manual lookup can precede OCR and barcode scanning. Add distinct dated outbreak and seasonal-awareness records with official guidance and qualified plant links.
+
+Represent products, ingredients, taxa and synonyms, claims, source records, sellers and credentials, reviews and verification states, and disease notices with provenance. Preserve original labels and show uncertain matches for review. Use documented snapshots if live sources are unavailable. Name matching, evidence retrieval, geospatial distance and graph exploration are possible computational methods; none establishes efficacy. Validate representative matches, ambiguity, sources, safety labels, timestamps and the end-to-end demo. Choose tools only for an actual need.

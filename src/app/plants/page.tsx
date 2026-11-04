@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { taxa } from "@/lib/catalog";
+import { PlantPhoto } from "@/components/plant-photo";
 export default function PlantsPage() {
   return (
     <div className="container page">
@@ -17,7 +18,8 @@ export default function PlantsPage() {
         </p>
       </div>
       <div className="plant-directory">
-        {taxa.map((plant, i) => (
+        {taxa.map((plant, i) => (<div key={plant.id} className="plant-directory-entry">
+          <PlantPhoto id={plant.id} name={plant.common} />
           <Link
             className="plant-row"
             href={`/plants/${plant.id}`}
@@ -30,7 +32,7 @@ export default function PlantsPage() {
             </div>
             <ArrowUpRight size={20} />
           </Link>
-        ))}
+        </div>))}
       </div>
     </div>
   );

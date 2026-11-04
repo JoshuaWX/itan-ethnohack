@@ -1,0 +1,5 @@
+# Evidence and safety
+
+For each claim record source, URL, access date, version, license, species, plant part and preparation where relevant, claim type and limitations. Prefer authoritative monographs and primary literature, assessing study design and applicability. Distinguish in-vitro, animal and human evidence. A compound’s bioactivity or occurrence in a plant does not prove clinical efficacy or product safety. Do not turn disease–plant associations into treatment recommendations. Provide official prevention guidance and appropriate professional-care context.
+
+Show source, timestamp and coverage for notices and registration records; label missing, stale, uncertain or simulated data. Do not call sellers or reviews verified without actual verification. A registration match cannot authenticate a package or license a seller. Reviews are anecdotes, not clinical proof or adverse-event incidence data. Minimize and protect sensitive health and location data. Respect source licenses, community knowledge, attribution and applicable access and benefit-sharing rules.

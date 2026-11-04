@@ -21,6 +21,13 @@ required for the current read-only catalog.
 Vercel builds from the connected GitHub repository using the fictional product
 by default. No database, API credentials, or environment variables are required.
 
+The comparison page accepts manual ingredient lists and offers optional on-device
+OCR. Its Tesseract.js worker and English language data are served locally from
+`public/ocr`. OCR may misread labels; review and confirm the transcription.
+The bundled language data is from the Tesseract.js fast English data distribution
+(https://tessdata.projectnaptha.com/4.0.0_fast/eng.traineddata.gz), based on
+Tesseract's Apache-licensed fast models (https://github.com/tesseract-ocr/tessdata_fast).
+
 The public-reproducible default uses a **fictional** example product with no
 regulatory record. A separately sourced local snapshot can be enabled with
 `ITAN_LOCAL_NAFDAC_SNAPSHOT=1` and an independently authorized

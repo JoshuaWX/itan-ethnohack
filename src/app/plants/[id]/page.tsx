@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight, Leaf } from "lucide-react";
 import { evidenceRecords, getTaxon, sources } from "@/lib/catalog";
 import { getProductData } from "@/lib/product-data";
 import { classifyEvidence } from "@/lib/evidence";
+import { PlantPhoto } from "@/components/plant-photo";
 
 export default async function PlantPage({
   params,
@@ -35,6 +36,7 @@ export default async function PlantPage({
           <Leaf size={96} strokeWidth={0.7} />
         </div>
       </div>
+      <PlantPhoto id={plant.id} name={plant.common} />
       <div className="detail-layout">
         <div>
           <section className="detail-section">
