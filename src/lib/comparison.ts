@@ -14,7 +14,7 @@ export function compareProducts(products: { name: string; ingredients: string[] 
   const occurrences = new Map<string, Set<number>>();
   const possible = new Set<string>();
   analyzed.forEach((product, index) => product.ingredients.forEach(({ match }) => {
-    if (match.kind === "exact" || match.kind === "alias") {
+    if (match.kind === "exact") {
       const id = match.candidates[0].id;
       const indexes = occurrences.get(id) ?? new Set<number>();
       indexes.add(index);
@@ -22,10 +22,10 @@ export function compareProducts(products: { name: string; ingredients: string[] 
     }
   }));
   analyzed.forEach((product, index) => product.ingredients.forEach(({ match }) => {
-    if (match.kind !== "ambiguous") return;
+    if (match.kind !== "ambiguous" && match.kind !== "alias") return;
     for (const candidate of match.candidates) {
       if ([...(occurrences.get(candidate.id) ?? [])].some((other) => other !== index)) possible.add(candidate.id);
-      if (analyzed.some((other, otherIndex) => otherIndex !== index && other.ingredients.some((entry) => entry.match.kind === "ambiguous" && entry.match.candidates.some((taxon) => taxon.id === candidate.id)))) possible.add(candidate.id);
+      if (analyzed.some((other, otherIndex) => otherIndex !== index && other.ingredients.some((entry) => (entry.match.kind === "ambiguous" || entry.match.kind === "alias") && entry.match.candidates.some((taxon) => taxon.id === candidate.id)))) possible.add(candidate.id);
     }
   }));
   const shared = taxa.filter((taxon) => (occurrences.get(taxon.id)?.size ?? 0) > 1);

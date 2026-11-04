@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Leaf } from "lucide-react";
-import { evidenceRecords, getTaxon, sources } from "@/lib/catalog";
+import { evidenceRecords, sources } from "@/lib/catalog";
+import { readCatalog } from "@/lib/catalog-server";
 import { getProductData } from "@/lib/product-data";
 import { classifyEvidence } from "@/lib/evidence";
 import { PlantPhoto } from "@/components/plant-photo";
+import { EvidenceExplorer } from "@/components/evidence-explorer";
 
 export default async function PlantPage({
   params,
@@ -13,7 +15,8 @@ export default async function PlantPage({
 }) {
   const { id } = await params;
   const { product } = getProductData();
-  const plant = getTaxon(id);
+  const catalog = await readCatalog();
+  const plant = catalog.taxa.find((row) => row.id === id);
   if (!plant) notFound();
   const evidence = evidenceRecords.find((record) => record.taxonId === id);
   const evidenceClass = classifyEvidence(evidence?.studyType ?? "");
@@ -37,11 +40,15 @@ export default async function PlantPage({
         </div>
       </div>
       <PlantPhoto id={plant.id} name={plant.common} />
+      <EvidenceExplorer initialPlant={plant.id} />
+      {catalog.source === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
       <div className="detail-layout">
         <div>
           <section className="detail-section">
             <p className="overline">Identity</p>
             <h2>Understanding the name</h2>
+            <p>Expert botanical and pharmacy review is pending.</p>
+            <p>Names in this catalog: {[plant.name, ...plant.aliases].join(", ")}.</p>
             <p className="prose">
               {id === "hibiscus"
                 ? "The product record uses Hibiscus sabdariffa. Kew currently treats that name as a synonym of Sabdariffa gossypiifolia, while noting alternative taxonomic treatments."
@@ -61,7 +68,15 @@ export default async function PlantPage({
           <section className="detail-section">
             <p className="overline">Evidence &amp; context</p>
             <h2>What has been studied</h2>
-            {id === "ginger" ? (
+            {id === "hibiscus" ? (
+              <article className="evidence">
+                <span className="evidence-label">Human pharmacokinetic research · six volunteers</span>
+                <h3>Roselle beverage and simvastatin</h3>
+                <p>A small crossover study measured simvastatin exposure after a single dose, with and without an aqueous beverage made from roselle calyces. The study also included separate animal experiments.</p>
+                <p className="evidence-limit">The preparation and conditions studied may differ from a product on a label. This finding does not establish an effect for every preparation or person. A pharmacist can help interpret questions about medicines.</p>
+                <a className="source-link" href="https://pubmed.ncbi.nlm.nih.gov/28925046/" target="_blank" rel="noreferrer">Read the study <ArrowUpRight size={16} /></a>
+              </article>
+            ) : id === "ginger" ? (
               <article className="evidence">
                 <span className="evidence-label">
                   {evidenceClass === "traditional"

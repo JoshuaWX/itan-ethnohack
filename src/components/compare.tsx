@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { taxa } from "@/lib/catalog";
+import type { Taxon } from "@/lib/matching";
 import { compareProducts, findInteractionEvidence, interactionRecords } from "@/lib/comparison";
 import { LabelOcr } from "@/components/label-ocr";
 import { PlantPhoto } from "@/components/plant-photo";
+import { EvidenceExplorer } from "@/components/evidence-explorer";
 
 type Entry = { name: string; text: string };
 const examples: Entry[] = [
@@ -13,7 +14,7 @@ const examples: Entry[] = [
   { name: "Example tea B", text: "roselle\nCinnamomum verum\nguava" },
 ];
 
-export function Compare() {
+export function Compare({ taxa, catalogSource }: { taxa: Taxon[]; catalogSource: "database" | "fallback" }) {
   const [entries, setEntries] = useState<Entry[]>(examples);
   const [medicine, setMedicine] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -26,6 +27,7 @@ export function Compare() {
   return <>
     <Link className="back" href="/">← Back to discover</Link>
     <div className="page-intro"><p className="overline">A clearer look at ingredients</p><h1>Compare what’s inside.</h1><p>Explore ingredients in two or three products. The examples are fictional; replace them with names from your labels.</p></div>
+    {catalogSource === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
     <div className="compare-inputs" id="scan">{entries.map((entry, index) => <section className="compare-card" key={index}>
       <label htmlFor={`product-${index}`}>Product name</label>
       <input id={`product-${index}`} value={entry.name} onChange={(event) => update(index, { name: event.target.value })} />
@@ -39,10 +41,11 @@ export function Compare() {
     <button className="button compare-submit" type="button" onClick={() => setSubmitted(true)} disabled={entries.some((entry) => !entry.text.trim())}>Compare ingredients</button>
     {submitted && <div className="compare-results" aria-live="polite">
       <section className="detail-section"><p className="overline">Comparison</p><h2>Shared ingredients</h2>{result.shared.length ? <ul>{result.shared.map((taxon) => <li key={taxon.id}><Link className="source-link" href={`/plants/${taxon.id}`}>{taxon.common} <i>({taxon.name})</i></Link><PlantPhoto id={taxon.id} name={taxon.common} /></li>)}</ul> : <p>No confirmed shared taxa in this small catalog.</p>}<p>Sharing an ingredient does not itself establish an interaction or danger.</p>
-      {result.possible.length > 0 && <><h3>Possible overlap</h3><p>An ambiguous name may refer to {result.possible.map((taxon) => taxon.name).join(", ")}. The label does not establish the species.</p></>}
+      {result.possible.length > 0 && <><h3>Possible overlap</h3><p>Common or ambiguous names may refer to {result.possible.map((taxon) => taxon.name).join(", ")}. The label does not establish the species.</p></>}
       </section>
-      <section className="detail-section"><h2>How the names matched</h2><p>Ìtàn compares each original entry with scientific names and documented aliases in its small catalog. A common name is a candidate, not laboratory identification.</p>{result.products.map((product, index) => <article className="compare-result-card" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{product.ingredients.map(({ original, match }, row) => <div className="compare-row" key={row}><strong>{original}</strong><span>{match.kind === "unresolved" ? "Not identified" : match.kind === "ambiguous" ? "Ambiguous" : match.kind === "exact" ? "Scientific-name match" : "Catalog alias"}{(match.kind === "exact" || match.kind === "alias") && !result.shared.some((taxon) => taxon.id === match.candidates[0].id) ? " · only confirmed in this product" : ""}</span><p>{match.explanation}</p>{match.candidates.map((taxon) => <Link className="candidate-link" href={`/plants/${taxon.id}`} key={taxon.id}><i>{taxon.name}</i> ↗</Link>)}</div>)}</article>)}</section>
+      <section className="detail-section"><h2>How the names matched</h2><p>Ìtàn compares each original entry with scientific names and documented aliases in its small catalog. A common name is a candidate, not laboratory identification.</p>{result.products.map((product, index) => <article className="compare-result-card" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{product.ingredients.map(({ original, match }, row) => <div className="compare-row" key={row}><strong>{original}</strong><span>{match.kind === "unresolved" ? "Not identified" : match.kind === "ambiguous" ? "Ambiguous" : match.kind === "exact" ? "Scientific-name match" : "Candidate catalog match"}</span><p>{match.explanation}</p>{match.candidates.map((taxon) => <Link className="candidate-link" href={`/plants/${taxon.id}`} key={taxon.id}><i>{taxon.name}</i> ↗</Link>)}</div>)}</article>)}</section>
       <section className="detail-section"><p className="overline">Evidence, separately</p><h2>Documented interaction research</h2>{matchingSafety.length ? matchingSafety.map((record) => <article className="guidance" key={record.source}><h3>{record.title}</h3><p>{record.summary}</p><p>{record.limitation}</p><a className="source-link" href={record.source} target="_blank" rel="noreferrer">Read the source ↗</a></article>) : <p>Insufficient evidence in this small curated collection to assess these combinations.</p>}<p>Missing records do not establish safety. This educational prototype does not check every interaction or clinical contraindication. Speak with a qualified health professional about medicines and herbal products.</p></section>
     </div>}
+    <EvidenceExplorer />
   </>;
 }

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, ChevronRight, Info } from "lucide-react";
-import { sources, taxa } from "@/lib/catalog";
+import { sources } from "@/lib/catalog";
+import { readCatalog } from "@/lib/catalog-server";
 import { getProductData } from "@/lib/product-data";
 import { identifyIngredient } from "@/lib/matching";
 
@@ -11,6 +12,7 @@ export default async function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const { taxa } = await readCatalog();
   const { product, ingredients, localSnapshot } = getProductData();
   if (id !== product.id) notFound();
   return (

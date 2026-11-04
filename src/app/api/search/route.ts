@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { taxa } from "@/lib/catalog";
+import { readCatalog } from "@/lib/catalog-server";
 import { getProductData } from "@/lib/product-data";
 import { normalizeName } from "@/lib/matching";
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const { taxa } = await readCatalog();
   const { product } = getProductData();
   const input = request.nextUrl.searchParams.get("q") ?? "";
   if (input.length > 100)

@@ -34,6 +34,26 @@ expert interviews, model training, or clinical validation have been performed.
 
 ## Reliability audit — 4 November 2026
 
+- Supabase ITAN has a new catalog migration and seed, with five published taxa,
+  three evidence sources, two evidence records, five photo records and one
+  interaction record. Anonymous SELECT is granted under RLS; anonymous write
+  privileges are denied. The application currently reads taxa from the database;
+  evidence, interactions and photos remain sourced from versioned application
+  files and still require integration. The local environment has the Supabase
+  URL and publishable key. The fallback is labeled in the interface.
+- Comparison treats common-name aliases as possible rather than confirmed
+  overlap. A limited evidence explorer uses fixed questions and curated summaries.
+  Gemini selects record IDs from supplied curated records; it does not generate
+  the displayed summaries. Unsupported topics abstain and failures fall back to
+  curated records. A Supabase counter limits model requests to 30 per UTC day.
+  One supported and one unsupported local request passed; this is not a full
+  assistant evaluation. Roselle now has a
+  bounded research summary. Expert review of all records remains pending.
+- A 375px browser check confirmed the possible-overlap language, evidence source
+  link and roselle page with the database enabled. Seven tests and the production
+  build passed. Broader responsive, real-phone, OCR and assistant evaluation and
+  deeper evidence work remain outstanding.
+
 - Local enhancement: comparison handles two or three editable products,
   confirmed and possible overlaps, unresolved names and a separately sourced
   roselle–simvastatin research example. Images have source and license credits.

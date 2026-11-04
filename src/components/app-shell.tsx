@@ -12,6 +12,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
   const nav = [
     { href: "/", label: "Discover", icon: Compass },
+    { href: "/compare", label: "Compare", icon: Search },
     { href: "/plants", label: "Plants", icon: Leaf },
     { href: "/awareness", label: "Awareness", icon: BookOpen },
   ];

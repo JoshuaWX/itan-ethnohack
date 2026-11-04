@@ -6,6 +6,9 @@
 *.key
 /data/
 /private/
+/EthnoHack-Codex-Context/
+/EthnoHack_Codex_Instructions_Updated.md
+/ETHNOHACK_SUBMISSION_REQUIREMENTS.md
 
 # Local environments and generated artifacts
 node_modules/

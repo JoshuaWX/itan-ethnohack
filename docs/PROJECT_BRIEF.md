@@ -14,14 +14,14 @@ Last updated: 2026-11-02 (Africa/Lagos).
 | Editor / secondary agent interface | WebStorm / Codex CLI |
 | Research notebook | Obsidian, with `docs/` as the vault |
 
-The context above was supplied by the participant. Consult the team's
-`ETHNOHACK_SUBMISSION_REQUIREMENTS.md` for organizer and submission references.
+The context above was supplied by the participant. Consult the official
+[hackathon rules](https://ethnohack2026.devpost.com/rules) for submission requirements.
 Do not treat the proposed [development plan](DEVELOPMENT_PLAN.md) as organizer rules.
 
 ## Questions to resolve before application work
 
-- User group, concrete problem, stakeholder access, and proposed value: see the
-  agreed project concept under `EthnoHack-Codex-Context/`.
+- User group and problem: consumers exploring Nigerian herbal products; access to
+  stakeholders and validation of the proposed value remain to be confirmed.
 - Measurable success criteria and clinical expert review: in progress.
 - Scientific question and evidence required for the intended claims: TBD.
 - Dataset availability, license, consent/authorization, and privacy constraints: TBD.

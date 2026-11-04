@@ -8,8 +8,8 @@ test("compares aliases, ambiguity and unknown names across products", () => {
     { name: "A", ingredients: ["hibiscus", "cinnamon", "unknown"] },
     { name: "B", ingredients: ["roselle", "Cinnamomum verum"] },
   ], taxa);
-  assert.deepEqual(result.shared.map((row) => row.id), ["hibiscus"]);
-  assert.deepEqual(result.possible.map((row) => row.id), ["cinnamon-verum"]);
+  assert.deepEqual(result.shared.map((row) => row.id), []);
+  assert.deepEqual(result.possible.map((row) => row.id), ["hibiscus", "cinnamon-verum"]);
   assert.equal(result.products[0].ingredients[2].match.kind, "unresolved");
 });
 
