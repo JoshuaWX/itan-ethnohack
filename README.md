@@ -6,11 +6,11 @@ In Nigeria, herbal product labels can contain unfamiliar plant names, and people
 
 **[Open the demonstration](https://itan-ethnohack.vercel.app/)** · [Teammate handoff](HANDOFF.md) · [Third-party notices](docs/THIRD_PARTY_NOTICES.md)
 
-The hosted demonstration may differ from the latest repository version. The site was reachable on 5 November 2026; individual hosted integrations have not all been verified in this documentation pass.
+Browsing, label reading, ingredient comparison and research summaries work without provider keys. Live photo identification and optional AI explanations depend on the deployment configuration. Both providers were exercised in local testing.
 
 ## What you can try
 
-1. **Identify a plant:** add a plant photo and consent to sending it to Pl@ntNet. The service suggests possible names; a photo does not confirm identity or safety. Availability depends on provider and quota configuration.
+1. **Identify a plant:** when the service is available, add a photo and consent to sending it to Pl@ntNet. It suggests possible plant names. A photo cannot confirm identity or safety. If the service is unavailable, search the library by name.
 2. **Scan a herbal product:** photograph an ingredient list or type it manually. Text recognition runs in your browser; correct and confirm the text before using it.
 3. **Compare products:** enter ingredients from two or three labels, or try the clearly fictional examples. Ìtàn shows matching scientific names, possible overlaps and names it cannot identify. A shared ingredient does not by itself mean a combination is dangerous.
 4. **Explore research:** browse the plant library or check a claim. Findings link to sources and identify what was studied and what remains uncertain. Ask Ìtàn can guide navigation and, with consent and working provider configuration, explain selected records.
@@ -72,7 +72,7 @@ Open `.env.local` in your editor, fill in only the services you are authorized t
 | `GEMINI_MODEL` | Optional model name. Leave empty to use the application's default, `gemini-2.5-flash`. |
 | `PLANTNET_API_KEY` | Server-only key obtained for an authorized [Pl@ntNet API](https://my.plantnet.org/) account; enables photo-identification requests when quota checks succeed. |
 
-Gemini and Pl@ntNet also require the protected quota function in an appropriately authorized Supabase environment. The migration in `supabase/migrations` changes database functions and can interrupt older deployments: review compatibility and obtain approval before applying it. The app fails closed to the available manual and research-summary paths if the quota cannot be checked. Provider usage limits, account terms and possible charges depend on the configured accounts.
+Gemini and Pl@ntNet also require the protected quota function from `supabase/migrations`. Apply the migrations to a development database to try the integrations. Check compatibility before applying them to an existing deployment. If the quota cannot be checked, manual paths and research summaries still work. Provider usage limits, account terms and possible charges depend on the configured accounts.
 
 ## Tests and reproducibility
 
@@ -82,7 +82,7 @@ npx --no-install tsc --noEmit
 npm run build
 ```
 
-The last documented run passed 25 automated tests and a production build. The 24 developer-authored botanical challenge cases yielded 12 correct single matches, zero incorrect single matches, two ambiguous results and ten abstentions. This small, catalog-specific set is not independent validation or a general accuracy estimate. Two clean synthetic label images were read in a browser; real-world photos and physical-phone checks still need broader testing. See [progress](docs/PROGRESS.md) and the [handoff](HANDOFF.md) for details.
+The local audit passed 32 automated test groups, type checking, a production build and 21 input-validation checks. The 24 botanical challenge cases yielded 12 correct single matches, zero incorrect single matches, two ambiguous results and ten abstentions. The separate 16-question research search check returned expected results on 12 questions and missed relevant records on four. Browser OCR read four upright synthetic labels, abstained on a blank, and failed to read a tilted label. These are small developer-authored checks. See the [handoff](HANDOFF.md#reproduce-the-evaluation) for the evaluation commands and remaining device checks.
 
 The NAFDAC product examples included in the public default are fictional. A separate local NAFDAC snapshot is excluded from Git and must not be included in a public release until its reuse rights are resolved. Scientific summaries link to their original sources; research and image provenance are documented in the app and [third-party notices](docs/THIRD_PARTY_NOTICES.md).
 

@@ -42,7 +42,10 @@ def main() -> int:
             errors.append(f"Invalid vault JSON {path.name}: {exc}")
 
     skills_root = ROOT / ".agents/skills"
-    skills = sorted(p for p in skills_root.iterdir() if p.is_dir())
+    skills = sorted(
+        p for p in skills_root.iterdir()
+        if p.is_dir() and p.name != "web-design-guidelines"
+    )
     names: set[str] = set()
     for skill in skills:
         path = skill / "SKILL.md"

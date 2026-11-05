@@ -1,5 +1,23 @@
 # Decisions
 
+## Public repository
+
+Keep the application, evidence sources, attribution and evaluation fixtures in
+Git. Keep credentials, restricted source snapshots, the detailed technical
+audit and machine-specific setup notes in the local workspace. Refer to the
+upstream Vercel web guidelines for accessibility reviews.
+
+## Technical audit — 5 November 2026
+
+Check hosted provider configuration separately from a matching Git SHA.
+Gate the identification picker on configured credentials and protected quota
+reachability, and decode uploads before spending quota. Keep direct source
+summaries, manual plant search and ingredient entry available. Treat a
+nonsignificant result as inconclusive and retain study-population limits.
+Use lexical retrieval improvements with sourced aliases and separate regression
+and evaluation sets. No model training, infrastructure change or additional
+canonical feature was needed. See the [handoff](../HANDOFF.md#reproduce-the-evaluation).
+
 ## Submission documentation — 5 November 2026
 
 Make the README understandable without specialist knowledge, disclose existing
@@ -88,7 +106,7 @@ resources, and optional service credentials until a concrete task needs them.
 **Rationale:** one-week scope; portable team guidance without premature application choices.
 **Consequences:** some skill scripts require dependencies or authorized service
 access later. Installed skill discovery does not prove operational readiness or
-automatic routing reliability. See [skills](SKILLS.md) and [setup](SETUP.md).
+automatic routing reliability. See [skills](SKILLS.md).
 
 ## New decision template
 

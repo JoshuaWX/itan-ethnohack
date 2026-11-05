@@ -68,7 +68,7 @@ export function Compare({ taxa, catalogSource }: { taxa: Taxon[]; catalogSource:
       <label htmlFor={`product-${index}`}>Product name (optional)</label>
       <input id={`product-${index}`} value={entry.name} onChange={(event) => update(index, { name: event.target.value })} />
       <label htmlFor={`ingredients-${index}`}>Ingredients, one per line or separated by commas</label>
-      <textarea id={`ingredients-${index}`} rows={5} value={entry.text} onChange={(event) => update(index, { text: event.target.value })} />
+      <textarea id={`ingredients-${index}`} rows={5} maxLength={4000} value={entry.text} onChange={(event) => update(index, { text: event.target.value })} />
       <details className="compare-scan"><summary>Read a label photo</summary><LabelOcr onConfirm={(text) => update(index, { text })} /></details>
       {entries.length > 2 && <button type="button" className="compare-secondary" onClick={() => { setEntries((current) => current.filter((_, i) => i !== index)); clearResult(); }}>Remove product</button>}
     </section>)}</div>

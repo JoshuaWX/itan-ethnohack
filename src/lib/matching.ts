@@ -12,7 +12,7 @@ export type Match = {
 };
 
 export function splitIngredients(text: string): string[] {
-  return text.split(/[\n,]/).map((value) => value.trim()).filter(Boolean);
+  return text.split(/[\n,;]/).map((value) => value.trim()).filter(Boolean);
 }
 
 export function normalizeName(value: string): string {
@@ -62,7 +62,9 @@ export function identifyIngredient(input: string, taxa: Taxon[]): Match {
       kind: "alias",
       candidates,
       explanation:
-        "Matches a documented common name or label alias in this catalog.",
+        name === "zobo"
+          ? "Zobo is associated with a roselle drink, which may contain other ingredients. This is a possible plant match; check the full ingredient list."
+          : "Matches a documented common name or label alias in this catalog.",
     };
   return {
     kind: "unresolved",

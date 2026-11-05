@@ -30,6 +30,8 @@ export const studyOutcomes: Record<string, StudyOutcome[]> = {
 export type Relation = "supports" | "contradicts" | "partially-addresses" | "does-not-answer";
 
 function directionOf(text: string): Direction | undefined {
+  // "Does not lower" can mean unchanged or increased; do not infer either.
+  if (/\b(?:does not|doesn't|not)\s+(?:lower|reduce|decrease|increase|raise|boost|slow|speed)/.test(text)) return;
   if (/\b(?:does not|doesn't|no effect|unchanged|neither)\b/.test(text)) return "unchanged";
   if (/\b(?:lowers?|lowering|reduces?|reduction|decreases?|decreasing|slows?)\b/.test(text)) return "decrease";
   if (/\b(?:increases?|raises?|boosts?|speeds?|faster|accelerates?)\b/.test(text)) return "increase";
@@ -70,13 +72,15 @@ export function analyzeClaim(input: string) {
       });
       const preparationMismatch = /\b(?:homemade|tea|decoction|juice|raw)\b/.test(text) && /standardized|capsules|specified.*extract/i.test(record.preparation)
         || /\balone\b/.test(text) && /alongside|added to|already taking/i.test(record.population ?? record.title);
+      const populationMismatch = /\b(?:children|child|infants?|babies|pregnant|pregnancy|breastfeeding)\b/.test(text)
+        && !/children|infant|pregnan|breastfeed/i.test(record.population ?? "");
       const overclaim = /\b(?:cures?|always|everyone|guarantee|proves?|safe)\b/.test(text);
-      if (speciesMismatch || partMismatch || preparationMismatch) explanation = "The claimed population, plant part, preparation or use without other medicines differs from this study.";
+      if (speciesMismatch || partMismatch || preparationMismatch || populationMismatch) explanation = "The claimed population, plant part, preparation or use without other medicines differs from this study.";
       else if (overclaim || record.type === "animal" && !/\b(?:rats|mice|animals?)\b/.test(text)) {
         relation = "partially-addresses";
         explanation = "The measured outcome is relevant, but the study cannot establish this broader claim.";
       } else {
-        relation = annotation.direction === direction ? "supports" : "contradicts";
+        relation = annotation.direction === "unchanged" ? "partially-addresses" : annotation.direction === direction ? "supports" : "contradicts";
         explanation = annotation.direction === "unchanged"
           ? "No significant change was detected under these study conditions. This does not prove an effect is impossible."
           : "The direction of the measured finding is compared with the direction in your claim. Applicability remains limited to this study.";

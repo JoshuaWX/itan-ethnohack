@@ -23,6 +23,9 @@ export const taxa: Taxon[] = [
       "Hibiscus sabdariffa",
       "hibiscus (calyces of hibiscus sabdariffa)",
       "roselle",
+      // Beverage/label alias, not a confirmed ingredient: Omemu et al., FUNAAB
+      // https://funaab.edu.ng/a-survey-of-the-microflora-of-hibiscus-sabdariffa-roselle-and-the-resulting-zobo-juice-72541757/
+      "zobo",
     ],
     source: sources.hibiscus,
   },

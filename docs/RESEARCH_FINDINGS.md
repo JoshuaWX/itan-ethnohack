@@ -73,11 +73,3 @@ Keep quotations distinct from paraphrases and reasoning. Separate traditional us
 laboratory results, animal studies, observational evidence, and human trials.
 Use [scientific evidence](SCIENTIFIC_EVIDENCE.md) for appraisal criteria and
 [data sources](DATA_SOURCES.md) for provenance. Decisions belong in [decisions](DECISIONS.md).
-
-## Judging research — 5 November 2026
-
-The [official event page](https://ethnohack2026.devpost.com/) lists five judges: Nektarios Aligiannis, Petros Bouras-Vallianatos, Dimitrios Gunopulos, Antigoni Cheilari and Mehmet Can Ay. The [rules](https://ethnohack2026.devpost.com/rules) list seven criteria: scientific relevance, innovation, technical implementation, data science quality, feasibility, impact and presentation. Final weights were not published in the rules consulted. Judge-specific critiques are hypothetical inferences, not their actual views; track assignments and complete panel membership beyond the public list are unverified.
-
-Public institutional profiles describe [Aligiannis](https://en.pharm.uoa.gr/people/faculty/pharmacognosy_chemistry_of_natural_products/alligianis_nektarios/) in pharmacognosy and traditional medicine, [Bouras-Vallianatos](https://en.phs.uoa.gr/staff/petros_bouras_vallianatos) in history of medicine, [Gunopulos](https://www.di.uoa.gr/en/staff/46) in data mining and databases, and [Ay](https://www.scai.fraunhofer.de/en/business-research-areas/bioinformatics/fields-of-research/bioinformatics/Software-Scientific-Computing/team.html) in language models and semantic harmonization. The event page describes Cheilari as a pharmacist and pharmacognosy researcher.
-
-Mock assessment: strong track fit, cautious source-linked evidence and functional local workflows; limitations include a small curated corpus, developer-authored tests rather than independent validation, pending specialist and user review, uncertain hosted feature parity, and unfinished submission materials. Priorities are to verify the judge-accessible demo, obtain and report bounded real-user and expert feedback if available, clearly demonstrate source-to-claim traceability, and complete the required submission. Eligibility and exact deadline should be confirmed with organizers because the public overview and rules present different eligibility details and time-zone wording.

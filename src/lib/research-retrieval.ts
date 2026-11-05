@@ -10,6 +10,7 @@ export const recordIds = new Set(researchCollection.map(({ id }) => id));
 
 const clean = (text: string) => normalizeName(text).replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const contains = (text: string, phrase: string) => ` ${text} `.includes(` ${clean(phrase)} `);
+const topicText = (text: string) => text.replace(/\bblood sugar\b|\bblood glucose\b|\bglucose\b/g, "glucose");
 const names = taxa.flatMap((taxon) => [taxon.name, taxon.common, ...taxon.aliases].map((name) => ({ name: clean(name), id: taxon.id })));
 names.push({ name: "cinnamomum zeylanicum", id: "cinnamon-verum" }, { name: "cinnamomum burmannii", id: "cinnamon-cassia" });
 names.sort((a, b) => b.name.length - a.name.length);
@@ -21,7 +22,7 @@ export function questionBlocked(question: string): boolean {
 
 type Scope = { taxonIds?: string[]; priorIds?: string[] };
 
-const broadWords = new Set("a an the of on in with for what whats which who where when why how is are was were has have had been does do did it its they this that these those there them and or about me tell show explain find know any available exist exists give evidence study studies research researched scientific paper papers recorded record documented source sources human humans people participants clinical trial trials traditional use used uses lab laboratory animal type kinds kind results findings found outcome outcomes limitation limitations mean means investigated studied compared compare comparison difference differences between both more also based actually say said look overview summary published pmid pmcid conducted only first second ingredients plant plants".split(" "));
+const broadWords = new Set("a an the of on in with for what whats which who where when why how is are was were has have had been does do did it its they this that these those there them their and or about me tell show explain find know any available exist exists give evidence study studies research researched scientific paper papers recorded record documented source sources human humans people participants clinical trial trials traditional use used uses lab laboratory animal type kinds kind results findings found outcome outcomes limitation limitations mean means investigated studied compared compare comparison difference differences between both more also based actually say said look overview summary published pmid pmcid conducted only first second ingredients plant plants abeg please now".split(" "));
 
 function mentions(text: string) {
   const hits = names.filter(({ name }) => contains(text, name));
@@ -45,10 +46,11 @@ export function retrieveEvidence(question: string, scope: Scope = {}) {
   const prior = researchCollection.filter(({ id }) => scope.priorIds?.includes(id));
   const followUp = !explicit.length && !publicTopic && /\b(?:it|its|they|them|their|that|this|those|these|what about|which|how many|limitations)\b/.test(text);
   const focus = explicit.length ? explicit : followUp && prior.length ? [...new Set(prior.flatMap(({ taxa }) => taxa))] : scope.taxonIds ?? [];
-  const evidenceType = /\b(?:traditional|ethnobotanical|survey)\b/.test(text) ? "traditional" : /\b(?:human|humans|clinical|participants)\b/.test(text) ? "human" : /\b(?:animal|rats|mice)\b/.test(text) ? "animal" : /\b(?:lab|laboratory|in vitro)\b/.test(text) ? "laboratory" : undefined;
+  const evidenceType = /\b(?:traditional|ethnobotanical|survey)\b/.test(text) ? "traditional" : /\b(?:human|humans|people|clinical|participants)\b/.test(text) ? "human" : /\b(?:animal|rats|mice)\b/.test(text) ? "animal" : /\b(?:lab|laboratory|in vitro)\b/.test(text) ? "laboratory" : undefined;
   const ambiguous = explicit.length > 1 && !explicit.every((id) => names.some((name) => name.id === id && contains(text, name.name) && names.filter((n) => n.name === name.name).length === 1));
 
   const ranked = researchCollection.flatMap((record) => {
+    if (followUp && prior.length && !evidenceType && /\b(?:limitations?|preparation|methods?)\b/.test(text) && !prior.some(({ id }) => id === record.id)) return [];
     if (!focus.length && !sourceMatch.length && !publicTopic && !/\b(?:simvastatin|metformin)\b/.test(text)) return [];
     // Infectious disease queries show official guidance only. Guava's lab study
     // stays available from its plant page, without an outbreak association.
@@ -57,12 +59,12 @@ export function retrieveEvidence(question: string, scope: Scope = {}) {
     const matchedSource = sourceMatch.includes(record);
     if (sourceMatch.length) return matchedSource ? [{ record, score: 100 }] : [];
     const scoped = record.taxa.some((id) => focus.includes(id));
-    const topicMatches = record.keywords.filter((keyword) => contains(text, keyword));
+    const topicMatches = record.keywords.filter((keyword) => contains(topicText(text), topicText(clean(keyword))));
     const hasSpecificTopic = topicMatches.some((keyword) => clean(keyword).split(" ").some((word) => !broadWords.has(word)));
     const priorMatch = followUp && prior.includes(record);
     const relevant = publicTopic && record.type === "guidance" && topicMatches.length
       || (!explicit.length || scoped) && hasSpecificTopic && (!focus.length || scoped || publicTopic)
-      || (scoped || priorMatch) && (terms.length === 0 || priorMatch && /^(?:how many|what (?:about (?:its|the) limitations|(?:was|were) (?:the|its) (?:preparation|method|methods|plant part)))/.test(text));
+      || (scoped || priorMatch) && (terms.length === 0 || priorMatch && /^(?:how many|what (?:about (?:its|the) limitations|(?:was|were) (?:the|its|their) (?:limitations|preparation|method|methods|plant part)))/.test(text));
     const typeMatch = evidenceType === record.type || evidenceType === "traditional" && record.type === "ethnobotanical";
     if (!relevant || evidenceType && !typeMatch && !(publicTopic && record.type === "guidance")) return [];
     return [{ record, score: (record.type === "guidance" && publicTopic ? 60 : 0) + topicMatches.length * 10 + (scoped ? 5 : 0) + (priorMatch ? 2 : 0) }];

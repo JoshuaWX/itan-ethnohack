@@ -70,8 +70,9 @@ worker/cache once in browser developer tools. Production offline fallback remain
   annotations and scope rules. It distinguishes a direction match within a
   study from applicability to a human, preparation or finished product.
 - The corpus now contains 19 records across eight taxa. Bitter leaf, neem and
-  pawpaw have sourced Nigerian names and ethnobotanical context. Bitter-leaf
-  and neem photos have retained credits. Pawpaw uses an illustration fallback.
+  pawpaw have sourced Nigerian names and ethnobotanical context. All eight
+  records have credited photos, including pawpaw. Broken images use a labeled
+  illustration. Credit details link to the original and the full photo.
 - `/verify` provides real source references and opens NAFDAC's own lookup
   services. Results remain external. A missing match cannot establish illegality.
   The restricted snapshot remains excluded from releases.
@@ -94,10 +95,12 @@ worker/cache once in browser developer tools. Production offline fallback remain
 ## Integration status and limitations
 
 Plant-photo recognition uses Pl@ntNet when `PLANTNET_API_KEY`, `SUPABASE_URL`,
-`SUPABASE_SECRET_KEY` and the quota migration are available. It uploads the
-selected image to Pl@ntNet only after consent and does not persist it. Candidate
-scores are provider scores, not medical or identification guarantees. Live
-recognition must be verified separately from fixture tests.
+`SUPABASE_SECRET_KEY` and the quota function are available. `GET /api/identify`
+checks settings and quota RPC reachability without spending quota; this does
+not prove the provider key works or that budget remains. The POST validates
+and bounds the upload, decodes and strips image metadata, and only then
+reserves a unit and sends the resized JPEG to Pl@ntNet. It requires consent
+and does not persist the photo. Candidate scores do not confirm identification.
 
 The label OCR runs on device and requires user review. The public product examples
 are fictional. Registration lookup is a small curated demonstration, not a live
@@ -131,21 +134,22 @@ including concurrent reservations. Then validate real Gemini and Pl@ntNet calls
 with synthetic questions and authorized photos. The browser suite and fixtures
 do not validate provider response quality or medical accuracy.
 
-Earlier on 5 November, the owner elected to keep the remote database unchanged.
-During the clarity pass a local request returned a real Gemini-generated answer
-about the roselle/simvastatin source. No quota, schema, credential or provider
-configuration was changed in this pass. Treat the earlier missing-function note
-as historical; database permissions and hosted concurrency still need their own
-authorised verification. A successful answer is not a complete quota audit.
-Never re-enable the anonymous reservation path as a workaround.
+## Reproduce the evaluation
 
-The clarity pass has 25 passing tests, including companion-summary coverage,
-study limits, uncertain identities and app-help filtering. The 15 source-derived
-claim cases and 24 botanical challenge cases remain unchanged. The test suite
-uses simulated generated outputs; the single live Gemini answer above was
-separately checked for the six-person study, preparation, direction and citation.
-This is not an independent assessment of model accuracy. See the dated progress
-note for browser and production checks and remaining real-device work.
+With Node.js 24, run `npm test` and `npm run build`. Use the following commands
+for the retrieval fixtures and to generate the synthetic OCR labels.
+
+```powershell
+node --experimental-strip-types scripts/audit-retrieval.mjs
+node --experimental-strip-types scripts/audit-retrieval.mjs holdout
+node scripts/audit-labels.mjs
+```
+
+The 36 regression questions guided the retrieval fixes. The separate 16-case
+set returned the expected records on 12 questions. All four misses returned
+no records. The configured local app reached both providers, and browser
+checks covered manual correction, comparison and offline fallback. Physical
+phone camera and installation checks and specialist validation are pending.
 
 ## First-time-user checks (not yet conducted)
 

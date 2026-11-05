@@ -23,7 +23,7 @@ export function ingredientLanguage(match: Match) {
 }
 
 export function studyRelationLanguage(relation: Relation, unchanged = false) {
-  if (unchanged && (relation === "supports" || relation === "contradicts")) return "No clear change was found in this study";
+  if (unchanged && relation !== "does-not-answer") return "No clear change was found in this study";
   return {
     supports: "This study found the effect described",
     contradicts: "This study reported a different result",

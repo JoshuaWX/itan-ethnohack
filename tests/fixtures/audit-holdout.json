@@ -1,0 +1,18 @@
+[
+  {"question":"How good is zobo for hypertension?","expected":["roselle-blood-pressure"]},
+  {"question":"Any human evidence for turmeric?","expected":[]},
+  {"question":"What about their preparation?","prior":["ginger-emptying-wu","ginger-emptying-phillips"],"expected":["ginger-emptying-wu","ginger-emptying-phillips"]},
+  {"question":"Is their preparation interchangeable?","prior":["ginger-emptying-wu","ginger-emptying-phillips"],"expected":["ginger-emptying-wu","ginger-emptying-phillips"]},
+  {"question":"Which neem papers tested people?","expected":["neem-human-glucose"]},
+  {"question":"Has pawpaw been investigated in animals for sperm count?","expected":[]},
+  {"question":"Tell me about Ginkgo biloba interactions","expected":[]},
+  {"question":"What does the cholera advisory say?","expected":["ncdc-cholera-2024"]},
+  {"question":"Psidium guajava in vitro","expected":["guava-lab"]},
+  {"question":"Is their evidence about cancer?","prior":["ginger-emptying-wu"],"expected":[]},
+  {"question":"Cinnamon","expected":["cinnamon-bark-chemistry","ceylon-phase-one"],"ambiguous":true},
+  {"question":"Ginger lowers glucose","expected":[]},
+  {"question":"Can I replace my medicine with zobo?","blocked":true},
+  {"question":"How much pawpaw leaf should I take?","blocked":true},
+  {"question":"Does Vernonia amygdalina interact with metformin?","expected":["bitter-leaf-metformin"]},
+  {"question":"Gingr stomach emptying","expected":[]}
+]

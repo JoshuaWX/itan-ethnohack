@@ -15,7 +15,22 @@ export function IdentifyPlant() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [results, setResults] = useState<Candidate[]>([]);
+  const [availability, setAvailability] = useState<"checking" | "available" | "unavailable">("checking");
   const heading = useRef<HTMLHeadingElement>(null);
+
+  async function checkAvailability(signal?: AbortSignal) {
+    setAvailability("checking");
+    try {
+      const response = await fetch("/api/identify", { cache: "no-store", signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(5000)]) : AbortSignal.timeout(5000) });
+      const data = await response.json();
+      if (!signal?.aborted) setAvailability(response.ok && data.available === true ? "available" : "unavailable");
+    } catch { if (!signal?.aborted) setAvailability("unavailable"); }
+  }
+  useEffect(() => {
+    const controller = new AbortController();
+    void checkAvailability(controller.signal);
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     if (!file) return;
@@ -26,6 +41,7 @@ export function IdentifyPlant() {
   useEffect(() => { if (results.length) heading.current?.focus(); }, [results]);
 
   function pick(photo: File) {
+    if (availability !== "available") return;
     if (!photo.size || photo.size > 12 * 1024 * 1024 || !["image/jpeg", "image/png"].includes(photo.type)) {
       setMessage("Choose a JPEG or PNG under 12 MB.");
       return;
@@ -61,7 +77,7 @@ export function IdentifyPlant() {
       form.append("organ", organ);
       form.append("consent", "yes");
       setMessage("Finding possible matches…");
-      const response = await fetch("/api/identify", { method: "POST", body: form });
+      const response = await fetch("/api/identify", { method: "POST", body: form, signal: AbortSignal.timeout(22000) });
       const data = await response.json();
       if (!response.ok) {
         setMessage(data.error || "Photo identification is unavailable. You can still search for a plant by name below.");
@@ -80,13 +96,15 @@ export function IdentifyPlant() {
     <section className="identify-panel capture-surface" aria-labelledby="identify-capture">
       <h2 id="identify-capture">{file ? "Review your photo" : "Add a plant photo"}</h2>
       <p>Use daylight and fill the frame with one leaf, flower or fruit.</p>
+      {availability === "checking" && <p role="status">Checking photo identification before you choose a photo…</p>}
+      {availability === "unavailable" && <div className="capture-tip"><p>Live photo identification is unavailable right now. You can still search our plant library by name. You do not need to upload a photo.</p><button className="compare-secondary" type="button" onClick={() => void checkAvailability()}>Check availability again</button></div>}
       {preview && <img className="identify-preview" src={preview} alt="Selected plant photo preview" onError={() => {
         setFile(null);
         setPreview("");
         setConsent(false);
         setMessage("This image could not be opened. Try another JPEG or PNG.");
       }} />}
-      <PhotoPicker accept="image/jpeg,image/png" disabled={busy} replacing={Boolean(file)} onPick={pick} />
+      <PhotoPicker accept="image/jpeg,image/png" disabled={busy || availability !== "available"} replacing={Boolean(file)} onPick={pick} />
       {file && <fieldset className="identify-options" disabled={busy}>
         <label htmlFor="organ">Which part is shown?</label>
         <select id="organ" value={organ} onChange={(event) => setOrgan(event.target.value)}><option value="auto">Not sure</option><option value="leaf">Leaf</option><option value="flower">Flower</option><option value="fruit">Fruit</option><option value="bark">Bark</option></select>

@@ -2,6 +2,23 @@ import "server-only";
 import { createHmac } from "node:crypto";
 import { isIP } from "node:net";
 
+export async function providerQuotaReady(signal?: AbortSignal): Promise<boolean> {
+  const url = process.env.SUPABASE_URL;
+  const secret = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !secret) return false;
+  try {
+    const headers: Record<string, string> = { apikey: secret, "Content-Type": "application/json" };
+    if (secret.startsWith("eyJ")) headers.Authorization = `Bearer ${secret}`;
+    // Invalid units return before any counter writes. This checks RPC/auth reachability,
+    // not remaining budget or provider authentication, and never reserves a call.
+    const response = await fetch(new URL("/rest/v1/rpc/itan_reserve_provider_calls", url), {
+      method: "POST", headers, body: JSON.stringify({ client_key: "0".repeat(64), units: 0 }), cache: "no-store",
+      signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(2500)]) : AbortSignal.timeout(2500),
+    });
+    return response.ok && await response.json() === false;
+  } catch { return false; }
+}
+
 export async function reserveProviderCalls(request: Request, units: 1 | 2): Promise<"allowed" | "limited" | "unavailable"> {
   const url = process.env.SUPABASE_URL;
   const secret = process.env.SUPABASE_SECRET_KEY;

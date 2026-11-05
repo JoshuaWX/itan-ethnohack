@@ -1,0 +1,13 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { researchCollection } from '../src/lib/research-collection.ts';
+const records=researchCollection.filter(r=>/^PMID:|^PMCID:/.test(r.sourceId));
+const query=records.map(r=>r.sourceId.startsWith('PMID:')?'(SRC:MED AND EXT_ID:'+r.sourceId.slice(5)+')':'PMCID:'+r.sourceId.slice(6)).join(' OR ');
+const url=new URL('https://www.ebi.ac.uk/europepmc/webservices/rest/search');
+url.search=new URLSearchParams({query,format:'json',resultType:'lite',pageSize:'30'}).toString();
+const response=await fetch(url,{signal:AbortSignal.timeout(15000)});
+if(!response.ok)throw Error('Metadata service unavailable');
+const data=await response.json();
+const rows=records.map(record=>{const match=data.resultList.result.find(r=>record.sourceId==='PMID:'+r.id&&r.source==='MED'||record.sourceId==='PMCID:'+r.pmcid);return{id:record.id,sourceId:record.sourceId,found:Boolean(match),publicationTitle:match?.title,doi:match?.doi,year:match?.pubYear,expertReview:'pending'};});
+await mkdir('outputs/audit',{recursive:true});
+await writeFile('outputs/audit/sources.json',JSON.stringify({note:'Bibliographic identity only, not claim support or expert validation',endpoint:url.href,rows},null,2));
+console.log(JSON.stringify({checked:rows.length,found:rows.filter(x=>x.found).length,missing:rows.filter(x=>!x.found)}));

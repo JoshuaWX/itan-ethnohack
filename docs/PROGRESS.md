@@ -1,5 +1,21 @@
 # Progress
 
+## Technical audit — 5 November 2026
+
+- Reproduced the hosted identification error and traced it to missing provider
+  settings. The configured local app reached the protected quota function.
+- Local fixes: preflight before photo capture, bounded upload decoding, resilient
+  candidate mapping, pawpaw photography and compact credits, multiline OCR,
+  improved name/topic retrieval, and stricter claim/population interpretation.
+- Verified 32 automated groups, 21 HTTP validation cases, 200 seeded comparison
+  inputs, a production build, type checking, and desktop-browser PWA fallback.
+  Locally, two real plant photos ranked their intended taxa first and one
+  generated answer had three claims consistent with its cited records. The
+  separate 16-question retrieval set passed 12; tilted OCR also remains limited.
+- See the [handoff](../HANDOFF.md#reproduce-the-evaluation) for reproduction
+  commands. Specialist review, physical-phone testing and a production retest
+  are pending. The detailed audit and machine setup records are local.
+
 Last updated: 2026-11-05 (Africa/Lagos).
 
 ## Submission documentation review — 5 November 2026
@@ -167,7 +183,7 @@ specialist review are outstanding.
 ## Earlier milestones
 
 Environment setup is complete with the limitations recorded in
-[setup](SETUP.md). The working directory was empty and had no Git repository at
+the local setup notes. The working directory was empty and had no Git repository at
 inspection. A local `main` repository has been initialized; no GitHub remote,
 commit, or publication has been created.
 
@@ -275,10 +291,6 @@ expert interviews, model training, or clinical validation have been performed.
 ## Blockers / unknowns
 
 Team roles, source reuse permissions, and budget: TBD.
-Tool-specific remaining actions belong in [setup](SETUP.md).
+Tool-specific remaining actions belong in the local setup notes.
 
 See the proposed [milestones](DEVELOPMENT_PLAN.md) and [decision log](DECISIONS.md).
-
-## Judge and rubric research — 5 November 2026
-
-Reviewed the five publicly listed judges and seven published criteria; recorded sources and a hypothetical assessment in [research findings](RESEARCH_FINDINGS.md). Weighting, track-specific panel assignment, independently validated impact and judge-accessible feature parity remain unverified. No judge was contacted and no new testing or deployment was performed.

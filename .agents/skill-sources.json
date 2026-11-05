@@ -529,17 +529,6 @@
       }
     },
     {
-      "name": "web-design-guidelines",
-      "repository": "vercel-labs/agent-skills",
-      "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
-      "skill_path": "skills/web-design-guidelines/SKILL.md",
-      "upstream_tree_sha": "3116f3e62dbd02b44a598b1aa690d2a8938e8f89",
-      "git_blobs_verified": true,
-      "files_sha256": {
-        "SKILL.md": "f4647ca866a3accf763777f83e7682954f0187cd6bea7eea0399796652414e8f"
-      }
-    },
-    {
       "name": "webapp-testing",
       "repository": "anthropics/skills",
       "commit": "ca45fc496a3436251f191354091d557da31c15b5",

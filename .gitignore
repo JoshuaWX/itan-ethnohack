@@ -2,6 +2,9 @@
 .env
 .env.*
 !.env.example
+.envrc
+*.p12
+*.pfx
 *.pem
 *.key
 /data/
@@ -9,12 +12,19 @@
 /EthnoHack-Codex-Context/
 /EthnoHack_Codex_Instructions_Updated.md
 /ETHNOHACK_SUBMISSION_REQUIREMENTS.md
+/docs/TECHNICAL_AUDIT.md
+/docs/EXISTING_SKILLS.md
+/docs/JUDGING_NOTES.md
+/docs/SETUP.md
 
 # Local environments and generated artifacts
 node_modules/
 .next/
 .vercel/
 .playwright-mcp/
+/playwright-report/
+/test-results/
+/supabase/.temp/
 *.tsbuildinfo
 .venv/
 venv/
@@ -45,4 +55,5 @@ docs/.obsidian/*
 !docs/.obsidian/core-plugins.json
 docs/.trash/
 
-# Version-control .agents/skills, skills-lock.json, and research Markdown.
+# Keep the shared skills and source lock. This skill is installed locally.
+/.agents/skills/web-design-guidelines/

@@ -13,7 +13,7 @@ WebStorm, and GitHub. Unknown information stays **TBD** until supported.
 - [Decisions](DECISIONS.md): decision record and rationale.
 - [Progress](PROGRESS.md): actual status, next actions, blockers.
 - [Skills](SKILLS.md): installed inventory and task selection.
-- [Setup](SETUP.md): tool versions, commands, verification, remaining actions.
+- [Application setup](../README.md#run-locally-on-windows): install and run the app.
 
 Keep patient information, identifiable interview transcripts, credentials, and
 restricted datasets outside this vault and repository. No community plugins were

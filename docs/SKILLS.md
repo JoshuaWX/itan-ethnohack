@@ -1,6 +1,6 @@
 # Installed skills and selection
 
-The repository contains **20 project skills** under `.agents/skills/`, installed as
+The public repository contains **19 project skills** under `.agents/skills/`, installed as
 ordinary files for Git portability. Skills are instructions and references, not
 installed scientific libraries, clinical validation, or service access.
 
@@ -24,7 +24,6 @@ installed scientific libraries, clinical validation, or service access.
 | `shap` | Audit fitted model feature attributions and their limitations | K-Dense |
 | `frontend-design` | Design a UI after a real product brief exists | Anthropic |
 | `webapp-testing` | Browser-based verification of an existing web application | Anthropic |
-| `web-design-guidelines` | Review accessibility and interface behavior against current guidelines | Vercel |
 | `vercel-react-best-practices` | React/Next.js performance if that stack is selected | Vercel |
 | `mlflow-onboarding` | Set up experiment tracking or GenAI tracing after a concrete use case exists | MLflow |
 | `mlflow-evaluation` | Define and evaluate LLM/RAG scorers, datasets, and results using MLflow | MLflow |
@@ -57,8 +56,8 @@ Investigated additions and existing capabilities:
   `security-best-practices`, `security-threat-model`, `gh-address-comments`,
   `gh-fix-ci`, and Playwright skills cover relevant workflows; no second copies
   were installed. Security review remains scoped to its supported languages.
-- [Existing machine skills](EXISTING_SKILLS.md) lists the complete discovered
-  user and plugin inventory at setup time.
+- [Vercel Web Interface Guidelines](https://vercel.com/design/guidelines) are
+  available upstream. The local guideline skill is excluded from distribution.
 - Existing `codebase-design`, `diagnosing-bugs`, `tdd`, `code-review`, and
   `resolving-merge-conflicts` provide general engineering support. Desktop's
   Vercel backend/API/deployment skills are available when relevant. They are
