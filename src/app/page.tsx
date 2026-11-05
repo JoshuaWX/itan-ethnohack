@@ -42,6 +42,7 @@ export default function Home() {
               <Link className="hero-link" href="/compare">Compare products <ArrowUpRight size={16} /></Link>
             </div>
             <div className="hero-foot">
+              <Link href="/claims">Investigate a claim <ArrowUpRight size={14} /></Link>
               <Link href="/plants">Plant library <ArrowUpRight size={14} /></Link>
               <Link href="/awareness">Health awareness <ArrowUpRight size={14} /></Link>
             </div>
@@ -87,6 +88,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <section className="claim-entry container" aria-labelledby="claim-entry-title">
+        <div><h2 id="claim-entry-title">Heard a claim about a plant?</h2><p>Follow the name, the outcome and the studies behind it.</p></div>
+        <Link className="button compare-submit" href="/claims">Investigate the evidence <ArrowUpRight size={17} /></Link>
+      </section>
       <section className="intro" id="explore">
         <div className="container">
           <div className="section-kicker">
@@ -113,6 +118,7 @@ export default function Home() {
             </div>
           </div>
           <SearchBox exampleNumber={product.number} />
+          <Link className="source-link" href="/verify">Check a real product using NAFDAC’s lookup ↗</Link>
           <div className="search-hint">
             Try <span>ginger</span>, <span>hibiscus</span>, or{" "}
             <span>{product.number}</span>
@@ -244,8 +250,8 @@ export default function Home() {
               <em>with context.</em>
             </h2>
             <p>
-              Explore Nigeria-focused public health information alongside the
-              research on plants. Each has its own story and its own limits.
+              Read dated Nigerian public-health advisories and prevention
+              guidance from official sources.
             </p>
             <Link className="button light" href="/awareness">
               Explore awareness <ArrowRight size={18} />
@@ -259,8 +265,8 @@ export default function Home() {
             <p className="paper-type">Archived advisory · 12 June 2024</p>
             <h3>Cholera awareness in Nigeria</h3>
             <p>
-              Official guidance comes first. Explore a separate laboratory study
-              on guava, with its limitations.
+              Read NCDC’s archived advice on safe water, hygiene and prompt
+              care. This prototype does not monitor outbreaks live.
             </p>
             <Link href="/awareness#outbreak">
               Read the context <ArrowUpRight size={15} />

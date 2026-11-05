@@ -55,6 +55,12 @@ export function findInteractionEvidence(products: ComparedProduct[], medicine: s
 }
 
 export const interactionRecords: InteractionRecord[] = [{
+  taxonId: "bitter-leaf", medicine: "metformin", type: "herb-drug",
+  title: "Bitter leaf and metformin · animal research",
+  source: "https://pubmed.ncbi.nlm.nih.gov/39710889/",
+  summary: "In diabetic rats, an aqueous bitter-leaf extract altered metformin exposure. This was an animal pharmacokinetic study, not a clinical contraindication study.",
+  limitation: "Human applicability and the effects of other preparations remain uncertain. Missing interaction records cannot establish safety.",
+}, {
   taxonId: "hibiscus",
   medicine: "simvastatin",
   type: "herb-drug",

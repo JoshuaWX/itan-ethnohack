@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { readCatalog } from "@/lib/catalog-server";
-import { PlantPhoto } from "@/components/plant-photo";
+import { PlantDirectory } from "@/components/plant-directory";
+import { nigerianPlants } from "@/lib/nigerian-plants";
 export default async function PlantsPage() {
   const { taxa, source } = await readCatalog();
   return (
@@ -19,23 +18,7 @@ export default async function PlantsPage() {
         </p>
       </div>
       {source === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
-      <div className="plant-directory">
-        {taxa.map((plant, i) => (<div key={plant.id} className="plant-directory-entry">
-          <PlantPhoto id={plant.id} name={plant.common} />
-          <Link
-            className="plant-row"
-            href={`/plants/${plant.id}`}
-            key={plant.id}
-          >
-            <span className="ingredient-index">0{i + 1}</span>
-            <div>
-              <h2>{plant.common}</h2>
-              <i>{plant.name}</i>
-            </div>
-            <ArrowUpRight size={20} />
-          </Link>
-        </div>))}
-      </div>
+      <PlantDirectory taxa={[...taxa].sort((a, b) => Number(Boolean(nigerianPlants[b.id])) - Number(Boolean(nigerianPlants[a.id])))} />
     </div>
   );
 }

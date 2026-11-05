@@ -5,6 +5,7 @@ import { evidenceVersion } from "@/lib/research-collection";
 import { answerWithBudget, groundedAnswer } from "@/lib/research-answer";
 import { maxContextIds, maxQuestionLength, questionBlocked, recordIds, retrieveEvidence, taxonIds } from "@/lib/research-retrieval";
 import { reserveProviderCalls } from "@/lib/provider-quota";
+import { analyzeClaim } from "@/lib/claim-analysis";
 
 export const runtime = "nodejs";
 const maxBytes = 4096;
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
   const comparisonIds = validatedIds(body.comparisonIds, taxonIds);
   if (!priorIds || !comparisonIds) return json({ error: "Invalid evidence context." }, 400);
   const path = body.path ?? "/";
-  if (typeof path !== "string" || path.length > 120 || !/^\/(?:identify|scan|compare|plants(?:\/[a-z0-9-]+)?|products\/[a-z0-9-]+|awareness(?:#(?:outbreak|seasonal))?)?$/.test(path)) return json({ error: "Invalid page context." }, 400);
+  if (typeof path !== "string" || path.length > 120 || !/^\/(?:claims|verify|identify|scan|compare|plants(?:\/[a-z0-9-]+)?|products\/[a-z0-9-]+|awareness(?:#(?:outbreak|seasonal))?)?$/.test(path)) return json({ error: "Invalid page context." }, 400);
   const plantId = path.startsWith("/plants/") ? path.slice(8) : "";
   let focus = taxonIds.has(plantId) ? [plantId] : path === "/compare" ? comparisonIds : [];
   if (path.startsWith("/products/")) {
@@ -57,7 +58,11 @@ export async function POST(request: Request) {
   const awarenessFollowUp = /\b(?:this|it|guidance|advisory|official|what is the difference)\b/i.test(question) && !/\b(?:cholera|malaria|artemisia)\b/i.test(question);
   const retrievalQuestion = awarenessFollowUp && path === "/awareness#outbreak" ? `${question} cholera` : awarenessFollowUp && path === "/awareness#seasonal" ? `${question} malaria` : question;
   const { records, ambiguous, publicTopic } = retrieveEvidence(retrievalQuestion, { taxonIds: focus, priorIds });
-  const result = { records, ambiguous, version: evidenceVersion };
+  const analysis = analyzeClaim(question);
+  const assessment = analysis.outcome && analysis.direction && !analysis.needsClarification
+    ? { outcome: analysis.outcome.label, studies: analysis.records.map(({ record, relation, explanation }) => ({ id: record.id, relation, explanation })) }
+    : undefined;
+  const result = { records, ambiguous, version: evidenceVersion, assessment };
   if (!records.length) return json({ ...result, mode: "no-evidence" });
   if (!body.consent || ambiguous || publicTopic || records.some(({ type }) => type === "guidance")) return json({ ...result, mode: "curated" });
   const key = process.env.GEMINI_API_KEY;

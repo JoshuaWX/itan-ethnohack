@@ -35,8 +35,8 @@ export function validateClaims(output: unknown, records: ResearchRecord[]): Clai
 }
 
 function evidenceForModel(record: ResearchRecord) {
-  const { id, finding, limitation, design, part, preparation } = record;
-  return { id, finding, limitation, design, part, preparation };
+  const { id, finding, limitation, design, part, preparation, population, constituents } = record;
+  return { id, finding, limitation, design, part, preparation, population, constituents };
 }
 
 export async function groundedAnswer(generate: Generate, question: string, records: ResearchRecord[], signal?: AbortSignal) {

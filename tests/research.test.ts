@@ -12,7 +12,7 @@ const retrievalCases = [
   ["Has Cinnamomum zeylanicum been studied in humans?", ["ceylon-phase-one"]],
   ["What is known about Cinnamomum burmannii and coumarin?", ["cinnamon-bark-chemistry"]],
   ["Which traditional uses are documented for ginger?", ["ginger-ema"]],
-  ["Does guava treat cholera?", ["ncdc-cholera-2024", "guava-lab"]],
+  ["Does guava treat cholera?", ["ncdc-cholera-2024"]],
   ["What does WHO say about Artemisia?", ["who-artemisia"]],
   ["Has turmeric been studied for cancer?", []],
   ["Does ginger cure cancer?", []],
@@ -35,7 +35,7 @@ test("retains ambiguous cinnamon and applies the evidence type filter to a follo
 
 test("record metadata keeps human research, laboratory evidence and source review distinct", () => {
   assert.equal(new Set(researchCollection.map(({ id }) => id)).size, researchCollection.length);
-  assert.deepEqual(new Set(researchCollection.flatMap(({ taxa }) => taxa)).size, 5);
+  assert.deepEqual(new Set(researchCollection.flatMap(({ taxa }) => taxa)).size, 8);
   for (const record of researchCollection) {
     assert.equal(new URL(record.url).protocol, "https:");
     assert.equal(record.sourceVerification, "checked against linked source");

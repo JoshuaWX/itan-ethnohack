@@ -13,5 +13,6 @@ export default async function ScanPage() {
     </div>
     <ScanLabel taxa={taxa} />
     <Link className="source-link" href="/#explore">Go to QR and registration lookup ↗</Link>
+    <Link className="source-link" href="/verify">Open official NAFDAC checks ↗</Link>
   </div>;
 }

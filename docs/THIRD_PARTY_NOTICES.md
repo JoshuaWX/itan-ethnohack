@@ -1,5 +1,17 @@
 # Third-party skill notices
 
+## Botanical images — 5 November 2026
+
+- Bitter leaf: `Vernonia_amygdalina_plant.jpg`, Zmu'az4Z, CC BY 4.0.
+  [Source](https://commons.wikimedia.org/wiki/File:Vernonia_amygdalina_plant.jpg).
+- Neem leaves: `Starr_060928-0469_Azadirachta_indica.jpg`, Forest & Kim Starr,
+  CC BY 3.0. [Source](https://commons.wikimedia.org/wiki/File:Starr_060928-0469_Azadirachta_indica.jpg).
+
+Both copies were resized to at most 800 pixels and converted to WebP. Source
+identifications and licenses were checked, and the images visually inspected.
+Independent botanical review is pending. The papaya download was rate-limited,
+so its record retains a labeled illustration fallback.
+
 Skill source URLs, exact revisions, and file hashes are recorded in
 `../.agents/skill-sources.json` and [skill inventory](SKILLS.md). Upstream content
 was copied without local modifications. Retain embedded notices and per-skill

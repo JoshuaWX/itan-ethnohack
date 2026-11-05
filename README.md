@@ -8,7 +8,7 @@ labels and compare ingredients with source-linked evidence. It includes separate
 Nigerian public-health awareness sections.
 
 On mobile, start from Identify a plant, Scan a herbal product or Compare herbal
-products. Ask Ìtàn searches a versioned collection of 10 cited records across five
+products. Ask Ìtàn searches a versioned collection of 19 cited records across eight
 plants and public-health guidance. Navigation help runs locally. Google Gemini
 can explain retrieved evidence when the user opts in and the provider is configured.
 
@@ -41,6 +41,15 @@ an eight-call cap per client. The bundled evidence and manual search are availab
 without external provider credentials.
 
 See [teammate handoff](HANDOFF.md) for setup, source data and remaining work.
+
+Open `/claims` to investigate a general plant claim. The app resolves the plant
+and outcome and shows source-specific relations with study scope. `/verify`
+guides checks in official NAFDAC services. Neither route establishes an
+individual's treatment or authenticates a package.
+
+Run `npm run evidence:draft -- 23770031` to prepare a metadata-only source draft.
+Drafts go into ignored `outputs/` and remain pending until source and reuse review.
+The app performs no live publication crawl and no model training.
 
 The comparison page accepts manual ingredient lists and offers optional on-device
 OCR. Its Tesseract.js worker and English language data are served locally from

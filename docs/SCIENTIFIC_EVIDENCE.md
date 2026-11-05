@@ -46,6 +46,13 @@ truth or eliminate hallucinations.
 
 ## Evidence register
 
+The executable register is `src/lib/research-collection.ts`, extended by
+`src/lib/nigerian-evidence.ts`. Each published summary links its source and
+supporting location. `claim-analysis.ts` records outcome direction and scope
+separately from the original claim. Source verification is recorded independently
+of the still-pending specialist review. See the dated research log for access
+and reuse checks.
+
 | Claim ID | Exact claim | Primary source and location | Study / evidence type | Appraisal and limitations | Reviewer / status |
 | --- | --- | --- | --- | --- | --- |
 | TBD | TBD | TBD | TBD | TBD | TBD |

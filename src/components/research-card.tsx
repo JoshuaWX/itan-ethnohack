@@ -13,6 +13,8 @@ export function ResearchCard({ record, number }: { record: ResearchRecord; numbe
         <dt>Design</dt><dd>{record.design}</dd>
         {record.type !== "guidance" && <><dt>Plant part</dt><dd>{record.part}</dd></>}
         <dt>Preparation</dt><dd>{record.preparation}</dd>
+        {record.population && <><dt>Population / setting</dt><dd>{record.population}</dd></>}
+        {record.constituents?.length && <><dt>Constituent research</dt><dd>{record.constituents.join(", ")}. Measurements do not establish which compound causes an effect.</dd></>}
         <dt>Source</dt><dd>{record.sourceId} · {record.location}</dd>
         <dt>Source verification</dt><dd>{record.sourceVerification}</dd>
         <dt>Specialist review</dt><dd>{record.expertReview}</dd>

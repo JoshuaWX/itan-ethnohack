@@ -1,6 +1,42 @@
 # Progress
 
-Last updated: 2026-11-04 (Africa/Lagos).
+Last updated: 2026-11-05 (Africa/Lagos).
+
+## Mentor corrections and claim analysis
+
+The local app removes guava from the homepage/cholera presentation. Disease
+queries return official guidance rather than pairing the archived advisory
+with the guava laboratory study. The guava plant record retains that study.
+The eight-taxon catalog adds bitter leaf, neem and pawpaw with sourced Nigerian
+names, context and preparation descriptions. Two new licensed images were
+optimized and credited; pawpaw retains an illustration after a rate-limited
+photo download. All specialist reviews are pending.
+
+`/claims` exposes identity and outcome resolution, study selection and source-
+specific relations. The 19-record corpus distinguishes ethnobotanical, animal,
+laboratory, human and review evidence. The metadata importer was exercised
+against Europe PMC for PMID 23770031. Drafts remain pending and are ignored.
+
+The production build and 19 tests passed. Fifteen source-derived claim cases
+passed, including preparation and population mismatches. The original 24-case
+botanical fixture remains unchanged. These are developer-authored development
+checks and do not establish independent clinical validation.
+
+Browser checks at 320, 375, 768 and 1440 px exercised claims, sourced plant
+names, official links, medication research, assistant trace and withdrawal,
+invalid image rejection and offline fallback. No configured private key was
+found in client bundles; restricted files were absent from build traces.
+
+Real browser verification in NAPAMS returned Rhimza and an expired second
+example. Greenbook did not return either in the tested filter. Ìtàn links to
+these services rather than importing their result database. The public site
+still lacks the new workflow because this work remains local.
+
+The user added SUPABASE_SECRET_KEY but chose to keep ITAN's database unchanged.
+Read-only inspection confirmed only the old anonymous quota RPC exists. The
+new app therefore fails closed to curated summaries for provider calls. Real
+Gemini/Pl@ntNet generation and photo-integration checks remain blocked pending
+the protected quota migration. Physical-phone testing is also outstanding.
 
 ## Six-screen UI refinement
 

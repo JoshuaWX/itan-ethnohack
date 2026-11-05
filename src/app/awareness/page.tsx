@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { sources } from "@/lib/catalog";
 
 export default function AwarenessPage() {
@@ -13,8 +12,8 @@ export default function AwarenessPage() {
           <em>with perspective.</em>
         </h1>
         <p>
-          Follow official public-health guidance first. Explore plant research
-          separately, with context about what it can and cannot tell us.
+          Read official public-health guidance and check the source date.
+          This prototype does not monitor outbreaks live.
         </p>
       </div>
       <div className="awareness-tabs">
@@ -51,24 +50,6 @@ export default function AwarenessPage() {
               >
                 Read the NCDC advisory <ArrowUpRight size={16} />
               </a>
-            </article>
-            <article className="evidence">
-              <span className="evidence-label">
-                Plant research · Laboratory study
-              </span>
-              <h3>What has been studied about guava?</h3>
-              <p>
-                A laboratory study investigated guava leaf extract and
-                mechanisms associated with infectious diarrhoea, including
-                cholera bacteria. It did not establish a treatment for people.
-              </p>
-              <p className="evidence-limit">
-                Guava is not a proven cholera treatment. Laboratory findings
-                cannot replace official guidance or professional care.
-              </p>
-              <Link className="source-link" href="/plants/guava">
-                Explore the guava evidence <ArrowRight size={16} />
-              </Link>
             </article>
           </section>
           <section className="detail-section" id="seasonal">

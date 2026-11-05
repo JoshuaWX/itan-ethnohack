@@ -14,9 +14,10 @@ Owners and final deliverables remain TBD until the project is selected.
 | Nov 7 | Fix material issues; prepare reproducible demo and pitch | Passing checks; traceable claims; demo fallback |
 | Nov 8 | Final verification and submission before confirmed deadline | Deliverables checklist and submission evidence |
 
-Application implementation is not part of the current setup task. Work begins
-after idea selection and user direction. Keep optional ML, deployment, or extra
-infrastructure outside the critical path until justified.
+The table above preserves the setup-stage proposal. The participant subsequently
+selected Ìtàn and authorized implementation. Current priority is mentor corrections,
+claim/evidence evaluation and stable end-to-end behavior by November 7, followed
+by demonstration checks before November 8. Confirm the exact organizer cutoff.
 
 Track current state in [progress](PROGRESS.md), rationale in [decisions](DECISIONS.md),
 and actual organizer requirements in [project brief](PROJECT_BRIEF.md).

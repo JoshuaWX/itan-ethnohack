@@ -19,12 +19,20 @@ test("a duplicate within one product does not count as overlap", () => {
 });
 
 test("interaction evidence is scoped to roselle and simvastatin", () => {
-  assert.equal(interactionRecords[0].taxonId, "hibiscus");
-  assert.equal(interactionRecords[0].medicine, "simvastatin");
-  assert.match(interactionRecords[0].source, /28925046/);
   const result = compareProducts([{ name: "A", ingredients: ["roselle"] }, { name: "B", ingredients: ["guava"] }], taxa);
-  assert.equal(findInteractionEvidence(result.products, "simvastatin", interactionRecords).length, 1);
+  const found = findInteractionEvidence(result.products, "simvastatin", interactionRecords);
+  assert.equal(found.length, 1);
+  assert.equal(found[0].taxonId, "hibiscus");
+  assert.match(found[0].source, /28925046/);
   assert.equal(findInteractionEvidence(result.products, "", interactionRecords).length, 0);
   const noRoselle = compareProducts([{ name: "A", ingredients: ["ginger"] }, { name: "B", ingredients: ["guava"] }], taxa);
   assert.equal(findInteractionEvidence(noRoselle.products, "simvastatin", interactionRecords).length, 0);
+});
+
+test("local-name comparison links bitter leaf to the preclinical metformin record", () => {
+  const result = compareProducts([{ name: "A", ingredients: ["Ewuro"] }, { name: "B", ingredients: ["neem"] }], taxa);
+  const found = findInteractionEvidence(result.products, "metformin", interactionRecords);
+  assert.equal(found.length, 1);
+  assert.match(found[0].summary, /rats/);
+  assert.match(found[0].source, /39710889/);
 });

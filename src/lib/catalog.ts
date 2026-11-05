@@ -54,6 +54,21 @@ export const taxa: Taxon[] = [
     aliases: [],
     source: sources.guava,
   },
+  {
+    id: "bitter-leaf", name: "Gymnanthemum amygdalinum", common: "Bitter leaf",
+    aliases: ["Vernonia amygdalina", "Ewuro", "Onugbu", "Shuwaka"],
+    source: "https://powo.science.kew.org/taxon/210886-1",
+  },
+  {
+    id: "neem", name: "Azadirachta indica", common: "Neem",
+    aliases: ["Dogon yaro", "Dongoyaro"],
+    source: "https://powo.science.kew.org/taxon/1213180-2",
+  },
+  {
+    id: "papaya", name: "Carica papaya", common: "Pawpaw (papaya)",
+    aliases: ["papaya", "pawpaw", "Ibepe"],
+    source: "https://powo.science.kew.org/taxon/30011248-2",
+  },
 ];
 
 export function getTaxon(id: string) {

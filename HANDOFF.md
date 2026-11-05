@@ -34,6 +34,17 @@ and opens as a compact panel on wider screens. The consent toggle stays visible.
 
 ## Structure and data
 
+- `/claims` runs botanical entity and outcome recognition followed by
+  source-specific study relations. `claim-analysis.ts` uses explicit outcome
+  annotations and scope rules. It distinguishes a direction match within a
+  study from applicability to a human, preparation or finished product.
+- The corpus now contains 19 records across eight taxa. Bitter leaf, neem and
+  pawpaw have sourced Nigerian names and ethnobotanical context. Bitter-leaf
+  and neem photos have retained credits. Pawpaw uses an illustration fallback.
+- `/verify` provides real source references and opens NAFDAC's own lookup
+  services. Results remain external. A missing match cannot establish illegality.
+  The restricted snapshot remains excluded from releases.
+
 - `src/app` contains Next.js routes and server APIs. `src/components` contains
   mobile UI, browser OCR and navigation help.
 - `src/lib/matching.ts` and `comparison.ts` handle catalog matching and overlaps.
@@ -70,6 +81,9 @@ in page memory and passes prior source IDs for follow-ups. Withdrawal cancels
 the client request and clears the conversation. It cannot recall data already
 sent to Google.
 
+Run `npm run evidence:draft -- 23770031` for approved PMIDs. It prepares only
+bibliographic metadata in ignored `outputs/evidence-drafts`, with source checking
+and expert review marked pending. It refuses an incomplete provider response.
 To add evidence, start from an approved PMID, PMCID, DOI or official source URL.
 Open the original source and verify its identity, species, study design, plant
 part, preparation, population, outcome and limitations. Record the source ID
@@ -85,6 +99,17 @@ local Supabase. Test anonymous and authenticated denial and service-role success
 including concurrent reservations. Then validate real Gemini and Pl@ntNet calls
 with synthetic questions and authorized photos. The browser suite and fixtures
 do not validate provider response quality or medical accuracy.
+
+On 5 November the owner elected to keep the remote database unchanged. The new
+server key is configured locally, but the protected RPC is absent, so the app
+returns provider-unavailable fallbacks. Retest both external integrations after
+the owner authorizes the migration. Never re-enable the anonymous reservation
+path as a workaround.
+
+The current local verification includes 19 passing tests and a production build,
+15 source-derived claim cases and browser checks at four widths. Source checking
+and independent expert review remain distinct. Tests of generated-claim support
+use simulated model outputs until live calls can pass the protected quota.
 
 See the [roselle/simvastatin study](https://pubmed.ncbi.nlm.nih.gov/28925046/),
 [Kew roselle taxonomy](https://powo.science.kew.org/taxon/326388-2), and the

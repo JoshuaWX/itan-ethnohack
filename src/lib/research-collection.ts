@@ -1,14 +1,18 @@
 import { sources } from "./catalog.ts";
+import { nigerianEvidence } from "./nigerian-evidence.ts";
 
-export const evidenceVersion = "1.0.0";
+export const evidenceVersion = "2.0.0";
 export const evidenceLabels = {
   traditional: "Documented traditional use",
   laboratory: "Laboratory research",
   human: "Human research",
   guidance: "Official public-health guidance",
+  animal: "Animal research",
+  ethnobotanical: "Ethnobotanical survey",
+  review: "Evidence review",
 };
 
-type EvidenceInput = {
+export type EvidenceInput = {
   id: string;
   taxa: string[];
   type: keyof typeof evidenceLabels;
@@ -23,9 +27,13 @@ type EvidenceInput = {
   limitation: string;
   keywords: string[];
   href?: string;
+  population?: string;
+  constituents?: string[];
+  checkedOn?: string;
 };
 
 const entries: EvidenceInput[] = [
+  ...nigerianEvidence.map((entry) => ({ ...entry, checkedOn: "2026-11-05" })),
   {
     id: "roselle-simvastatin", taxa: ["hibiscus"], type: "human",
     design: "Crossover pharmacokinetic study", title: "Roselle beverage and simvastatin",
@@ -121,6 +129,7 @@ const entries: EvidenceInput[] = [
 export const researchCollection = entries.map((entry) => ({
   ...entry,
   sourceVerification: "checked against linked source" as const,
+  checkedOn: entry.checkedOn ?? "2026-11-04",
   expertReview: "pending" as const,
   reuse: "Original Ìtàn summary and link. Source text and figures are excluded." as const,
 }));

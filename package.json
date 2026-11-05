@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "evidence:draft": "node scripts/evidence-draft.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

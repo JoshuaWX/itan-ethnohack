@@ -10,7 +10,7 @@ import type { ResearchRecord } from "@/lib/research-collection";
 import type { Claim } from "@/lib/research-answer";
 
 type Comparison = { ids: string[]; summary: string };
-type Reply = { mode: "curated" | "generated" | "restricted" | "no-evidence"; records: ResearchRecord[]; claims?: Claim[]; reason?: string; ambiguous?: boolean; version?: string };
+type Reply = { mode: "curated" | "generated" | "restricted" | "no-evidence"; records: ResearchRecord[]; claims?: Claim[]; reason?: string; ambiguous?: boolean; version?: string; assessment?: { outcome: string; studies: { id: string; relation: string; explanation: string }[] } };
 type Turn = { question: string; reply?: Reply; guidance?: { text: string; href: string; label: string } };
 const openEvent = "itan:ask";
 const comparisonEvent = "itan:comparison";
@@ -28,6 +28,7 @@ function navigation(question: string, path: string, comparison: Comparison | nul
   if (path === "/compare" && /\b(?:share|shared|overlap|in common|ambiguous|unresolved|match)\b/.test(text) && !/\b(?:study|research|interaction|evidence)\b/.test(text)) return { text: comparison?.summary ?? "Run a comparison first to see which names match and where the label is ambiguous.", href: "/compare#scan", label: "Return to comparison" };
   if (!/^(?:how (?:do|can|to|should)|where (?:is|can|do)|help me|what can (?:i|manufacturers|ìtàn|itan))\b/.test(text)) return;
   if (/manufactur|register|nafdac|authentic/.test(text)) return { text: "Use Ìtàn to explore ingredient names and evidence. For regulatory checks, consult NAFDAC. A record match cannot authenticate the physical package.", href: "/#explore", label: "Explore product records" };
+  if (/claim|prove|evidence behind/.test(text)) return { text: "Enter a plant claim to follow its botanical identity, outcome and source evidence. The study relations include limitations about preparation and population.", href: "/claims", label: "Investigate a claim" };
   if (/identify|photograph|photo of a plant|picture/.test(text)) return { text: "Open Identify a plant, add a clear photo, check the preview and consent before submitting. You can search the plant collection by name instead.", href: "/identify", label: "Identify a plant" };
   if (/scan|ocr|label|correct/.test(text)) return { text: "Photograph the ingredient list, then review and correct the extracted text before confirming it. You can also type the ingredients.", href: "/scan", label: "Scan or enter ingredients" };
   if (/compar/.test(text)) return { text: "Enter the ingredients from two or three labels and choose Compare ingredients. Ìtàn groups shared taxa, possible matches and unresolved names.", href: "/compare", label: "Compare products" };
@@ -40,10 +41,10 @@ const exampleQuestions = (path: string) => path.startsWith("/plants/") ? ["What 
   : path.startsWith("/products/") ? ["What research is available on these ingredients?", "How do I scan a label?"]
   : path === "/identify" ? ["How do I identify a plant?", "What research exists on ginger?"]
   : path === "/scan" ? ["How do I scan a label?", "How do I compare products?"]
-  : ["What research exists on ginger?", "How do I scan a label?"];
+  : ["Bitter leaf lowers blood sugar", "How do I scan a label?"];
 
 function ReplyView({ reply }: { reply: Reply }) {
-  if (reply.mode === "restricted") return <p>Ask a general research question without personal details. For diagnosis, treatment, dosage or medication safety, speak with a qualified health professional.</p>;
+  if (reply.mode === "restricted") return <p>Ask a general research question without personal details. Ìtàn cannot recommend doses or replacing prescribed medicines. For treatment, interactions, pregnancy or breastfeeding, speak with a qualified health professional.</p>;
   if (reply.mode === "no-evidence") return <p>I found no supporting record in this collection. Try a plant name or a study identifier, or <Link href="/plants">browse the plants</Link>.</p>;
   const reason = reply.ambiguous ? "This name can refer to more than one species. Choose a plant below to narrow your question."
     : reply.reason === "quota" ? "The demo AI limit has been reached. Here are the curated sources."
@@ -54,6 +55,7 @@ function ReplyView({ reply }: { reply: Reply }) {
   return <>
     {reply.mode === "generated" ? <><p className="research-meta">AI explanation based on the cited records</p><ul className="ask-claims">{reply.claims?.map((claim, index) => <li key={index}>{claim.text} <strong>{claim.sourceIds.map((id) => `[${reply.records.findIndex((record) => record.id === id) + 1}]`).join(" ")}</strong></li>)}</ul></> : <p>{reason}</p>}
     <p className="research-meta">{reply.version && `Collection v${reply.version} · `}Specialist review pending</p>
+    {reply.assessment && <details className="claim-method"><summary>How this claim relates to the evidence</summary><p>Outcome: {reply.assessment.outcome}. Relations apply only to the conditions studied.</p>{reply.assessment.studies.filter((row) => reply.records.some(({ id }) => id === row.id)).map((row) => <p key={row.id}><strong>{row.relation.replaceAll("-", " ")}</strong> · {row.explanation}</p>)}<Link href="/claims">Open the claim-to-evidence workflow ↗</Link></details>}
     {reply.records.map((record, index) => <ResearchCard key={record.id} record={record} number={index + 1} />)}
   </>;
 }
@@ -181,7 +183,7 @@ export function AskItan() {
         <div className="ask-privacy"><label><input type="checkbox" checked={consent} aria-describedby="ask-consent-info" onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} /> Allow Google Gemini to explain evidence</label><p id="ask-consent-info">Sends your question and selected evidence to Google when enabled. Turning it off clears this conversation.</p></div>
         <label htmlFor="ask-question">Your question</label>
         <div className="ask-compose"><textarea id="ask-question" rows={2} maxLength={maxQuestionLength} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask about a plant or study" aria-describedby="ask-private-note" /><button className="button" type="submit" disabled={busy || !question.trim()}>Ask</button></div>
-        <p className="ask-note" id="ask-private-note">Leave out personal or medical details.</p>
+        <p className="ask-note" id="ask-private-note">Leave out personal details. For dosing, prescribed medicines, pregnancy or breastfeeding, seek qualified advice.</p>
         {turns.length > 0 && <button type="button" className="ask-clear" onClick={reset}>Clear conversation</button>}
       </form>
     </dialog>

@@ -1,5 +1,20 @@
 # Decisions
 
+## Mentor-driven claim analysis — 5 November 2026
+
+Remove the guava study from the homepage and cholera-awareness presentation,
+including disease-query retrieval. Preserve it on the guava research page.
+Add sourced Nigerian records and a deterministic, outcome-level claim analysis
+that exposes taxon resolution, population/preparation mismatches and source
+relations. Use the existing RAG corpus and Gemini support checker. This provides
+an auditable baseline on the available small corpus without claiming model
+training or clinical validation.
+
+Keep NAFDAC checks in the official services until API and reuse terms are
+established. Local snapshot isolation continues. The user declined applying
+the protected-quota migration to ITAN in this run, so the database stays
+unchanged and provider requests retain their fallback.
+
 ## Standalone label scanning
 
 Use `/scan` for a single label and leave the comparison form as a separate

@@ -175,6 +175,8 @@ export default async function ProductPage({
               package or establish the product’s effectiveness, safety, or a
               seller’s credentials.
             </p>
+            <p>Check the manufacturer’s name and address, batch number, dates and packaging. A copied registration number can appear on a falsified package.</p>
+            <Link className="source-link" href="/verify">Check the official source ↗</Link>
           </div>
           <div className="aside-box plain">
             <p className="overline">About this collection</p>

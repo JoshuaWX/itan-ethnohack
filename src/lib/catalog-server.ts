@@ -14,7 +14,9 @@ export async function readCatalog(): Promise<{ taxa: Taxon[]; source: "database"
       });
       if (response.ok) {
         const rows: Taxon[] = await response.json();
-        if (rows.length && rows.every((row) => row.id && row.name && row.common && row.source && Array.isArray(row.aliases))) return { taxa: rows, source: "database" };
+        // An older remote seed must not hide newly verified local identities.
+        const complete = fallbackTaxa.every((entry) => rows.some((row) => row.id === entry.id && row.name === entry.name));
+        if (complete && rows.every((row) => row.id && row.name && row.common && row.source && Array.isArray(row.aliases))) return { taxa: rows, source: "database" };
       }
     } catch { /* The versioned catalog is available when the service is down. */ }
   }
