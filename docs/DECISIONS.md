@@ -1,5 +1,15 @@
 # Decisions
 
+## Submission documentation — 5 November 2026
+
+Make the README understandable without specialist knowledge, disclose existing
+models and AI-assisted development, and distinguish the live site from the
+repository's latest verified local behaviour. Document optional credentials via
+an empty template; retain secret and restricted-data exclusions. The organizer's
+repository naming instruction and earlier context-folder history require owner
+decisions before a rename or history rewrite. Do not imply that the 25 tests or
+small challenge set establish clinical validity.
+
 ## Consumer clarity — 5 November 2026
 
 Use plain English and common plant names in the default view. Keep scientific

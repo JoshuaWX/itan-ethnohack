@@ -1,76 +1,98 @@
-# EthnoHack 2026
+# Ìtàn
 
-Nigeria-first TCIM and ethnopharmacology research prototype for **Track 4: Digital
-Health & Phytotherapy**, November 2–8, 2026. The working title is Ìtàn.
+Ìtàn is a Nigeria-first research prototype for **EthnoHack 2026, Track 4: Digital Health & Phytotherapy**. It helps people explore medicinal plants and understand the ingredient names on herbal products.
 
-Ìtàn helps people explore medicinal plant names, scan herbal-product ingredient
-labels and compare ingredients with source-linked evidence. It includes separate
-Nigerian public-health awareness sections.
+In Nigeria, herbal product labels can contain unfamiliar plant names, and people may find it difficult to distinguish traditional uses from scientific research. Ìtàn brings plant names, product-label information and links to research together in one place.
 
-On mobile, start from Identify a plant, Scan a herbal product or Compare herbal
-products. Ask Ìtàn searches a versioned collection of 19 cited records across eight
-plants and public-health guidance. Navigation help runs locally. Google Gemini
-can explain retrieved evidence when the user opts in and the provider is configured.
+**[Open the demonstration](https://itan-ethnohack.vercel.app/)** · [Teammate handoff](HANDOFF.md) · [Third-party notices](docs/THIRD_PARTY_NOTICES.md)
 
-Results start with a plain explanation, what remains unknown and a next action.
-Scientific names, original label text and study details are expandable. Edition
-2.0.1 includes source-linked plain-language summaries for every evidence record;
-botanist and pharmacist review is still pending. See the handoff for wording rules
-and first-time-user checks.
+The hosted demonstration may differ from the latest repository version. The site was reachable on 5 November 2026; individual hosted integrations have not all been verified in this documentation pass.
 
-Open this directory in WebStorm. In its PowerShell terminal, with Node.js 24
-installed:
+## What you can try
+
+1. **Identify a plant:** add a plant photo and consent to sending it to Pl@ntNet. The service suggests possible names; a photo does not confirm identity or safety. Availability depends on provider and quota configuration.
+2. **Scan a herbal product:** photograph an ingredient list or type it manually. Text recognition runs in your browser; correct and confirm the text before using it.
+3. **Compare products:** enter ingredients from two or three labels, or try the clearly fictional examples. Ìtàn shows matching scientific names, possible overlaps and names it cannot identify. A shared ingredient does not by itself mean a combination is dangerous.
+4. **Explore research:** browse the plant library or check a claim. Findings link to sources and identify what was studied and what remains uncertain. Ask Ìtàn can guide navigation and, with consent and working provider configuration, explain selected records.
+5. **Read health information:** the cholera page uses an archived 2024 advisory, and the malaria page links to official guidance. The app does not monitor outbreaks live.
+
+A registration number can be checked on the linked NAFDAC websites. Ìtàn does not currently perform a live NAFDAC database lookup or authenticate the physical package.
+
+The library contains **19 source-linked records across eight plants** and public-health guidance. It is a small, manually curated collection, not a complete search of all research. Botanical and pharmacist review is pending. This prototype does not provide diagnosis, treatment recommendations or proof that a product is safe or effective.
+
+## How it works
+
+- The label scanner uses **optical character recognition (OCR)** to suggest text from an image. Users review the suggestion.
+- A rule-based matcher compares ingredient names against scientific names and aliases in the plant library. Common names can point to more than one plant, so possible matches stay uncertain.
+- Comparison groups matching names and shows relevant, limited interaction research separately.
+- The research assistant retrieves records from the versioned collection using names and keywords. If enabled, Google Gemini can draft explanations from selected records; citations and proposed claims are checked before display. These checks cannot guarantee accuracy. If the provider is unavailable, the app displays the cited records instead.
+- Pl@ntNet provides the pretrained plant-photo identification model. Tesseract provides pretrained OCR. No model was trained by this project.
+
+Traditional and complementary medicine (TCIM) refers here to traditional, complementary and integrative medicine. Traditional-use reports, laboratory studies, animal studies, human research and official guidance are labelled separately.
+
+## Technology
+
+The app uses TypeScript, React and Next.js, with Tesseract.js for on-device label reading. Optional integrations are Pl@ntNet for plant photos, Gemini for research explanations and Supabase for catalog access and server-side request limits. The versioned local catalog and manual entry work without a database or API keys.
+
+The team developed the application, matching and comparison logic, evidence collection and interface during the hackathon. It uses the pretrained and third-party tools named above and in [third-party notices](docs/THIRD_PARTY_NOTICES.md). Codex was used to assist with development, documentation and research; the team remains responsible for checking the results, sources and licences.
+
+## Run locally on Windows
+
+You need [Node.js 24](https://nodejs.org/), npm, and Git. A code editor such as WebStorm is helpful.
+
+1. Clone this repository or download it from GitHub, then open its folder in WebStorm.
+2. Open **Terminal** in WebStorm. Install the project's dependencies and start it:
+
+   ```powershell
+   npm ci
+   npm run dev
+   ```
+
+3. Open the local address printed in the terminal, usually [http://localhost:3000](http://localhost:3000). If that port is in use, follow the address printed by the terminal.
+4. Choose **Scan a herbal product** to enter ingredients manually, or open **Compare products** and try the fictional examples.
+
+Press `Ctrl+C` in the terminal to stop the server. No credentials are needed for these manual flows or the saved research collection.
+
+## Optional API and database setup
+
+To enable external services, copy the provided template to a local file in the project root:
 
 ```powershell
-npm ci
-npm run dev
+Copy-Item .env.example .env.local
 ```
 
-Open the local URL printed in the terminal. Run `npm test` for the matching and
-evidence checks, and `npm run build` for a production build. No database is
-required for the current read-only catalog.
+Open `.env.local` in your editor, fill in only the services you are authorized to use, save it, and restart the development server. Never commit this file or share its values in chat. The template contains no keys.
 
-The catalog can read published names from Supabase and falls back to versioned
-local data when configuration or network access is missing. Plant pages and Ask
-Ìtàn share the bundled evidence collection. Each entry identifies its source,
-study type, preparation and limitations. Source checking and specialist review
-are tracked separately. Specialist review is pending.
+| Setting | Purpose and where to obtain it |
+| --- | --- |
+| `SUPABASE_URL` | Project URL from your authorized [Supabase project](https://supabase.com/dashboard). |
+| `SUPABASE_PUBLISHABLE_KEY` | Publishable key from Supabase project API settings; enables the optional catalog read. |
+| `SUPABASE_SECRET_KEY` | Server-only Supabase secret key, or a legacy service-role key, from the project's API settings. Required by the provider quota check. Never use a `NEXT_PUBLIC_` prefix. |
+| `GEMINI_API_KEY` | Server-only key created in [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key); enables optional AI explanations when quota checks succeed. |
+| `GEMINI_MODEL` | Optional model name. Leave empty to use the application's default, `gemini-2.5-flash`. |
+| `PLANTNET_API_KEY` | Server-only key obtained for an authorized [Pl@ntNet API](https://my.plantnet.org/) account; enables photo-identification requests when quota checks succeed. |
 
-Optional server environment variables are `SUPABASE_URL`,
-`SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL`,
-and `PLANTNET_API_KEY`. Set values in an ignored `.env.local`. Use a Supabase
-secret key for `SUPABASE_SECRET_KEY`, or an existing legacy service-role key.
-Keep it server-side. Apply the quota migration in an authorized test project
-before enabling external calls. Gemini uses up to two reserved calls per answer,
-and Pl@ntNet uses one per identification. They share a 30-call UTC-day cap and
-an eight-call cap per client. The bundled evidence and manual search are available
-without external provider credentials.
+Gemini and Pl@ntNet also require the protected quota function in an appropriately authorized Supabase environment. The migration in `supabase/migrations` changes database functions and can interrupt older deployments: review compatibility and obtain approval before applying it. The app fails closed to the available manual and research-summary paths if the quota cannot be checked. Provider usage limits, account terms and possible charges depend on the configured accounts.
 
-See [teammate handoff](HANDOFF.md) for setup, source data and remaining work.
+## Tests and reproducibility
 
-Open `/claims` to investigate a general plant claim. The app resolves the plant
-and outcome and shows source-specific relations with study scope. `/verify`
-guides checks in official NAFDAC services. Neither route establishes an
-individual's treatment or authenticates a package.
+```powershell
+npm test
+npx --no-install tsc --noEmit
+npm run build
+```
 
-Run `npm run evidence:draft -- 23770031` to prepare a metadata-only source draft.
-Drafts go into ignored `outputs/` and remain pending until source and reuse review.
-The app performs no live publication crawl and no model training.
+The last documented run passed 25 automated tests and a production build. The 24 developer-authored botanical challenge cases yielded 12 correct single matches, zero incorrect single matches, two ambiguous results and ten abstentions. This small, catalog-specific set is not independent validation or a general accuracy estimate. Two clean synthetic label images were read in a browser; real-world photos and physical-phone checks still need broader testing. See [progress](docs/PROGRESS.md) and the [handoff](HANDOFF.md) for details.
 
-The comparison page accepts manual ingredient lists and offers optional on-device
-OCR. Its Tesseract.js worker and English language data are served locally from
-`public/ocr`. OCR may misread labels; review and confirm the transcription.
-The bundled language data is from the Tesseract.js fast English data distribution
-(https://tessdata.projectnaptha.com/4.0.0_fast/eng.traineddata.gz), based on
-Tesseract's Apache-licensed fast models (https://github.com/tesseract-ocr/tessdata_fast).
+The NAFDAC product examples included in the public default are fictional. A separate local NAFDAC snapshot is excluded from Git and must not be included in a public release until its reuse rights are resolved. Scientific summaries link to their original sources; research and image provenance are documented in the app and [third-party notices](docs/THIRD_PARTY_NOTICES.md).
 
-The public-reproducible default uses a **fictional** example product with no
-regulatory record. A separately sourced local snapshot can be enabled with
-`ITAN_LOCAL_NAFDAC_SNAPSHOT=1` and an independently authorized
-`data/nafdac-rhimza.local.json`; both local configuration and data are ignored by
-Git. Do not include this snapshot in a public build or release until reuse rights
-have been resolved. The application is not a live registration lookup.
+## Current limitations and next checks
 
-The collection is a curated research prototype. The cholera advisory is historical,
-and the catalog is small. Not for medical
-diagnosis, individualized treatment, or live clinical use.
+- The plant collection and interaction records are small. Missing information does not mean a product or combination is safe.
+- Plant-photo suggestions and OCR can be wrong. Review names and labels; never use a photo result as proof a plant is safe to consume.
+- Live provider availability, privacy terms, quota enforcement and spending controls must be checked in the actual deployment. Hosted configuration is separate from `.env.local`.
+- The archived cholera advisory is not a live alert. The app links to current official sources.
+- Specialist review, first-time-user testing, physical-phone camera and installation checks remain outstanding.
+- Sellers, reviews, live outbreak monitoring and live NAFDAC integration remain roadmap items.
+
+For approved evidence identifiers, `npm run evidence:draft -- 23770031` creates a metadata-only draft in ignored `outputs/evidence-drafts`; it is not published until reviewed.

@@ -2,6 +2,26 @@
 
 Last updated: 2026-11-05 (Africa/Lagos).
 
+## Submission documentation review — 5 November 2026
+
+Reworked the README for first-time readers with the problem, challenge, demo
+link, current versus planned capabilities, methods, technology, setup,
+attribution, AI-assisted development disclosure, tests and limitations. Added
+an empty `.env.example` and clarified API setup without including credentials.
+Corrected the handoff: the GitHub repository is public. The demo returned HTTP
+200; individual hosted integrations were not re-tested in this documentation
+pass. All 25 tests and a production build passed using the installed dependencies.
+A clean-clone `npm ci` was not run.
+
+The supplied GitHub guide specifies `makeathon-2026-[team-name]-[challenge-name]`.
+The existing repository name does not match. No repository or website rename,
+commit, push, deployment, database change, video or slides were performed.
+The remote `origin/main` history contains earlier copies of the ignored
+`EthnoHack-Codex-Context` folder. Removing a folder from the current tree does not
+remove previous commits; review the contents and agree on a history-remediation
+approach before any history rewrite. A filename check alone does not prove that
+credentials or restricted data are absent from history.
+
 ## Consumer clarity pass — 5 November 2026
 
 Local changes simplify the homepage, navigation, photo identification, scan,
@@ -258,3 +278,7 @@ Team roles, source reuse permissions, and budget: TBD.
 Tool-specific remaining actions belong in [setup](SETUP.md).
 
 See the proposed [milestones](DEVELOPMENT_PLAN.md) and [decision log](DECISIONS.md).
+
+## Judge and rubric research — 5 November 2026
+
+Reviewed the five publicly listed judges and seven published criteria; recorded sources and a hypothetical assessment in [research findings](RESEARCH_FINDINGS.md). Weighting, track-specific panel assignment, independently validated impact and judge-accessible feature parity remain unverified. No judge was contacted and no new testing or deployment was performed.

@@ -10,8 +10,8 @@ certification. See the official [event rules](https://ethnohack2026.devpost.com/
 Use Node.js 24, `npm ci`, `npm run dev`, `npm test`, and `npm run build`. Local
 development works using versioned catalog fallback data. Environment variables
 are listed in the README; request credentials from the project owner through an
-approved channel, never in a commit or chat. The GitHub repository is private,
-and access must be granted by its owner.
+approved channel, never in a commit or chat. The GitHub repository is public;
+write access must be granted by its owner.
 
 The mobile homepage prioritizes identification, scanning and comparison.
 Plant records retain credited botanical photography. Motion respects reduced-motion preferences. The
