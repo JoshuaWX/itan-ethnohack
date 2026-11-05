@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { PhotoPicker } from "./photo-picker";
+import { ResultGuide } from "./result-guide";
 
 type Candidate = { name: string; common: string; score: number; match: { kind: string; candidates: { id: string; name: string }[] } };
 
@@ -63,7 +64,7 @@ export function IdentifyPlant() {
       const response = await fetch("/api/identify", { method: "POST", body: form });
       const data = await response.json();
       if (!response.ok) {
-        setMessage(data.error || "Identification is unavailable. Try manual search.");
+        setMessage(data.error || "Photo identification is unavailable. You can still search for a plant by name below.");
         return;
       }
       setResults([...data.candidates as Candidate[]].sort((a, b) => b.score - a.score));
@@ -90,19 +91,20 @@ export function IdentifyPlant() {
         <label htmlFor="organ">Which part is shown?</label>
         <select id="organ" value={organ} onChange={(event) => setOrgan(event.target.value)}><option value="auto">Not sure</option><option value="leaf">Leaf</option><option value="flower">Flower</option><option value="fruit">Fruit</option><option value="bark">Bark</option></select>
         <label className="identify-consent"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} /> <span>I agree to send this photo to Pl@ntNet for identification. Internet is required. Ìtàn does not store the photo.</span></label>
-        <button type="button" className="button" disabled={!consent || busy} onClick={identify}>{busy ? "Identifying…" : "Find possible plants"}</button>
+        {!consent && <p>Tick the box above when you are ready to send this photo.</p>}
+        <button type="button" className="button" disabled={!consent || busy} onClick={identify}>{busy ? "Looking for the plant…" : "Identify this photo"}</button>
       </fieldset>}
       <p role="status">{message}</p>
       <Link className="source-link" href="/plants">Search the plant library by name ↗</Link>
     </section>
     {results.length > 0 && <section className="identify-results detail-section" aria-labelledby="identify-results">
-      <h2 id="identify-results" ref={heading} tabIndex={-1}>Possible matches</h2>
-      <p>Photo matches are suggestions. A photo cannot establish that a plant is safe to consume.</p>
+      <h2 id="identify-results" ref={heading} tabIndex={-1}>Plants your photo may show</h2>
+      <ResultGuide found={`${results.length} possible ${results.length === 1 ? "plant" : "plants"}, with the closest photo match first.`} meaning="These are suggestions from the photo, not a confirmed identification." unknown="A photo cannot tell us whether the plant is safe to eat or use."><p>Compare the names below. Open a plant page to read its research, or try a clearer photo above.</p></ResultGuide>
       <ol>{results.map((result, index) => <li className="identify-candidate" key={`${result.name}-${index}`}>
         <h3>{result.common || <i>{result.name}</i>}</h3>
         {result.common && <p><i>{result.name}</i></p>}
-        <p className="research-meta">Provider match score: {(result.score * 100).toFixed(1)}%. Species identity remains uncertain.</p>
-        {result.match.candidates.length ? result.match.candidates.map((candidate) => <Link className="source-link" href={`/plants/${candidate.id}#research`} key={candidate.id}>Explore evidence for <i>{candidate.name}</i> ↗</Link>) : <p>This candidate is outside the Ìtàn collection.</p>}
+        <details><summary>Photo match details</summary><p>Photo match score: {(result.score * 100).toFixed(1)}%. This is the service’s ranking score, not a guarantee that the plant was correctly identified.</p></details>
+        {result.match.candidates.length ? result.match.candidates.map((candidate) => <Link className="source-link" href={`/plants/${candidate.id}#research`} key={candidate.id}>Read about {result.common || candidate.name} ↗</Link>) : <p>We don’t yet have a research page for this plant. Try searching its name in the library.</p>}
       </li>)}</ol>
     </section>}
   </>;

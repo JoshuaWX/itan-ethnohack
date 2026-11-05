@@ -52,7 +52,7 @@ export function SearchBox({ exampleNumber }: { exampleNumber: string }) {
             setQuery(e.target.value);
             if (e.target.value.trim() !== q) setStatus("loading");
           }}
-          placeholder="Search a plant, product or NAFDAC number"
+          placeholder="Try ginger, Ewuro or a product name"
           autoComplete="off"
           maxLength={100}
         />
@@ -92,7 +92,7 @@ export function SearchBox({ exampleNumber }: { exampleNumber: string }) {
             ))}
           {status === "ready" && results.length === 0 && (
             <p>
-              No matches in this small, curated collection. Try “ginger” or “
+              We couldn’t find that name in our small library. Try “ginger” or “
               {exampleNumber}”.
             </p>
           )}

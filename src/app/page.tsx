@@ -1,12 +1,8 @@
 import Link from "next/link";
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
-  FlaskConical,
-  Leaf,
-  ShieldCheck,
 } from "lucide-react";
 import { SearchBox } from "@/components/search";
 import { Scanner } from "@/components/scanner";
@@ -31,20 +27,19 @@ export default function Home() {
               <em>made clearer.</em>
             </h1>
             <p>
-              Identify plants, understand herbal product labels, and explore
-              the evidence behind the ingredients.
+              Use a photo to identify a plant, read a herbal product label,
+              or compare its ingredients. See what researchers found and what is still unknown.
             </p>
             <div className="hero-actions" aria-label="Start here">
-              <Link className="button light" href="/identify">Identify a plant <ArrowUpRight size={16} /></Link>
+              <Link className="button light hero-task" href="/identify"><span><strong>Identify a plant</strong><small>Find possible names from a photo</small></span><ArrowUpRight size={18} /></Link>
               <Link className="hero-link" href="/scan">
-                Scan a herbal product <ArrowRight size={18} />
+                <span><strong>Scan a herbal product</strong><small>Read or type the ingredients</small></span><ArrowRight size={18} />
               </Link>
-              <Link className="hero-link" href="/compare">Compare products <ArrowUpRight size={16} /></Link>
+              <Link className="hero-link" href="/compare"><span><strong>Compare products</strong><small>See which ingredients they share</small></span><ArrowUpRight size={18} /></Link>
             </div>
             <div className="hero-foot">
-              <Link href="/claims">Investigate a claim <ArrowUpRight size={14} /></Link>
               <Link href="/plants">Plant library <ArrowUpRight size={14} /></Link>
-              <Link href="/awareness">Health awareness <ArrowUpRight size={14} /></Link>
+              <Link href="/awareness">Health information <ArrowUpRight size={14} /></Link>
             </div>
           </div>
           <div className="hero-art" aria-hidden="true">
@@ -88,42 +83,17 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="claim-entry container" aria-labelledby="claim-entry-title">
-        <div><h2 id="claim-entry-title">Heard a claim about a plant?</h2><p>Follow the name, the outcome and the studies behind it.</p></div>
-        <Link className="button compare-submit" href="/claims">Investigate the evidence <ArrowUpRight size={17} /></Link>
-      </section>
       <section className="intro" id="explore">
         <div className="container">
-          <div className="section-kicker">
-            <span>Start with a question</span>
-            <span>01 / Discover</span>
-          </div>
-          <div className="intro-grid">
-            <div>
-              <h2>
-                A little more clarity,
-                <br />
-                <em>at every step.</em>
-              </h2>
-            </div>
-            <div>
-              <p>
-                There’s a lot on a herbal product label. We bring the names,
-                sources and context together, so you can explore with a clearer
-                picture.
-              </p>
-              <span className="quiet-link">
-                A small, curated collection <ArrowDown size={15} />
-              </span>
-            </div>
-          </div>
+          <h2>Looking for a name?</h2>
+          <p>Search our small plant library or try the example product below.</p>
           <SearchBox exampleNumber={product.number} />
           <Link className="source-link" href="/verify">Check a real product using NAFDAC’s lookup ↗</Link>
           <div className="search-hint">
             Try <span>ginger</span>, <span>hibiscus</span>, or{" "}
             <span>{product.number}</span>
           </div>
-          <Scanner productId={product.id} productNumber={product.number} />
+          <details className="home-lookup"><summary>Use a QR code or registration number</summary><p>The QR example opens a demo product. To check a real registration number, use NAFDAC’s own lookup.</p><Scanner productId={product.id} productNumber={product.number} /></details>
         </div>
       </section>
       <section className="featured">
@@ -133,8 +103,8 @@ export default function Home() {
               <p className="overline">A product, understood</p>
               <h2>Start with the label.</h2>
               <p>
-                Follow an ingredient from a product record to its botanical
-                identity and evidence.
+                Try an example to see how ingredient names connect to plants
+                and research.
               </p>
             </div>
             <Link className="text-link" href={`/products/${product.id}`}>
@@ -192,51 +162,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <section className="approach">
-        <div className="container">
-          <div className="section-heading">
-            <div>
-              <p className="overline">An honest approach</p>
-              <h2>Knowledge, in context.</h2>
-            </div>
-            <p>
-              Traditional knowledge and scientific research can sit side by
-              side, with their differences made clear.
-            </p>
-          </div>
-          <div className="principles">
-            <div>
-              <span className="principle-icon">
-                <Leaf size={20} />
-              </span>
-              <h3>Know the plant</h3>
-              <p>
-                See how a label name connects to a botanical identity, including
-                where that identity is uncertain.
-              </p>
-            </div>
-            <div>
-              <span className="principle-icon">
-                <FlaskConical size={20} />
-              </span>
-              <h3>Follow the evidence</h3>
-              <p>
-                Explore what has been studied, how it was studied and where the
-                limits of that evidence lie.
-              </p>
-            </div>
-            <div>
-              <span className="principle-icon">
-                <ShieldCheck size={20} />
-              </span>
-              <h3>Understand the record</h3>
-              <p>
-                See what a source record says, without confusing a record match
-                with proof of an authentic package.
-              </p>
-            </div>
-          </div>
-        </div>
+      <section className="claim-entry container" aria-labelledby="claim-entry-title">
+        <div><h2 id="claim-entry-title">Heard something about a plant?</h2><p>See what the studies in Ìtàn say, and what is still unknown.</p></div>
+        <Link className="button compare-submit" href="/claims">Check a plant claim <ArrowUpRight size={17} /></Link>
       </section>
       <section className="awareness-feature">
         <div className="container awareness-grid">
@@ -244,17 +172,13 @@ export default function Home() {
             <p className="overline light-overline">
               Public health &amp; plant research
             </p>
-            <h2>
-              Awareness begins
-              <br />
-              <em>with context.</em>
-            </h2>
+            <h2>Health advice from official sources.</h2>
             <p>
               Read dated Nigerian public-health advisories and prevention
               guidance from official sources.
             </p>
             <Link className="button light" href="/awareness">
-              Explore awareness <ArrowRight size={18} />
+              Read health information <ArrowRight size={18} />
             </Link>
           </div>
           <div className="awareness-paper">
@@ -269,7 +193,7 @@ export default function Home() {
               care. This prototype does not monitor outbreaks live.
             </p>
             <Link href="/awareness#outbreak">
-              Read the context <ArrowUpRight size={15} />
+              Read the archived advice <ArrowUpRight size={15} />
             </Link>
           </div>
         </div>

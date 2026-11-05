@@ -12,6 +12,12 @@ products. Ask Ìtàn searches a versioned collection of 19 cited records across 
 plants and public-health guidance. Navigation help runs locally. Google Gemini
 can explain retrieved evidence when the user opts in and the provider is configured.
 
+Results start with a plain explanation, what remains unknown and a next action.
+Scientific names, original label text and study details are expandable. Edition
+2.0.1 includes source-linked plain-language summaries for every evidence record;
+botanist and pharmacist review is still pending. See the handoff for wording rules
+and first-time-user checks.
+
 Open this directory in WebStorm. In its PowerShell terminal, with Node.js 24
 installed:
 

@@ -1,5 +1,22 @@
 # Decisions
 
+## Consumer clarity — 5 November 2026
+
+Use plain English and common plant names in the default view. Keep scientific
+names, original OCR text, matching rules and original study summaries available
+in disclosures. Pair findings with limits and a concrete next action; a short
+summary must not turn a candidate match into certainty or missing evidence into
+safety. Preserve the matching and claim-analysis engines and the six-feature
+roadmap. Add companion summaries to the existing 19 source records as evidence
+edition 2.0.1; expert review stays pending. No new scientific sources were added.
+
+Keep the provider quota and database configuration outside this change. A local
+Gemini request returned a generated answer during the clarity pass, so earlier
+missing-RPC notes describe a historical observation. No database or provider
+configuration was changed here; permissions and concurrency require separate
+verification. Register the service worker only for production builds to avoid
+cached development chunks hiding local UI changes.
+
 ## Mentor-driven claim analysis — 5 November 2026
 
 Remove the guava study from the homepage and cholera-awareness presentation,

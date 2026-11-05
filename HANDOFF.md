@@ -32,6 +32,37 @@ overlap sections. Examine inspired the evidence overview and expandable study
 details. Ada’s guided choices appear in Ask Ìtàn, which fills the phone viewport
 and opens as a compact panel on wider screens. The consent toggle stays visible.
 
+## Consumer language and result layout
+
+The default view is written for a consumer with no scientific background.
+`ResultGuide` introduces what was found, what it means, what remains unknown
+and a next action. Common names come first; original label text, scientific
+names, matching rules and study details remain available in disclosures.
+Home keeps the three task choices and removes repeated introductory sections.
+The navigation uses Home and Health info; `/claims` is Check a plant claim.
+
+Evidence edition 2.0.1 adds original plain-language companion summaries in
+`src/lib/plain-evidence.ts`, keyed to the existing 19 source records. Findings,
+limitations, source IDs and original scientific summaries remain intact.
+Add a companion summary whenever adding a published source. Tests check that
+none are missing or orphaned. Source checking is not botanist/pharmacist review;
+expert review is still pending. No new scientific sources were added in this pass.
+
+Keep these distinctions when editing: an uncertain plant name is not a confirmed
+identification; sharing an ingredient is not proof of danger; no interaction
+record is not a safety clearance; no statistically clear effect is not proof
+of ineffectiveness. Use specific everyday wording and a practical next action.
+Generated scientific answers retain citations and support checks, with a plain
+English instruction and companion wording supplied only to the drafting step.
+The support check still uses the original evidence. App-help questions such as
+“How do I use Ìtàn?” have a narrow local allowlist; medical and injection filters
+remain in place.
+
+The service worker registers in production, where build assets have content
+hashes. It does not newly register during development, avoiding stale dev chunks.
+If an old development registration exists, clear that localhost origin's service
+worker/cache once in browser developer tools. Production offline fallback remains.
+
 ## Structure and data
 
 - `/claims` runs botanical entity and outcome recognition followed by
@@ -100,16 +131,30 @@ including concurrent reservations. Then validate real Gemini and Pl@ntNet calls
 with synthetic questions and authorized photos. The browser suite and fixtures
 do not validate provider response quality or medical accuracy.
 
-On 5 November the owner elected to keep the remote database unchanged. The new
-server key is configured locally, but the protected RPC is absent, so the app
-returns provider-unavailable fallbacks. Retest both external integrations after
-the owner authorizes the migration. Never re-enable the anonymous reservation
-path as a workaround.
+Earlier on 5 November, the owner elected to keep the remote database unchanged.
+During the clarity pass a local request returned a real Gemini-generated answer
+about the roselle/simvastatin source. No quota, schema, credential or provider
+configuration was changed in this pass. Treat the earlier missing-function note
+as historical; database permissions and hosted concurrency still need their own
+authorised verification. A successful answer is not a complete quota audit.
+Never re-enable the anonymous reservation path as a workaround.
 
-The current local verification includes 19 passing tests and a production build,
-15 source-derived claim cases and browser checks at four widths. Source checking
-and independent expert review remain distinct. Tests of generated-claim support
-use simulated model outputs until live calls can pass the protected quota.
+The clarity pass has 25 passing tests, including companion-summary coverage,
+study limits, uncertain identities and app-help filtering. The 15 source-derived
+claim cases and 24 botanical challenge cases remain unchanged. The test suite
+uses simulated generated outputs; the single live Gemini answer above was
+separately checked for the six-person study, preparation, direction and citation.
+This is not an independent assessment of model accuracy. See the dated progress
+note for browser and production checks and remaining real-device work.
+
+## First-time-user checks (not yet conducted)
+
+Ask three to five volunteers with no scientific background to try these tasks
+without coaching: start a label scan; explain whether two products share an
+ingredient; and explain whether an animal study proves a benefit in people.
+After each, ask what Ìtàn found, what remains unknown and what they would do next.
+Record task completion, misunderstood wording and needed help without collecting
+health histories. Browser checks are developer verification, not user feedback.
 
 See the [roselle/simvastatin study](https://pubmed.ncbi.nlm.nih.gov/28925046/),
 [Kew roselle taxonomy](https://powo.science.kew.org/taxon/326388-2), and the

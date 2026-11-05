@@ -6,18 +6,13 @@ export default async function PlantsPage() {
   return (
     <div className="container page">
       <div className="page-intro">
-        <p className="overline">The plant collection</p>
-        <h1>
-          Names with stories.
-          <br />
-          <em>Evidence with context.</em>
-        </h1>
+        <h1>Plant library</h1>
         <p>
-          Explore a small, curated set of botanical records. A plant name alone
-          cannot tell you whether a product works.
+          Find a plant by its common, local or scientific name. Read about
+          traditional uses, research findings and what is still unknown.
         </p>
       </div>
-      {source === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
+      {source === "fallback" && <p>Using the plant library saved with this demo. Recent updates may be missing.</p>}
       <PlantDirectory taxa={[...taxa].sort((a, b) => Number(Boolean(nigerianPlants[b.id])) - Number(Boolean(nigerianPlants[a.id])))} />
     </div>
   );

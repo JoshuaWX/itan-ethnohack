@@ -5,26 +5,21 @@ export default function AwarenessPage() {
   return (
     <div className="container page">
       <div className="page-intro">
-        <p className="overline">Public health &amp; plant research</p>
-        <h1>
-          Awareness,
-          <br />
-          <em>with perspective.</em>
-        </h1>
+        <h1>Health information</h1>
         <p>
-          Read official public-health guidance and check the source date.
-          This prototype does not monitor outbreaks live.
+          Read advice from official health authorities. Check the dates:
+          this demo does not track live outbreaks.
         </p>
       </div>
       <div className="awareness-tabs">
-        <a href="#outbreak">Outbreak awareness</a>
-        <a href="#seasonal">Seasonal &amp; endemic</a>
+        <a href="#outbreak">Past outbreak advice</a>
+        <a href="#seasonal">Ongoing disease awareness</a>
       </div>
       <div className="detail-layout">
         <div>
           <section className="detail-section" id="outbreak">
             <div className="badge-row">
-              <span className="pill archived">Archived advisory</span>
+              <span className="pill archived">Archived advice · not a live alert</span>
               <span className="record-number">12 June 2024</span>
             </div>
             <h2>Cholera awareness in Nigeria</h2>
@@ -54,7 +49,7 @@ export default function AwarenessPage() {
           </section>
           <section className="detail-section" id="seasonal">
             <div className="badge-row">
-              <span className="pill">Seasonal &amp; endemic</span>
+              <span className="pill">Ongoing and seasonal disease awareness</span>
               <span className="record-number">Nigeria</span>
             </div>
             <h2>Malaria and plant research</h2>
@@ -65,7 +60,7 @@ export default function AwarenessPage() {
             </p>
             <article className="guidance">
               <p className="overline">WHO guidance</p>
-              <h3>Plant material and medicines are different.</h3>
+              <h3>Artemisia teas are not recommended for malaria.</h3>
               <p>
                 WHO does not support using non-pharmaceutical Artemisia plant
                 material, including teas, for malaria prevention or treatment.
@@ -93,10 +88,10 @@ export default function AwarenessPage() {
         </div>
         <aside className="detail-aside">
           <div className="aside-box">
-            <h3>A note on freshness</h3>
+            <h3>Looking for current updates?</h3>
             <p>
-              This prototype uses curated sources and does not monitor outbreaks
-              in real time. Check NCDC for current advisories.
+              These pages use selected published sources. They do not update
+              automatically. Check NCDC for current outbreak information.
             </p>
             <a
               className="source-link"

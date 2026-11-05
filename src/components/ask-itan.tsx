@@ -8,6 +8,10 @@ import { ResearchCard } from "./research-card";
 import { maxQuestionLength, questionBlocked, retrieveEvidence } from "@/lib/research-retrieval";
 import type { ResearchRecord } from "@/lib/research-collection";
 import type { Claim } from "@/lib/research-answer";
+import { ResultGuide } from "./result-guide";
+import { taxa } from "@/lib/catalog";
+import { isGettingStartedQuestion, studyRelationLanguage } from "@/lib/consumer-language";
+import type { Relation } from "@/lib/claim-analysis";
 
 type Comparison = { ids: string[]; summary: string };
 type Reply = { mode: "curated" | "generated" | "restricted" | "no-evidence"; records: ResearchRecord[]; claims?: Claim[]; reason?: string; ambiguous?: boolean; version?: string; assessment?: { outcome: string; studies: { id: string; relation: string; explanation: string }[] } };
@@ -25,14 +29,14 @@ export function AskTrigger({ className, label = "Ask Ìtàn" }: { className?: st
 
 function navigation(question: string, path: string, comparison: Comparison | null): Turn["guidance"] {
   const text = question.toLowerCase();
-  if (path === "/compare" && /\b(?:share|shared|overlap|in common|ambiguous|unresolved|match)\b/.test(text) && !/\b(?:study|research|interaction|evidence)\b/.test(text)) return { text: comparison?.summary ?? "Run a comparison first to see which names match and where the label is ambiguous.", href: "/compare#scan", label: "Return to comparison" };
+  if (path === "/compare" && /\b(?:share|shared|overlap|in common|ambiguous|unresolved|match)\b/.test(text) && !/\b(?:study|research|interaction|evidence)\b/.test(text)) return { text: comparison?.summary ?? "Add two ingredient lists and choose Compare ingredients first. I can then explain which names they share and which need checking.", href: "/compare#scan", label: "Return to comparison" };
   if (!/^(?:how (?:do|can|to|should)|where (?:is|can|do)|help me|what can (?:i|manufacturers|ìtàn|itan))\b/.test(text)) return;
-  if (/manufactur|register|nafdac|authentic/.test(text)) return { text: "Use Ìtàn to explore ingredient names and evidence. For regulatory checks, consult NAFDAC. A record match cannot authenticate the physical package.", href: "/#explore", label: "Explore product records" };
-  if (/claim|prove|evidence behind/.test(text)) return { text: "Enter a plant claim to follow its botanical identity, outcome and source evidence. The study relations include limitations about preparation and population.", href: "/claims", label: "Investigate a claim" };
+  if (/manufactur|register|nafdac|authentic/.test(text)) return { text: "Use NAFDAC’s official website to check a registration number. A matching number does not prove the package is genuine. Ìtàn can help you understand the listed ingredients and research.", href: "/verify", label: "Open the NAFDAC check guide" };
+  if (/claim|prove|evidence behind/.test(text)) return { text: "Type something you have heard about one plant, such as bitter leaf lowers blood sugar. Ìtàn will show relevant studies and explain their limits.", href: "/claims", label: "Check a plant claim" };
   if (/identify|photograph|photo of a plant|picture/.test(text)) return { text: "Open Identify a plant, add a clear photo, check the preview and consent before submitting. You can search the plant collection by name instead.", href: "/identify", label: "Identify a plant" };
   if (/scan|ocr|label|correct/.test(text)) return { text: "Photograph the ingredient list, then review and correct the extracted text before confirming it. You can also type the ingredients.", href: "/scan", label: "Scan or enter ingredients" };
-  if (/compar/.test(text)) return { text: "Enter the ingredients from two or three labels and choose Compare ingredients. Ìtàn groups shared taxa, possible matches and unresolved names.", href: "/compare", label: "Compare products" };
-  if (/start|navigate|use ìtàn|use itan|what can (?:ìtàn|itan)/.test(text)) return { text: "Start with a plant photo or a herbal product label. You can compare labels or browse plant studies by name.", href: "/", label: "Back to Discover" };
+  if (/compar/.test(text)) return { text: "Add the ingredients from two or three labels, then choose Compare ingredients. You’ll see names they share, differences and names that need checking. You can try the example products first.", href: "/compare", label: "Compare products" };
+  if (/start|navigate|use ìtàn|use itan|what can (?:ìtàn|itan)/.test(text)) return { text: "Have a plant? Choose Identify a plant and add a photo. Have a product? Choose Scan a herbal product to read its label. Choose Compare products to compare two ingredient lists. You can also search the plant library by name.", href: "/", label: "Go to Home" };
 }
 
 const exampleQuestions = (path: string) => path.startsWith("/plants/") ? ["What has been studied?", "Which studies were in humans?"]
@@ -41,22 +45,32 @@ const exampleQuestions = (path: string) => path.startsWith("/plants/") ? ["What 
   : path.startsWith("/products/") ? ["What research is available on these ingredients?", "How do I scan a label?"]
   : path === "/identify" ? ["How do I identify a plant?", "What research exists on ginger?"]
   : path === "/scan" ? ["How do I scan a label?", "How do I compare products?"]
-  : ["Bitter leaf lowers blood sugar", "How do I scan a label?"];
+  : ["How do I use Ìtàn?", "Bitter leaf lowers blood sugar", "How do I scan a label?"];
 
 function ReplyView({ reply }: { reply: Reply }) {
-  if (reply.mode === "restricted") return <p>Ask a general research question without personal details. Ìtàn cannot recommend doses or replacing prescribed medicines. For treatment, interactions, pregnancy or breastfeeding, speak with a qualified health professional.</p>;
-  if (reply.mode === "no-evidence") return <p>I found no supporting record in this collection. Try a plant name or a study identifier, or <Link href="/plants">browse the plants</Link>.</p>;
-  const reason = reply.ambiguous ? "This name can refer to more than one species. Choose a plant below to narrow your question."
-    : reply.reason === "quota" ? "The demo AI limit has been reached. Here are the curated sources."
-    : reply.reason === "provider-unavailable" ? "AI explanations are unavailable. Here are the curated sources."
-    : reply.reason === "unverified-answer" ? "An AI answer could not be verified. Here are the curated sources."
-    : reply.reason === "offline" ? "Using the bundled evidence collection."
-    : "Results from the curated evidence collection.";
+  if (reply.mode === "restricted") return <ResultGuide found="This question needs a healthcare professional." meaning="I can explain research, but cannot diagnose, suggest doses or decide whether a product is safe for you." unknown="Ìtàn cannot assess your personal health or treatment."><p>Ask a pharmacist or qualified healthcare professional. You can still ask general questions about plant research.</p></ResultGuide>;
+  if (reply.mode === "no-evidence") return <ResultGuide found="Ìtàn doesn’t have enough research to answer this." meaning="Other research may exist. Our library covers a small number of plants and questions." unknown="A missing result does not tell us that a plant works, does not work or is safe."><Link href="/plants">Find a plant in the library</Link><p>Try its name and one specific question.</p></ResultGuide>;
+  const reason = reply.reason === "quota" ? "The demo’s daily AI limit has been reached. You can still read our research summaries."
+    : reply.reason === "provider-unavailable" ? "AI explanations are unavailable. You can still read our research summaries."
+    : reply.reason === "unverified-answer" ? "We couldn’t confirm that the AI answer matched its sources. Here are the research summaries instead."
+    : reply.reason === "offline" ? "The online service could not be reached. Here are research summaries saved with this demo."
+    : "";
+  const plants = taxa.filter((plant) => reply.records.some((record) => record.taxa.includes(plant.id)));
   return <>
-    {reply.mode === "generated" ? <><p className="research-meta">AI explanation based on the cited records</p><ul className="ask-claims">{reply.claims?.map((claim, index) => <li key={index}>{claim.text} <strong>{claim.sourceIds.map((id) => `[${reply.records.findIndex((record) => record.id === id) + 1}]`).join(" ")}</strong></li>)}</ul></> : <p>{reason}</p>}
-    <p className="research-meta">{reply.version && `Collection v${reply.version} · `}Specialist review pending</p>
-    {reply.assessment && <details className="claim-method"><summary>How this claim relates to the evidence</summary><p>Outcome: {reply.assessment.outcome}. Relations apply only to the conditions studied.</p>{reply.assessment.studies.filter((row) => reply.records.some(({ id }) => id === row.id)).map((row) => <p key={row.id}><strong>{row.relation.replaceAll("-", " ")}</strong> · {row.explanation}</p>)}<Link href="/claims">Open the claim-to-evidence workflow ↗</Link></details>}
-    {reply.records.map((record, index) => <ResearchCard key={record.id} record={record} number={index + 1} />)}
+    {reason && <p className="status-note">{reason}</p>}
+    {reply.mode === "generated" && <p className="research-meta">AI explanation based on the sources below</p>}
+    <ResultGuide found={<ul className="ask-claims">{reply.mode === "generated" ? reply.claims?.map((claim, index) => <li key={index}>{claim.text} {claim.sourceIds.map((id) => {
+      const number = reply.records.findIndex((record) => record.id === id);
+      return number >= 0 && <a key={id} href={reply.records[number].url} target="_blank" rel="noreferrer" aria-label={`Read source ${number + 1}`}>[{number + 1}] </a>;
+    })}</li>) : reply.records.slice(0, 3).map((record, index) => <li key={record.id}><strong>{record.type === "animal" ? "Studied in animals: " : record.type === "laboratory" ? "Laboratory tests: " : record.type === "ethnobotanical" || record.type === "traditional" ? "Traditional use: " : ""}</strong>{record.plain.finding} <a href={record.url} target="_blank" rel="noreferrer" aria-label={`Read source ${index + 1}`}>[{index + 1}]</a><p className="answer-limit">{record.plain.limitation}</p></li>)}</ul>}
+      meaning={reply.ambiguous ? "This name can refer to different plants. Choose a plant below before drawing conclusions." : "Each finding applies to the people, plant parts and preparations studied. It may not apply to a product you have."}
+      unknown="These records cannot tell us whether a product is suitable or safe for you. Expert review of our summaries is still pending."
+    ><div className="research-links">{plants.map((plant) => <Link key={plant.id} href={`/plants/${plant.id}`}>About {plant.common} ↗</Link>)}{!plants.length && <Link href="/awareness">Read official health guidance ↗</Link>}</div></ResultGuide>
+    <details className="ask-source-details"><summary>Read the studies and source details ({reply.records.length})</summary>
+      <p className="research-meta">Research edition {reply.version ?? "saved with this demo"}. Original sources checked; botanist or pharmacist review pending.</p>
+      {reply.assessment && <details className="claim-method"><summary>How these studies relate to the question</summary><p>Effect mentioned: {reply.assessment.outcome}.</p>{reply.assessment.studies.filter((row) => reply.records.some(({ id }) => id === row.id)).map((row) => <p key={row.id}><strong>{studyRelationLanguage(row.relation as Relation)}</strong> · {row.explanation}</p>)}<Link href="/claims">Check a plant claim ↗</Link></details>}
+      {reply.records.map((record, index) => <ResearchCard key={record.id} record={record} number={index + 1} />)}
+    </details>
   </>;
 }
 
@@ -138,8 +152,12 @@ export function AskItan() {
     if (!prompt || request.current) return;
     setQuestion("");
     const add = (turn: Turn) => setTurns((current) => [...current.slice(-2), turn]);
+    if (isGettingStartedQuestion(prompt)) {
+      add({ question: prompt, guidance: { text: "Have a plant? Choose Identify a plant and add a photo. Have a product? Choose Scan a herbal product to read its label. Choose Compare products to compare two ingredient lists. You can also search the plant library by name.", href: "/", label: "Go to Home" } });
+      return;
+    }
     if (questionBlocked(prompt)) {
-      add({ question: "General research questions only", reply: { mode: "restricted", records: [] } });
+      add({ question: "Question not sent", reply: { mode: "restricted", records: [] } });
       return;
     }
     const context = path === "/compare" ? comparison.current : null;
@@ -175,15 +193,15 @@ export function AskItan() {
     }}>
       <div className="ask-header"><h2 id="ask-title" ref={heading} tabIndex={-1}>Ask Ìtàn</h2><button type="button" className="ask-close" onClick={close} aria-label="Close Ask Ìtàn"><X size={20} /></button></div>
       <div className="ask-conversation" ref={conversation} aria-live="polite" tabIndex={0} aria-label="Conversation">
-        {!turns.length && <div className="ask-intro"><h3>What would you like to explore?</h3><p>Pick a question or ask your own about plants, labels or evidence.</p><div className="ask-suggestions">{exampleQuestions(path).map((example) => <button key={example} type="button" disabled={busy} onClick={() => void ask(example)}>{example}<ArrowUpRight size={16} aria-hidden="true" /></button>)}</div></div>}
+        {!turns.length && <div className="ask-intro"><h3>What would you like help with?</h3><p>I can help you use Ìtàn or explain the research in our small plant library. Choose a question to get started.</p><div className="ask-suggestions">{exampleQuestions(path).map((example) => <button key={example} type="button" disabled={busy} onClick={() => void ask(example)}>{example}<ArrowUpRight size={16} aria-hidden="true" /></button>)}</div></div>}
         {turns.map((turn, index) => index === turns.length - 1 ? <div className="ask-turn" key={`${index}-${turn.question}`} ref={lastTurn}><p className="ask-question-text">{turn.question}</p>{renderTurn(turn)}</div> : <details className="ask-previous" key={`${index}-${turn.question}`}><summary>{turn.question}</summary>{renderTurn(turn)}</details>)}
-        {busy && <p role="status">Finding relevant evidence…</p>}
+        {busy && <p role="status">Looking through the research…</p>}
       </div>
       <form className="ask-form" onSubmit={(event) => { event.preventDefault(); void ask(question); }}>
-        <div className="ask-privacy"><label><input type="checkbox" checked={consent} aria-describedby="ask-consent-info" onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} /> Allow Google Gemini to explain evidence</label><p id="ask-consent-info">Sends your question and selected evidence to Google when enabled. Turning it off clears this conversation.</p></div>
+        <div className="ask-privacy"><label><input type="checkbox" checked={consent} aria-describedby="ask-consent-info" onChange={(event) => { setConsent(event.target.checked); if (!event.target.checked) reset(); }} /> Use AI explanations (optional)</label><p id="ask-consent-info">When on, your question and selected research go to Google Gemini. Turn off to withdraw consent and clear the chat. Research summaries work without AI.</p></div>
         <label htmlFor="ask-question">Your question</label>
-        <div className="ask-compose"><textarea id="ask-question" rows={2} maxLength={maxQuestionLength} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask about a plant or study" aria-describedby="ask-private-note" /><button className="button" type="submit" disabled={busy || !question.trim()}>Ask</button></div>
-        <p className="ask-note" id="ask-private-note">Leave out personal details. For dosing, prescribed medicines, pregnancy or breastfeeding, seek qualified advice.</p>
+        <div className="ask-compose"><textarea id="ask-question" rows={2} maxLength={maxQuestionLength} value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="For example, what has been studied about ginger?" aria-describedby="ask-private-note" /><button className="button" type="submit" disabled={busy || !question.trim()}>Ask</button></div>
+        <p className="ask-note" id="ask-private-note">Leave out personal health details. For treatment or doses, ask a qualified healthcare professional.</p>
         {turns.length > 0 && <button type="button" className="ask-clear" onClick={reset}>Clear conversation</button>}
       </form>
     </dialog>

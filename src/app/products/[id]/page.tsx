@@ -5,6 +5,8 @@ import { sources } from "@/lib/catalog";
 import { readCatalog } from "@/lib/catalog-server";
 import { getProductData } from "@/lib/product-data";
 import { identifyIngredient } from "@/lib/matching";
+import { ingredientLanguage } from "@/lib/consumer-language";
+import { ResultGuide } from "@/components/result-guide";
 
 export default async function ProductPage({
   params,
@@ -18,41 +20,36 @@ export default async function ProductPage({
   return (
     <div className="container page">
       <Link href="/" className="back">
-        <ArrowLeft size={16} /> Back to discover
+        <ArrowLeft size={16} /> Back to Home
       </Link>
       <div className="breadcrumbs">
-        Discover <ChevronRight size={13} /> Product record
+        Home <ChevronRight size={13} /> Product details
       </div>
       <div className="detail-header">
         <div>
           <p className="overline">A closer look · Product</p>
           <h1>{product.name}</h1>
           <p className="detail-lead">
-            A closer look at the names on a herbal tea record and the plants
-            they may refer to.
+            See which plants these ingredient names may refer to, then open
+            a plant to read its research.
           </p>
           <div className="badge-row">
             <span className="pill">
               {localSnapshot
-                ? "Local source snapshot"
+                ? "Historical product records"
                 : "Fictional demo product"}
             </span>
             <span className="record-number">{product.number}</span>
           </div>
         </div>
-        <div className="detail-stamp">
-          <span>RECORD</span>
-          <strong>01</strong>
-          <small>in the collection</small>
-        </div>
       </div>
+      <ResultGuide found="Three ingredient names on this example label." meaning="Each name may connect to a plant in our library. Some common names can mean different plants." unknown="A label or registration record does not confirm a product’s actual contents, benefits or safety."><p>Open an ingredient below to learn about the possible plant and its research.</p></ResultGuide>
       <div className="detail-layout">
         <div>
           <section className="detail-section">
             <div className="section-title">
               <div>
-                <p className="overline">Declared composition</p>
-                <h2>What’s on the record</h2>
+                <h2>Ingredients on the label</h2>
               </div>
               <span>3 ingredients</span>
             </div>
@@ -60,7 +57,7 @@ export default async function ProductPage({
               {localSnapshot
                 ? "The local source snapshot lists three ingredients."
                 : "These fictional ingredients demonstrate the matching workflow."}{" "}
-              Follow a name to see how our small catalog interprets it.
+              Open a plant below to learn more.
             </p>
             <div className="ingredient-list">
               {ingredients.map((ingredient, index) => {
@@ -76,32 +73,20 @@ export default async function ProductPage({
                       <p>{ingredient.detail}</p>
                       <div className={`match-tag ${match.kind}`}>
                         <span />{" "}
-                        {match.kind === "ambiguous"
-                          ? "Species ambiguous"
-                          : match.kind === "alias"
-                            ? "Catalog alias match"
-                            : match.kind === "exact"
-                              ? "Scientific-name match"
-                              : "No catalog match"}
+                        {ingredientLanguage(match).label}
                       </div>
-                      <p className="match-explanation">{match.explanation}</p>
-                      {match.kind === "alias" && (
-                        <p className="match-explanation">
-                          This ingredient uses a common name only. This is a
-                          candidate identification, not an independently
-                          verified species.
-                        </p>
-                      )}
+                      <p className="match-explanation">{ingredientLanguage(match).explanation}</p>
                       {match.candidates.map((candidate) => (
                         <Link
                           className="candidate-link"
                           href={`/plants/${candidate.id}`}
                           key={candidate.id}
                         >
-                          <i>{candidate.name}</i>
+                          About {candidate.common}
                           <ArrowUpRight size={15} />
                         </Link>
                       ))}
+                      <details className="claim-method"><summary>See the name check</summary><p>{match.explanation}</p>{match.candidates.map((candidate) => <p key={candidate.id}><i>{candidate.name}</i></p>)}</details>
                     </div>
                   </div>
                 );
@@ -171,9 +156,8 @@ export default async function ProductPage({
             <Info size={20} />
             <h3>A record is a starting point</h3>
             <p>
-              A registration number match does not authenticate a physical
-              package or establish the product’s effectiveness, safety, or a
-              seller’s credentials.
+              A matching registration number does not prove a package is genuine,
+              that the product works or is safe, or that a seller is authorised.
             </p>
             <p>Check the manufacturer’s name and address, batch number, dates and packaging. A copied registration number can appear on a falsified package.</p>
             <Link className="source-link" href="/verify">Check the official source ↗</Link>

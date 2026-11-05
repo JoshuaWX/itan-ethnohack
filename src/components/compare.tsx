@@ -10,6 +10,10 @@ import { EvidenceExplorer } from "@/components/evidence-explorer";
 import { AskTrigger, shareComparison } from "@/components/ask-itan";
 import { taxonIds } from "@/lib/research-retrieval";
 import { useScanTransfer } from "@/components/scan-transfer";
+import { ingredientLanguage } from "@/lib/consumer-language";
+import { ResultGuide } from "./result-guide";
+import { researchCollection } from "@/lib/research-collection";
+import { ResearchCard } from "./research-card";
 
 type Entry = { name: string; text: string };
 const examples: Entry[] = [
@@ -26,6 +30,8 @@ export function Compare({ taxa, catalogSource }: { taxa: Taxon[]; catalogSource:
   const { ingredients: scanIngredients, setIngredients: setScanIngredients } = useScanTransfer();
   const result = compareProducts(entries.map((entry) => ({ name: entry.name, ingredients: splitIngredients(entry.text) })), taxa);
   const matchingSafety = findInteractionEvidence(result.products, medicine, interactionRecords);
+  const unknownEntries = result.products.flatMap((product) => product.ingredients.filter(({ match }) => match.kind === "unresolved").map(({ original }) => ({ product: product.name, original })));
+  const uniqueByProduct = result.products.map((product) => [...new Map(product.ingredients.flatMap(({ match }) => match.kind === "exact" ? match.candidates : []).map((taxon) => [taxon.id, taxon])).values()].filter((taxon) => !result.shared.some(({ id }) => id === taxon.id) && !result.possible.some(({ id }) => id === taxon.id)));
   useEffect(() => () => shareComparison(null), []);
   useEffect(() => {
     if (!scanIngredients) return;
@@ -46,20 +52,20 @@ export function Compare({ taxa, catalogSource }: { taxa: Taxon[]; catalogSource:
     const shared = result.shared.map(({ common }) => common).join(", ");
     const possible = result.possible.map(({ name }) => name).join(", ");
     const unresolved = result.products.reduce((count, { ingredients }) => count + ingredients.filter(({ match }) => match.kind === "unresolved").length, 0);
-    shareComparison({ ids, summary: `${shared ? `Confirmed catalog overlap: ${shared}.` : "No exact scientific-name overlap in this comparison."}${possible ? ` Possible overlap: ${possible}.` : ""}${unresolved ? ` Unresolved label entries: ${unresolved}.` : ""} Overlap alone does not establish an interaction.` });
+    shareComparison({ ids, summary: `${shared ? `These labels share scientific names for: ${shared}.` : "We could not confirm a shared ingredient from the scientific names on these labels."}${possible ? ` These plants may be shared, but their names need checking: ${possible}.` : ""}${unresolved ? ` We could not identify ${unresolved} ingredient names.` : ""} Sharing an ingredient alone does not show that a combination is dangerous.` });
   }
   function update(index: number, change: Partial<Entry>) {
     setEntries((current) => current.map((entry, i) => i === index ? { ...entry, ...change } : entry));
     clearResult();
   }
   return <>
-    <Link className="back" href="/">← Back to discover</Link>
+    <Link className="back" href="/">← Back to Home</Link>
     <div className="page-intro"><h1>Compare products</h1><p>{importedScan ? "Your confirmed ingredients are in the first product. Add another label to compare." : "Compare ingredients in two or three products. Try the fictional examples or replace them with your own labels."}</p></div>
-    {catalogSource === "fallback" && <p>Using the versioned offline catalog. It may not include recent updates.</p>}
+    {catalogSource === "fallback" && <p className="status-note">Using the plant library saved with this demo. Recent updates may be missing.</p>}
     <div id="scan" className="scan-lead"><h2>Add your labels</h2><p>Take a clear photo of the ingredient list or enter it yourself. Review the text before comparing.</p></div>
     <div className="compare-inputs">{entries.map((entry, index) => <section className="compare-card" key={index}>
       <h3>Product {index + 1}</h3>
-      <label htmlFor={`product-${index}`}>Product name</label>
+      <label htmlFor={`product-${index}`}>Product name (optional)</label>
       <input id={`product-${index}`} value={entry.name} onChange={(event) => update(index, { name: event.target.value })} />
       <label htmlFor={`ingredients-${index}`}>Ingredients, one per line or separated by commas</label>
       <textarea id={`ingredients-${index}`} rows={5} value={entry.text} onChange={(event) => update(index, { text: event.target.value })} />
@@ -67,23 +73,36 @@ export function Compare({ taxa, catalogSource }: { taxa: Taxon[]; catalogSource:
       {entries.length > 2 && <button type="button" className="compare-secondary" onClick={() => { setEntries((current) => current.filter((_, i) => i !== index)); clearResult(); }}>Remove product</button>}
     </section>)}</div>
     {entries.length < 3 && <button type="button" className="compare-secondary" onClick={() => { setEntries([...entries, { name: "Product 3", text: "" }]); clearResult(); }}>+ Add another product</button>}
-    <div className="compare-medicine"><label htmlFor="medicine">Explore a documented medicine interaction (optional)</label><select id="medicine" value={medicine} onChange={(event) => { setMedicine(event.target.value); clearResult(); }}><option value="">No medicine selected</option><option value="simvastatin">Simvastatin</option><option value="metformin">Metformin · animal evidence only</option></select></div>
+    <div className="compare-medicine"><label htmlFor="medicine">Include research about a medicine (optional)</label><select id="medicine" value={medicine} onChange={(event) => { setMedicine(event.target.value); clearResult(); }}><option value="">No medicine selected</option><option value="simvastatin">Simvastatin</option><option value="metformin">Metformin · studied in animals</option></select><p>This demo covers only a few studies. It cannot check whether a combination is safe for you.</p></div>
     <button className="button compare-submit" type="button" onClick={submit} disabled={entries.some((entry) => !splitIngredients(entry.text).length)}>Compare ingredients</button>
     {submitted && <div className="compare-results" aria-live="polite">
-      <section className="detail-section"><h2 ref={resultHeading} tabIndex={-1}>Shared ingredients</h2>{result.shared.length ? <ul>{result.shared.map((taxon) => <li key={taxon.id}><Link className="source-link" href={`/plants/${taxon.id}`}>{taxon.common} <i>({taxon.name})</i></Link><PlantPhoto id={taxon.id} name={taxon.common} /></li>)}</ul> : <p>No confirmed shared taxa in this small catalog.</p>}<p>Sharing an ingredient does not itself establish an interaction or danger.</p>
+      <h2 ref={resultHeading} tabIndex={-1}>Your comparison</h2>
+      <ResultGuide found={result.shared.length ? `The labels share scientific names for ${result.shared.map(({ common }) => common).join(", ")}.${result.possible.length ? " There are also possible matches to check below." : ""}` : result.possible.length ? `These products may share ${result.possible.map(({ common }) => common).join(", ")}. The label names need checking before we can confirm this.` : "We couldn’t confirm any shared ingredient names. Check the label lists and any unidentified ingredients below."} meaning="We compared the names on the labels. Sharing an ingredient alone does not mean the products are dangerous together." unknown="We cannot confirm amounts, actual product contents or whether these products are safe to take together."><p>Check the uncertain names below, then open a plant to read the research.</p></ResultGuide>
+      <section className="detail-section"><h2>Ingredients they share</h2>{result.shared.length ? <ul className="shared-plant-list">{result.shared.map((taxon) => <li key={taxon.id}><Link className="source-link" href={`/plants/${taxon.id}`}>{taxon.common} ↗</Link><PlantPhoto id={taxon.id} name={taxon.common} /></li>)}</ul> : <p>We couldn’t confirm a shared ingredient from the full scientific names on these labels. Common names may still refer to the same plant; check below.</p>}
       <AskTrigger className="source-link" label="Ask about this comparison" />
       </section>
-      <section className="detail-section"><h2>Unique scientific-name matches</h2><p>These taxa have an exact match on one label and no matching candidate on the other labels.</p>
+      {uniqueByProduct.some((items) => items.length) && <section className="detail-section"><h2>Ingredients found on only one label</h2><p>These scientific names matched on one label only. Names we are less sure about appear in the next section.</p>
         <div className="compare-columns">
         {result.products.map((product, index) => {
-          const unique = [...new Map(product.ingredients.flatMap(({ match }) => match.kind === "exact" ? match.candidates : []).map((taxon) => [taxon.id, taxon])).values()].filter((taxon) => !result.shared.some(({ id }) => id === taxon.id) && !result.possible.some(({ id }) => id === taxon.id));
-          return <article className="compare-column" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{unique.length ? <ul>{unique.map((taxon) => <li key={taxon.id}><Link href={`/plants/${taxon.id}`} className="source-link"><i>{taxon.name}</i> ↗</Link></li>)}</ul> : <p>No unique exact matches.</p>}</article>;
+          const unique = uniqueByProduct[index];
+          return <article className="compare-column" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{unique.length ? <ul>{unique.map((taxon) => <li key={taxon.id}><Link href={`/plants/${taxon.id}`} className="source-link">{taxon.common} ↗</Link></li>)}</ul> : <p>No ingredient could be placed here with certainty from its name.</p>}</article>;
         })}
         </div>
+      </section>}
+      <section className="detail-section"><h2>Names that need checking</h2>
+        {result.possible.length > 0 && <><h3>These may be the same ingredient</h3><p>For example, “cinnamon” can mean different plants. We need more detail before counting it as shared.</p><ul>{result.possible.map((taxon) => <li key={taxon.id}><Link className="source-link" href={`/plants/${taxon.id}`}>{taxon.common} ↗</Link></li>)}</ul></>}
+        {result.products.map((product, index) => {
+          const uncertain = product.ingredients.filter(({ match }) => match.kind === "alias" || match.kind === "ambiguous");
+          return uncertain.length > 0 && <div key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{uncertain.map(({ original, match }, row) => <p key={row}><strong>{original}:</strong> {ingredientLanguage(match).explanation}</p>)}</div>;
+        })}
+        {unknownEntries.length > 0 && <><h3>Ingredients we couldn’t identify</h3><ul>{unknownEntries.map((entry, index) => <li key={index}><strong>{entry.original}</strong> · {entry.product || "Unnamed product"}</li>)}</ul><p>Check the spelling or label photo. These plants may also be missing from our library.</p></>}
+        {!result.possible.length && !unknownEntries.length && !result.products.some((product) => product.ingredients.some(({ match }) => match.kind === "alias" || match.kind === "ambiguous")) && <p>All names matched a full scientific name in this library. This checks the label text, not the contents of the products.</p>}
       </section>
-      {result.possible.length > 0 && <section className="detail-section"><h2>Possible overlap</h2><p>Common or ambiguous names may refer to more than one species.</p><ul>{result.possible.map((taxon) => <li key={taxon.id}><Link className="source-link" href={`/plants/${taxon.id}`}><i>{taxon.name}</i> ↗</Link></li>)}</ul></section>}
-      <details className="detail-section compare-disclosure"><summary>Original label text and matching details</summary><p>Ìtàn checks original label entries against scientific names and documented aliases. Common names suggest possible identities.</p><div className="compare-columns">{result.products.map((product, index) => <article className="compare-column" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{product.ingredients.map(({ original, match }, row) => <div className="compare-row" key={row}><strong>{original}</strong><span>{match.kind === "unresolved" ? "Unresolved" : match.kind === "ambiguous" ? "Ambiguous" : match.kind === "exact" ? "Scientific-name match" : "Possible identity"}</span><p>{match.explanation}</p>{match.candidates.map((taxon) => <Link className="candidate-link" href={`/plants/${taxon.id}`} key={taxon.id}><i>{taxon.name}</i> ↗</Link>)}</div>)}</article>)}</div></details>
-      <section className="detail-section"><p className="overline">Evidence, separately</p><h2>Documented interaction research</h2>{matchingSafety.length ? matchingSafety.map((record) => <article className="guidance" key={record.source}><h3>{record.title}</h3><p>{record.summary}</p><p>{record.limitation}</p><a className="source-link" href={record.source} target="_blank" rel="noreferrer">Read the source ↗</a></article>) : <p>Insufficient evidence in this small curated collection to assess these combinations.</p>}<p>Missing records do not establish safety. This educational prototype does not check every interaction or clinical contraindication. Speak with a qualified health professional about medicines and herbal products.</p></section>
+      <details className="detail-section compare-disclosure"><summary>See the original labels and name checks</summary><p>Common names suggest a plant but do not confirm its exact identity.</p><div className="compare-columns">{result.products.map((product, index) => <article className="compare-column" key={index}><h3>{product.name || `Product ${index + 1}`}</h3>{product.ingredients.map(({ original, match }, row) => <div className="compare-row" key={row}><strong>{original}</strong><span>{ingredientLanguage(match).label}</span><p>{match.explanation}</p>{match.candidates.map((taxon) => <Link className="candidate-link" href={`/plants/${taxon.id}`} key={taxon.id}><i>{taxon.name}</i> ↗</Link>)}</div>)}</article>)}</div></details>
+      <section className="detail-section interaction-section"><h2>Research about effects on medicines</h2><p>This is separate from shared ingredients. It describes studies, not a personal safety check.</p>{matchingSafety.length ? matchingSafety.map((record) => {
+        const evidence = researchCollection.find((item) => item.url === record.source);
+        return evidence ? <ResearchCard key={record.source} record={evidence} /> : <article className="guidance" key={record.source}><h3>{record.title}</h3><p>{record.summary}</p><p>{record.limitation}</p><a className="source-link" href={record.source} target="_blank" rel="noreferrer">Read the source ↗</a></article>;
+      }) : <p>Ìtàn doesn’t have enough research to assess these combinations{medicine ? ` with ${medicine}` : ""}. This does not mean they are safe.</p>}<p>We do not check every possible effect between herbs and medicines, or every reason a product might be unsuitable. Ask a pharmacist before combining herbal products with medicines.</p></section>
     </div>}
     <EvidenceExplorer />
   </>;

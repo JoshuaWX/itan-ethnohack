@@ -10,8 +10,8 @@ export function PlantDirectory({ taxa }: { taxa: Taxon[] }) {
   const [query, setQuery] = useState("");
   const filtered = taxa.filter((plant) => normalizeName([plant.name, plant.common, ...plant.aliases].join(" ")).includes(normalizeName(query)));
   return <>
-    <label className="scan-field library-search">Find a plant by scientific, common or local name<input type="search" maxLength={80} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Ewuro, neem or ginger" /></label>
-    <p role="status">{filtered.length} plant records</p>
+    <label className="scan-field library-search">Search by plant name<input type="search" maxLength={80} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try Ewuro, neem or ginger" /></label>
+    <p role="status">{filtered.length} {filtered.length === 1 ? "plant" : "plants"} in this library</p>
     <div className="plant-directory">{filtered.map((plant) => <div key={plant.id} className="plant-directory-entry">
       <PlantPhoto id={plant.id} name={plant.common} />
       <Link className="plant-row" href={`/plants/${plant.id}`}><div><h2>{plant.common}</h2><i>{plant.name}</i></div><ArrowUpRight size={20} /></Link>

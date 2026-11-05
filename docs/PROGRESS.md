@@ -2,6 +2,63 @@
 
 Last updated: 2026-11-05 (Africa/Lagos).
 
+## Consumer clarity pass — 5 November 2026
+
+Local changes simplify the homepage, navigation, photo identification, scan,
+comparison, plant and claim results, Ask Ìtàn, and official-check guidance.
+Results use a shared finding/meaning/unknown/next-step layout. Edition 2.0.1
+adds original plain-language companions to all 19 existing evidence records.
+Original findings, limitations, source links and technical checks remain
+available in expandable details. All expert reviews remain pending.
+
+The 25 automated tests and TypeScript check pass. The production build passes.
+The unchanged botanical challenge set reports 12 correct single matches,
+zero incorrect single matches, two ambiguous results and ten abstentions across
+24 developer-authored cases. All 15 existing source-derived claim cases pass.
+These are development checks, not an independent scientific evaluation.
+
+Production browser checks covered nine routes at 320, 375, 768 and 1440 pixels
+(36 route/width combinations): all returned 200 with no horizontal overflow or
+visibly unnamed buttons. The 320px run used a short 480px viewport. Simulated
+text enlargement to a 32px body font passed on six main screens. Key hero,
+navigation and Ask controls measured at least 44px high. Keyboard skip-link
+focus and Ask focus restoration were observed; reduced-motion transitions were
+near zero. Selected new text colours were checked against their backgrounds.
+This is a targeted accessibility check, not a complete screen-reader audit.
+
+Real browser OCR on the two clean synthetic fixtures produced “hibiscus,
+ginger” and “roselle, guava”. Neither showed results before confirmation.
+A blank synthetic image produced a retake/manual-entry message and kept
+confirmation disabled. Corrected manual text, including an unknown ingredient,
+transferred unchanged to comparison slot one; slot two was empty. Reload cleared
+the transfer. Exact-name overlap, uncertain cinnamon, unknown names, source
+details, the roselle/simvastatin record and its six-person limitations were
+checked; a comparison link opened the ginger research page.
+
+Identification UI checks used a simulated candidate response: no request before
+consent, ranked-result language, plant link and replacement clearing consent and
+results were verified. A simulated service failure offered manual search and
+left retry enabled. A camera file picker opened during automation, but no
+physical camera or live Pl@ntNet prediction was validated in this pass.
+Assistant checks covered local app help, unsupported questions, withdrawal and
+focus restoration. Simulated unavailable-provider, quota and rejected-answer
+responses retained cited summaries; an aborted request used saved summaries.
+One actual Gemini answer about PMID 28925046 was observed and checked against
+the record for participant count, preparation, direction and source ID. This
+does not establish general answer accuracy. No database migration, quota code,
+credentials or provider settings were changed; the older missing-RPC observation
+below is historical and was not independently re-audited here.
+
+The production service worker opened the offline fallback with network access
+disabled. The standalone manifest and both icons returned 200. Development no
+longer newly registers the production service worker, avoiding stale dev assets.
+No commit, push, deployment, new dependency or optional feature was introduced.
+
+The handoff contains three novice-user tasks; no volunteer testing has occurred.
+Physical-phone camera, difficult real-world label OCR, installation and assistive
+technology checks remain outstanding, along with botanist/pharmacist review.
+Production preview for local review: http://localhost:3036/.
+
 ## Mentor corrections and claim analysis
 
 The local app removes guava from the homepage/cholera presentation. Disease

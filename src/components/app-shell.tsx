@@ -9,14 +9,14 @@ import { ScanTransferProvider } from "./scan-transfer";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   useEffect(() => {
-    if ("serviceWorker" in navigator)
+    if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => {});
   }, []);
   const nav = [
-    { href: "/", label: "Discover", icon: Compass },
+    { href: "/", label: "Home", icon: Compass },
     { href: "/compare", label: "Compare", icon: Search },
     { href: "/plants", label: "Plants", icon: Leaf },
-    { href: "/awareness", label: "Awareness", icon: BookOpen },
+    { href: "/awareness", label: "Health info", icon: BookOpen },
   ];
   const isCurrent = (href: string) =>
     href === "/" ? pathname === "/" || pathname.startsWith("/products/") : pathname.startsWith(href);
@@ -53,7 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
           <Link className="header-search" href="/#explore">
             <Search size={17} />
-            <span>Explore the guide</span>
+            <span>Search</span>
           </Link>
         </div>
       </header>

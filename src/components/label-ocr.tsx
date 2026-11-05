@@ -54,12 +54,13 @@ export function LabelOcr({ onConfirm, onEdit, standalone = false }: {
     <PhotoPicker accept="image/*" disabled={busy} replacing={Boolean(photoName)} onPick={(file) => void scan(file)} />
     {photoName && <p className="photo-file">{photoName}</p>}
     <p role="status">{status}</p>
-    {original && <details><summary>Original extracted text</summary><pre>{original}</pre></details>}
+    {original && <details><summary>See the original text read from the photo</summary><pre>{original}</pre></details>}
     {(standalone || original) && <>
-      <label className="scan-field">{standalone ? "Review or type ingredients" : "Review ingredients"}
+      <label className="scan-field">{standalone ? "Check or type the ingredients" : "Check the ingredients"}
         <textarea rows={standalone ? 4 : 3} value={draft} disabled={busy} placeholder="Enter one ingredient per line, or separate them with commas" onChange={(event) => { setDraft(event.target.value); onEdit?.(); }} />
       </label>
-      <button type="button" className={standalone ? "button" : "compare-secondary"} disabled={busy || !splitIngredients(draft).length} onClick={() => { onConfirm(draft.trim()); setStatus(standalone ? "Ingredients confirmed." : "Ingredients added. You can still edit them above."); }}>Confirm ingredients</button>
+      <p>Correct any missing or misspelled names. Then confirm the list to see your results.</p>
+      <button type="button" className={standalone ? "button" : "compare-secondary"} disabled={busy || !splitIngredients(draft).length} onClick={() => { onConfirm(draft.trim()); setStatus(standalone ? "Ingredients confirmed. Your results are below." : "Ingredients added. You can still edit them above."); }}>Confirm ingredients</button>
     </>}
   </div>;
 }

@@ -1,15 +1,16 @@
 import { sources } from "./catalog.ts";
 import { nigerianEvidence } from "./nigerian-evidence.ts";
+import { plainEvidence } from "./plain-evidence.ts";
 
-export const evidenceVersion = "2.0.0";
+export const evidenceVersion = "2.0.1";
 export const evidenceLabels = {
-  traditional: "Documented traditional use",
-  laboratory: "Laboratory research",
-  human: "Human research",
-  guidance: "Official public-health guidance",
-  animal: "Animal research",
-  ethnobotanical: "Ethnobotanical survey",
-  review: "Evidence review",
+  traditional: "Traditional use",
+  laboratory: "Tested in a laboratory",
+  human: "Studied in people",
+  guidance: "Official health guidance",
+  animal: "Studied in animals",
+  ethnobotanical: "Reported traditional use",
+  review: "Review of several studies",
 };
 
 export type EvidenceInput = {
@@ -128,6 +129,7 @@ const entries: EvidenceInput[] = [
 
 export const researchCollection = entries.map((entry) => ({
   ...entry,
+  plain: plainEvidence[entry.id],
   sourceVerification: "checked against linked source" as const,
   checkedOn: entry.checkedOn ?? "2026-11-04",
   expertReview: "pending" as const,
