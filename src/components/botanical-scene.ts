@@ -1,9 +1,39 @@
 import {
-  ACESFilmicToneMapping, Box3, DirectionalLight, Group, HemisphereLight,
-  MathUtils, Mesh, OrthographicCamera, Quaternion, Scene, Texture, Vector3,
+  ACESFilmicToneMapping, Box3, DirectionalLight, Float32BufferAttribute, Group,
+  HemisphereLight, MathUtils, Mesh, OrthographicCamera, Quaternion, Scene, Texture, Vector3,
   WebGLRenderer, type Material,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+// The authored leaf blades grow along local +X. Bend across their surface,
+// keeping the roots fixed. The normal delta follows the slope of the bend.
+function addLeafBend(mesh: Mesh) {
+  const geometry = mesh.geometry;
+  const positions = geometry.getAttribute("position");
+  const normals = geometry.getAttribute("normal");
+  geometry.computeBoundingBox();
+  const length = geometry.boundingBox?.max.x ?? 0;
+  if (length <= 0 || !normals) return;
+  const positionDelta = new Float32Array(positions.count * 3);
+  const normalDelta = new Float32Array(normals.count * 3);
+  const bentNormal = new Vector3();
+  for (let index = 0; index < positions.count; index++) {
+    const alongBlade = Math.max(0, positions.getX(index) / length);
+    const offset = index * 3;
+    positionDelta[offset + 1] = length * 0.18 * alongBlade ** 2;
+    const x = normals.getX(index);
+    const y = normals.getY(index);
+    const z = normals.getZ(index);
+    bentNormal.set(x - y * 0.36 * alongBlade, y, z).normalize();
+    normalDelta[offset] = bentNormal.x - x;
+    normalDelta[offset + 1] = bentNormal.y - y;
+    normalDelta[offset + 2] = bentNormal.z - z;
+  }
+  geometry.morphTargetsRelative = true;
+  geometry.morphAttributes.position = [new Float32BufferAttribute(positionDelta, 3)];
+  geometry.morphAttributes.normal = [new Float32BufferAttribute(normalDelta, 3)];
+  mesh.updateMorphTargets();
+}
 
 function cameraBounds(plant: Group, camera: OrthographicCamera) {
   plant.updateMatrixWorld(true);
@@ -64,23 +94,26 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
 
   const scene = new Scene();
   const sway = new Group();
-  scene.add(sway, new HemisphereLight(0xfffbef, 0x60794e, 1.35));
-  const key = new DirectionalLight(0xfff2dc, 2.65);
-  key.position.set(2, 3, 2);
-  const rim = new DirectionalLight(0xffffeb, 1.4);
-  rim.position.set(-2, 2, -1);
-  scene.add(key, rim);
-
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
-  camera.position.set(1.72, 1.42, 1.68);
-  camera.lookAt(0, 0.5, 0);
-  camera.rotateZ(0.1);
+  camera.position.set(1.26, 1.92, 1.96);
+  camera.lookAt(0, 0.52, 0);
+  camera.rotateZ(0.27);
+
+  const key = new DirectionalLight(0xffebcb, 2.3);
+  key.position.set(-2.5, 2.2, 1.8).applyQuaternion(camera.quaternion);
+  const fill = new DirectionalLight(0xf1f0df, 0.46);
+  fill.position.set(1, 0.4, 2.2).applyQuaternion(camera.quaternion);
+  const rim = new DirectionalLight(0xfff1ce, 1.35);
+  rim.position.set(1.8, 1.4, -2.5).applyQuaternion(camera.quaternion);
+  scene.add(sway, new HemisphereLight(0xf7f7e7, 0x63744a, 0.95), key, fill, rim);
 
   const mouse = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const desktop = window.matchMedia("(min-width: 1024px)");
   const controller = new AbortController();
   const hingeAxis = new Vector3(0, 0, 1);
   const hinge = new Quaternion();
   const petals: { mesh: Mesh; rest: Quaternion }[] = [];
+  const leaves: { mesh: Mesh; rest: Quaternion; side: number; flex: number }[] = [];
   let model: Group | undefined;
   let bounds: Box3 | undefined;
   let disposed = false;
@@ -107,7 +140,8 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
     const size = bounds.getSize(new Vector3());
     const aspect = width / height;
     // Keep a margin around the projected silhouette for sway and pointer movement.
-    const halfHeight = Math.max(size.y, size.x / aspect) / 1.64;
+    const coverage = desktop.matches ? 0.94 : 0.82;
+    const halfHeight = Math.max(size.y, size.x / aspect) / (2 * coverage);
     const halfWidth = halfHeight * aspect;
     camera.left = center.x - halfWidth;
     camera.right = center.x + halfWidth;
@@ -124,21 +158,31 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
     const dt = previous ? Math.min((now - previous) / 1000, 0.08) : 0;
     previous = now;
     elapsed += dt;
-    easedX = MathUtils.damp(easedX, mouseX, 4, dt);
-    easedY = MathUtils.damp(easedY, mouseY, 4, dt);
+    easedX = MathUtils.damp(easedX, mouseX, 5, dt);
+    easedY = MathUtils.damp(easedY, mouseY, 5, dt);
     easedScroll = MathUtils.damp(easedScroll, scroll, 5, dt);
     const settling = (1 - MathUtils.clamp(elapsed / 1.3, 0, 1)) ** 3;
-    const breeze = Math.sin(elapsed * 0.93) * 0.014 + Math.sin(elapsed * 0.41) * 0.007;
-    sway.position.set(easedX * 0.024, -settling * 0.045 + easedY * 0.012 + easedScroll * 0.035, 0);
+    const breeze = Math.sin(elapsed * 0.93) * 0.021 + Math.sin(elapsed * 0.41) * 0.009;
+    sway.position.set(easedX * 0.026, -settling * 0.04 + easedY * 0.012 + easedScroll * 0.035, 0);
     sway.rotation.set(
-      -easedY * 0.05,
-      easedX * 0.085 + easedScroll * 0.11 - settling * 0.075,
-      breeze,
+      -easedY * 0.085,
+      easedX * 0.19 + easedScroll * 0.12 - settling * 0.055,
+      breeze - easedX * 0.047,
     );
     petals.forEach(({ mesh, rest }, index) => {
-      const opening = MathUtils.smoothstep(elapsed - index * 0.07, 0.08, 0.95);
-      hinge.setFromAxisAngle(hingeAxis, 0.13 * (1 - opening));
+      const opening = MathUtils.smoothstep(elapsed - index * 0.1, 0.05, 1.05);
+      const breath = Math.sin(elapsed * 0.8 - index * 0.7) * 0.023 * opening;
+      hinge.setFromAxisAngle(hingeAxis, 0.16 * (1 - opening) + breath);
       mesh.quaternion.copy(rest).multiply(hinge);
+    });
+    leaves.forEach((leaf, index) => {
+      const breeze = Math.sin(elapsed * 1.24 - index * 1.8) * 0.36;
+      const response = breeze + mouseY * 0.43 + mouseX * leaf.side * 0.47 - easedScroll * 0.2;
+      leaf.flex = MathUtils.damp(leaf.flex, MathUtils.clamp(response, -1, 1), 3.4 - index * 0.6, dt);
+      hinge.setFromAxisAngle(hingeAxis, leaf.flex * 0.12);
+      leaf.mesh.quaternion.copy(leaf.rest).multiply(hinge);
+      const weights = leaf.mesh.morphTargetInfluences;
+      if (weights) weights[0] = leaf.flex;
     });
 
     try {
@@ -156,6 +200,7 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
 
   function updateActivity() {
     const active = !disposed && model && visible && !document.hidden;
+    host.toggleAttribute("data-scene-active", Boolean(active));
     if (!active && frame) {
       cancelAnimationFrame(frame);
       frame = 0;
@@ -167,9 +212,11 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
 
   function onPointerMove(event: PointerEvent) {
     if (!visible || !mouse.matches || event.pointerType !== "mouse") return;
-    const rect = hero.getBoundingClientRect();
-    mouseX = MathUtils.clamp((event.clientX - rect.left) / rect.width * 2 - 1, -1, 1);
-    mouseY = MathUtils.clamp(1 - (event.clientY - rect.top) / rect.height * 2, -1, 1);
+    const rect = host.getBoundingClientRect();
+    const horizontal = (event.clientX - rect.left) / rect.width;
+    const influence = MathUtils.lerp(0.14, 1, MathUtils.smoothstep(horizontal, -0.6, 0.16));
+    mouseX = MathUtils.clamp(horizontal * 2 - 1, -1, 1) * influence;
+    mouseY = MathUtils.clamp(1 - (event.clientY - rect.top) / rect.height * 2, -1, 1) * influence;
   }
 
   function resetPointer() {
@@ -200,6 +247,7 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
   hero.addEventListener("pointermove", onPointerMove, { passive: true });
   hero.addEventListener("pointerleave", resetPointer);
   mouse.addEventListener("change", onPointerChange);
+  desktop.addEventListener("change", resize);
   window.addEventListener("scroll", onScroll, { passive: true });
   document.addEventListener("visibilitychange", updateActivity);
   canvas.addEventListener("webglcontextlost", dispose);
@@ -214,6 +262,7 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
     hero.removeEventListener("pointermove", onPointerMove);
     hero.removeEventListener("pointerleave", resetPointer);
     mouse.removeEventListener("change", onPointerChange);
+    desktop.removeEventListener("change", resize);
     window.removeEventListener("scroll", onScroll);
     document.removeEventListener("visibilitychange", updateActivity);
     canvas.removeEventListener("webglcontextlost", dispose);
@@ -239,9 +288,32 @@ export function mountBotanicalScene(host: HTMLDivElement, hero: HTMLElement) {
     plant.position.y -= size.min.y;
     sway.scale.setScalar(1 / height);
     sway.add(plant);
+    // Move the complete bloom around the junction at the top of the stem.
+    const crown = new Group();
+    const receptacle = plant.getObjectByName("Receptacle");
+    if (receptacle) {
+      crown.position.copy(receptacle.position);
+      const floralParts = plant.children.filter(({ name }) =>
+        /^(Anther|Filament|Ovary|Petal|Receptacle|Sepal|Stigma)([ _]|$)/.test(name));
+      plant.add(crown);
+      for (const part of floralParts) {
+        part.position.sub(crown.position);
+        crown.add(part);
+      }
+      const towardViewer = new Vector3(camera.position.z, 0, -camera.position.x).normalize();
+      crown.quaternion.setFromAxisAngle(towardViewer, 0.24);
+      crown.scale.setScalar(1.23);
+    }
+    const inverseCameraRotation = camera.quaternion.clone().invert();
     plant.traverse((object) => {
-      if (object instanceof Mesh && /^Petal[ _][1-3]$/.test(object.name)) {
+      if (!(object instanceof Mesh)) return;
+      if (/^Petal[ _][1-3]$/.test(object.name)) {
         petals.push({ mesh: object, rest: object.quaternion.clone() });
+      } else if (/^Leaf[ _][1-3]$/.test(object.name)) {
+        addLeafBend(object);
+        const side = new Vector3(1, 0, 0).applyQuaternion(object.quaternion)
+          .applyQuaternion(inverseCameraRotation).x;
+        leaves.push({ mesh: object, rest: object.quaternion.clone(), side, flex: 0 });
       }
     });
     bounds = cameraBounds(sway, camera);

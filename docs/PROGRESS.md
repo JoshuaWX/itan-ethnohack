@@ -29,6 +29,14 @@ Ran it twice in Blender 5.2.2 and verified that the rerun replaced the plant
 while retaining an unrelated test object. The 2.67 MB Desktop GLB re-imported
 with 27 mesh objects, double-sided leaf and petal surfaces, and four embedded
 color and normal textures.
+## Botanical hero refinement — 6 November 2026
+
+Added layered green lighting, two blurred corner accents from the existing
+model, a closer view of the bloom and independent leaf flex. Local Chromium
+checks covered 1440, 1024, 768, 701, 700 and 390 CSS pixels, keyboard navigation,
+emulated touch scrolling, and zero artwork requests at the two phone widths.
+Verified the poster with reduced motion, data saving, blocked WebGL, a failed
+model request and context loss. Physical-device testing is pending.
 
 ## Compare medicine studies — 6 November 2026
 

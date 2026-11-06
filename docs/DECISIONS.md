@@ -21,6 +21,13 @@ sepals and flower center using the description in
 [Flora of North America](https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242101995).
 Generate leaf and petal color and normal maps in Blender and embed them in the
 Desktop GLB.
+## Homepage botanical artwork — 6 November 2026
+
+Keep the supplied GLB and use its authored pivots for petal opening and leaf
+bending. Frame the desktop bloom more tightly and keep the whole plant on
+tablet. Use a transparent poster rendered from the same scene when motion or
+WebGL is unavailable. At 700 CSS pixels and below, omit artwork requests so the
+home actions remain fast to reach.
 
 ## Claim-to-evidence ranking — 6 November 2026
 
