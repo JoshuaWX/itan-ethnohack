@@ -1,5 +1,13 @@
 # Decisions
 
+## Homepage botanical artwork — 6 November 2026
+
+Keep the supplied GLB and use its authored pivots for petal opening and leaf
+bending. Frame the desktop bloom more tightly and keep the whole plant on
+tablet. Use a transparent poster rendered from the same scene when motion or
+WebGL is unavailable. At 700 CSS pixels and below, omit artwork requests so the
+home actions remain fast to reach.
+
 ## Claim-to-evidence ranking — 6 November 2026
 
 Keep the auditable lexical baseline. Do not introduce embeddings on a

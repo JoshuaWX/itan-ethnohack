@@ -1,5 +1,14 @@
 # Progress
 
+## Botanical hero refinement — 6 November 2026
+
+Added layered green lighting, two blurred corner accents from the existing
+model, a closer view of the bloom and independent leaf flex. Local Chromium
+checks covered 1440, 1024, 768, 701, 700 and 390 CSS pixels, keyboard navigation,
+emulated touch scrolling, and zero artwork requests at the two phone widths.
+Verified the poster with reduced motion, data saving, blocked WebGL, a failed
+model request and context loss. Physical-device testing is pending.
+
 ## Compare medicine studies — 6 November 2026
 
 Documented herb–medicine studies now appear when a compared label names the

@@ -46,6 +46,11 @@ export default function Home() {
           <div className="hero-art" aria-hidden="true">
             <div className="art-orbit orbit-one" />
             <div className="art-orbit orbit-two" />
+            <svg className="art-trail" viewBox="0 0 520 560" preserveAspectRatio="none" fill="none">
+              <path d="M 11 470 C 123 544 222 491 287 361 S 403 95 491 143" />
+              <path className="art-trail-tip" d="M 484 134 L 491 143 L 479 146" />
+              <circle cx="11" cy="470" r="3" />
+            </svg>
             <BotanicalHero />
             <span className="art-label label-one">A closer look</span>
             <span className="art-label label-two">
