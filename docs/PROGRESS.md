@@ -1,5 +1,11 @@
 # Progress
 
+## Compare medicine studies — 6 November 2026
+
+Documented herb–medicine studies now appear when a compared label names the
+plant. The medicine menu narrows that list. Absence of a record remains
+insufficient evidence, not a safety clearance. No new sources were added.
+
 ## Claim-to-evidence pipeline — 6 November 2026
 
 - Kept the existing lexical corpus, matcher and Gemini support check. Added

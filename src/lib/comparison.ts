@@ -47,11 +47,11 @@ export function findInteractionEvidence(products: ComparedProduct[], medicine: s
   const matchedIds = new Set(products.flatMap((product) => product.ingredients.flatMap(({ match }) =>
     match.kind === "exact" || match.kind === "alias" ? [match.candidates[0].id] : [],
   )));
-  return records.filter((record) => matchedIds.has(record.taxonId) && (
-    record.type === "herb-drug"
-      ? Boolean(medicine) && record.medicine === medicine
-      : Boolean(record.otherTaxonId) && matchedIds.has(record.otherTaxonId!)
-  ));
+  return records.filter((record) => {
+    if (!matchedIds.has(record.taxonId)) return false;
+    if (record.type === "herb-herb") return Boolean(record.otherTaxonId) && matchedIds.has(record.otherTaxonId);
+    return !medicine || record.medicine === medicine;
+  });
 }
 
 export const interactionRecords: InteractionRecord[] = [{

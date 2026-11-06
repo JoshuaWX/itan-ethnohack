@@ -18,15 +18,22 @@ test("a duplicate within one product does not count as overlap", () => {
   assert.equal(result.shared.length, 0);
 });
 
-test("interaction evidence is scoped to roselle and simvastatin", () => {
+test("documented medicine studies appear for a matched plant without a selected medicine", () => {
   const result = compareProducts([{ name: "A", ingredients: ["roselle"] }, { name: "B", ingredients: ["guava"] }], taxa);
-  const found = findInteractionEvidence(result.products, "simvastatin", interactionRecords);
+  const found = findInteractionEvidence(result.products, "", interactionRecords);
   assert.equal(found.length, 1);
   assert.equal(found[0].taxonId, "hibiscus");
   assert.match(found[0].source, /28925046/);
-  assert.equal(findInteractionEvidence(result.products, "", interactionRecords).length, 0);
+  assert.equal(findInteractionEvidence(result.products, "simvastatin", interactionRecords)[0]?.medicine, "simvastatin");
+  assert.equal(findInteractionEvidence(result.products, "metformin", interactionRecords).length, 0);
   const noRoselle = compareProducts([{ name: "A", ingredients: ["ginger"] }, { name: "B", ingredients: ["guava"] }], taxa);
-  assert.equal(findInteractionEvidence(noRoselle.products, "simvastatin", interactionRecords).length, 0);
+  assert.equal(findInteractionEvidence(noRoselle.products, "", interactionRecords).length, 0);
+});
+
+test("a medicine choice narrows the studies instead of hiding every other plant", () => {
+  const result = compareProducts([{ name: "A", ingredients: ["roselle", "Ewuro"] }], taxa);
+  assert.deepEqual(findInteractionEvidence(result.products, "", interactionRecords).map((row) => row.medicine), ["metformin", "simvastatin"]);
+  assert.deepEqual(findInteractionEvidence(result.products, "metformin", interactionRecords).map((row) => row.taxonId), ["bitter-leaf"]);
 });
 
 test("local-name comparison links bitter leaf to the preclinical metformin record", () => {

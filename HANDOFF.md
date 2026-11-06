@@ -28,8 +28,11 @@ through in-memory state. A reload returns Compare to the example products.
 The existing QR and registration lookup stays linked separately.
 
 SkinSort inspired the product columns and the shared, unique and possible
-overlap sections. Examine inspired the evidence overview and expandable study
-details. Ada’s guided choices appear in Ask Ìtàn, which fills the phone viewport
+overlap sections. A listed plant with a documented medicine study shows that
+study without a medicine being selected. Choosing a medicine only narrows the
+list. No record is not a safety clearance.
+
+Examine inspired the evidence overview and expandable study details. Ada’s guided choices appear in Ask Ìtàn, which fills the phone viewport
 and opens as a compact panel on wider screens. The consent toggle stays visible.
 
 ## Consumer language and result layout
