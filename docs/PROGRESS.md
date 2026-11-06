@@ -1,5 +1,35 @@
 # Progress
 
+## Claim-to-evidence submission pack — 6 November 2026
+
+Prepared the Devpost copy, eight-slide editable PowerPoint and PDF, storyboard,
+cover image, two hosted screenshots and timed recording guide in the local
+`outputs/submission` folder. Microsoft PowerPoint opened and rendered all eight
+slides. The team roster remains editable in the deck and Devpost copy.
+
+Rehearsed “Does bitter leaf lower blood sugar?” on the public app and confirmed
+the expected finding plus the human and rat study links. A clean public clone
+at `a4425ce` passed installation, 39 automated tests, the production build,
+TypeScript, 34 of 34 claim cases and 16 of 16 separate retrieval questions.
+The local development server returned the expected claim result without provider
+keys. After the public branch advanced to `44d3212`, its tests, claim and retrieval
+checks, build and TypeScript check also passed. These are team-written software
+checks. Specialist and first-time-user review are pending.
+
+The Devpost owner still needs to verify signed-in form fields, fill the roster,
+confirm the repository naming instruction, add the recorded video link and
+submit. The README update is on the local branch. The current public tree
+excludes the old context folder. Earlier public commits still contain it.
+
+## Procedural Trillium asset — 6 November 2026
+
+Reworked the [generator](../scripts/generate_stylized_flower.py) with curved,
+veined leaves, a tilted flower with ruffled petals, sepals and a modeled center.
+Ran it twice in Blender 5.2.2 and verified that the rerun replaced the plant
+while retaining an unrelated test object. The 2.67 MB Desktop GLB re-imported
+with 27 mesh objects, double-sided leaf and petal surfaces, and four embedded
+color and normal textures.
+
 ## Compare medicine studies — 6 November 2026
 
 Documented herb–medicine studies now appear when a compared label names the

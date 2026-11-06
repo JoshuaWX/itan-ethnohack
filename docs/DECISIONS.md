@@ -1,5 +1,27 @@
 # Decisions
 
+## Submission focus — 6 November 2026
+
+Lead the Track 4 pitch with claim checking. Use the hosted bitter leaf example
+to show how the app distinguishes a short human study of bitter leaf alone and
+a three-plant blend from research in rats and reported traditional use. Use
+real app captures for the result and a clearly labelled illustrated storyboard
+for the example user journey. The team will fill in the editable roster.
+
+Use the existing public repository in submission drafts while the owner
+confirms the organizer's naming instruction. Deliver an editable PowerPoint
+with a PDF export for the Devpost file field.
+
+## Procedural Trillium asset — 6 November 2026
+
+Keep the [Blender generator](../scripts/generate_stylized_flower.py) as the
+editable source. Use the supplied screenshots to guide the tilted bloom, curved
+petals and veined leaf shapes. Keep three leaves and three petals and model the
+sepals and flower center using the description in
+[Flora of North America](https://www.efloras.org/florataxon.aspx?flora_id=1&taxon_id=242101995).
+Generate leaf and petal color and normal maps in Blender and embed them in the
+Desktop GLB.
+
 ## Claim-to-evidence ranking — 6 November 2026
 
 Keep the auditable lexical baseline. Do not introduce embeddings on a
