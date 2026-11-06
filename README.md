@@ -1,20 +1,20 @@
 # Ìtàn
 
-Ìtàn is a Nigeria-first research prototype for **EthnoHack 2026, Track 4: Digital Health & Phytotherapy**. It helps people explore medicinal plants and understand the ingredient names on herbal products.
+Ìtàn is a Nigeria-first research prototype for **EthnoHack 2026, Track 4: Digital Health & Phytotherapy**. It helps people check claims about medicinal plants and see what researchers found, who they studied, and what remains unclear.
 
-In Nigeria, herbal product labels can contain unfamiliar plant names, and people may find it difficult to distinguish traditional uses from scientific research. Ìtàn brings plant names, product-label information and links to research together in one place.
+People hear claims about medicinal plants in everyday conversation, on product labels and online. Ìtàn lets them follow a claim to the relevant studies in its collection and see the differences between reported traditional use, animal or laboratory results, and research in people.
 
-**[Open the demonstration](https://itan-ethnohack.vercel.app/)** · [Teammate handoff](HANDOFF.md) · [Third-party notices](docs/THIRD_PARTY_NOTICES.md)
+**[Try the claim checker](https://itan-ethnohack.vercel.app/claims)** · [App home](https://itan-ethnohack.vercel.app/) · [Teammate handoff](HANDOFF.md) · [Third-party notices](docs/THIRD_PARTY_NOTICES.md)
 
-Browsing, label reading, ingredient comparison and research summaries work without provider keys. Live photo identification and optional AI explanations depend on the deployment configuration. Both providers were exercised in local testing.
+Claim checking, browsing, label reading and ingredient comparison work without provider keys. Live photo identification and optional AI explanations depend on the deployment configuration. Both providers were exercised in local testing.
 
 ## What you can try
 
-1. **Identify a plant:** when the service is available, add a photo and consent to sending it to Pl@ntNet. It suggests possible plant names. A photo cannot confirm identity or safety. If the service is unavailable, search the library by name.
-2. **Scan a herbal product:** photograph an ingredient list or type it manually. Text recognition runs in your browser; correct and confirm the text before using it.
-3. **Compare products:** enter ingredients from two or three labels, or try the clearly fictional examples. Ìtàn shows matching scientific names, possible overlaps and names it cannot identify. A shared ingredient does not by itself mean a combination is dangerous.
-4. **Explore research:** browse the plant library or check a claim. Findings link to sources and identify what was studied and what remains uncertain. Ask Ìtàn can guide navigation and, with consent and working provider configuration, explain selected records.
-5. **Read health information:** the cholera page uses an archived 2024 advisory, and the malaria page links to official guidance. The app does not monitor outbreaks live.
+1. **Check a plant claim.** Try “Does bitter leaf lower blood sugar?” Open the study in people and the study in rats, then follow their source links.
+2. **Explore research.** Browse the plant library for local names and source summaries. Ask Ìtàn can guide navigation and, with consent and a configured provider, explain selected records.
+3. **Scan and compare labels.** Review the ingredients read from a photo or enter them yourself. Compare two or three labels to see matching names, possible overlaps and unidentified names.
+4. **Identify a plant.** With consent and a configured Pl@ntNet service, add a photo to get possible names. The library also supports manual search.
+5. **Read health information.** The cholera page uses an archived 2024 advisory, and the malaria page links to official guidance.
 
 A registration number can be checked on the linked NAFDAC websites. Ìtàn does not currently perform a live NAFDAC database lookup or authenticate the physical package.
 
@@ -22,6 +22,7 @@ The library contains **19 source-linked records across eight plants** and public
 
 ## How it works
 
+- The claim checker matches the plant name and the stated effect to the curated collection. It checks the study result, the preparation and who or what researchers studied before showing a finding and links to the original sources.
 - The label scanner uses **optical character recognition (OCR)** to suggest text from an image. Users review the suggestion.
 - A rule-based matcher compares ingredient names against scientific names and aliases in the plant library. Common names can point to more than one plant, so possible matches stay uncertain.
 - Comparison groups matching names and shows relevant, limited interaction research separately.
@@ -49,7 +50,7 @@ You need [Node.js 24](https://nodejs.org/), npm, and Git. A code editor such as 
    ```
 
 3. Open the local address printed in the terminal, usually [http://localhost:3000](http://localhost:3000). If that port is in use, follow the address printed by the terminal.
-4. Choose **Scan a herbal product** to enter ingredients manually, or open **Compare products** and try the fictional examples.
+4. Open **Check a plant claim** or go to `/claims`. Enter “Does bitter leaf lower blood sugar?” and choose **Check the research**.
 
 Press `Ctrl+C` in the terminal to stop the server. No credentials are needed for these manual flows or the saved research collection.
 
@@ -78,11 +79,13 @@ Gemini and Pl@ntNet also require the protected quota function from `supabase/mig
 
 ```powershell
 npm test
+npm run audit:claims
+npm run audit:retrieval -- holdout
 npx --no-install tsc --noEmit
 npm run build
 ```
 
-The local audit passed 32 automated test groups, type checking, a production build and 21 input-validation checks. The 24 botanical challenge cases yielded 12 correct single matches, zero incorrect single matches, two ambiguous results and ten abstentions. The separate 16-question research search check returned expected results on 12 questions and missed relevant records on four. Browser OCR read four upright synthetic labels, abstained on a blank, and failed to read a tilted label. These are small developer-authored checks. See the [handoff](HANDOFF.md#reproduce-the-evaluation) for the evaluation commands and remaining device checks.
+On 6 November 2026, a clean clone of revision `a4425ce` passed 39 automated tests, returned the expected results on 34 of 34 claim cases and retrieved the expected records on 16 of 16 questions in the separate retrieval set. The team wrote these checks. Specialist review and first-time-user testing are pending. See the [handoff](HANDOFF.md#reproduce-the-evaluation) for fixture details and remaining checks.
 
 The NAFDAC product examples included in the public default are fictional. A separate local NAFDAC snapshot is excluded from Git and must not be included in a public release until its reuse rights are resolved. Scientific summaries link to their original sources; research and image provenance are documented in the app and [third-party notices](docs/THIRD_PARTY_NOTICES.md).
 
