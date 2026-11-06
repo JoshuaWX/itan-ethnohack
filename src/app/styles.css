@@ -335,7 +335,7 @@ input:focus-visible {
   .hero:has(.hero-flower[data-scene-ready])::after { animation-delay: -6s; }
   .hero:has(.hero-flower[data-scene-active])::before,
   .hero:has(.hero-flower[data-scene-active])::after { animation-play-state: running; }
-  .hero-art { inset: 8% 14px -19% 49%; }
+  .hero-art { inset: 5.5% 14px -16.5% 49%; }
   .hero-flower-poster { inset: 3%; }
   .orbit-one { width: 91%; }
   .orbit-two { width: 72%; }
