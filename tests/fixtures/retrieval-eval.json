@@ -1,0 +1,20 @@
+[
+  {"question":"What is known about bitter leaf?","expected":["southwest-diabetes-survey","kwara-survey","north-central-survey","bitter-leaf-human-glucose","bitter-leaf-rat-glucose","bitter-leaf-metformin"]},
+  {"question":"Which bitter leaf studies were done in humans?","expected":["bitter-leaf-human-glucose"]},
+  {"question":"What are the side effects of pawpaw leaf?","expected":["papaya-safety-review"]},
+  {"question":"Does zobo lower BP?","expected":["roselle-blood-pressure"]},
+  {"question":"bitterleaf blood sugar","expected":["southwest-diabetes-survey","bitter-leaf-human-glucose","bitter-leaf-rat-glucose"]},
+  {"question":"Does ewuro reduce sugar level?","expected":["southwest-diabetes-survey","bitter-leaf-human-glucose","bitter-leaf-rat-glucose"]},
+  {"question":"Does paw paw leaf increase platelets?","expected":["papaya-human-platelets"]},
+  {"question":"Does ginger make the stomach empty faster?","expected":["ginger-emptying-wu","ginger-emptying-phillips"]},
+  {"question":"Does Vernonia amygdalina have antidiabetic effects?","expected":["southwest-diabetes-survey","bitter-leaf-human-glucose","bitter-leaf-rat-glucose"]},
+  {"question":"Does onugbu interact with metformin?","expected":["bitter-leaf-metformin"]},
+  {"question":"Has neem been tested in people?","expected":["neem-human-glucose"]},
+  {"question":"Show me animal studies on bitter leaf","expected":["bitter-leaf-rat-glucose","bitter-leaf-metformin"]},
+  {"question":"Does moringa lower blood sugar?","expected":[]},
+  {"question":"Does ginger cure ulcer?","expected":[]},
+  {"question":"Is neem safe for the kidneys?","expected":[]},
+  {"question":"Gingr stomach emptying","expected":[]},
+  {"question":"Tell me about pawpaw for typhoid","expected":[]},
+  {"question":"Abeg how I go take bitter leaf?","blocked":true}
+]

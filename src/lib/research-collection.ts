@@ -2,7 +2,7 @@ import { sources } from "./catalog.ts";
 import { nigerianEvidence } from "./nigerian-evidence.ts";
 import { plainEvidence } from "./plain-evidence.ts";
 
-export const evidenceVersion = "2.0.1";
+export const evidenceVersion = "2.1.0";
 export const evidenceLabels = {
   traditional: "Traditional use",
   laboratory: "Tested in a laboratory",

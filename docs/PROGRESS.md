@@ -1,5 +1,20 @@
 # Progress
 
+## Claim-to-evidence pipeline — 6 November 2026
+
+- Kept the existing lexical corpus, matcher and Gemini support check. Added
+  everyday/Nigerian phrasings, compact names (`bitterleaf`, `paw paw`), an
+  overall evidence verdict, and near-miss name suggestions that never select
+  records. Interaction questions now require an interaction record.
+- Frozen before the change: 36/36 regression questions, 12/16 holdout, 5/34
+  claim verdicts, 7/18 everyday retrieval questions. After the change: 36/36,
+  16/16, 34/34 and 18/18. Existing source-derived study relations still pass.
+  These remain developer-authored checks, not independent scientific validation.
+- Specialist review, live Gemini/Pl@ntNet calls and first-time-user testing are
+  still pending. No new published sources were added.
+
+Last updated: 2026-11-06 (Africa/Lagos).
+
 ## Technical audit — 5 November 2026
 
 - Reproduced the hosted identification error and traced it to missing provider

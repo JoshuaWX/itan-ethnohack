@@ -14,12 +14,17 @@ outcomes before publication.
 The claim engine resolves plant and outcome entities, recognizes direction,
 selects matching records and compares outcome annotations under scope rules.
 Population, plant part, preparation and adjunct-treatment mismatches can force
-abstention. The interface shows source-specific relations and applicability.
-This auditable baseline is rule-based and has not been independently validated.
-A larger independently evaluated corpus would be needed to justify embeddings.
+abstention. After per-study relations, a deterministic verdict ranks human
+studies above animal or laboratory work and traditional use. A small human
+study can support at most “some support in people”. The interface shows that
+overall reading, then source-specific relations. This auditable baseline is
+rule-based and has not been independently validated. A larger independently
+evaluated corpus would be needed to justify embeddings.
 
-Ask Ìtàn retrieves the same records using names, aliases, source IDs, topics,
-evidence types and prior source IDs. Navigation help runs locally. Opted-in
+Ask Ìtàn retrieves the same records using names, aliases, compact spellings,
+source IDs, topics, evidence types and prior source IDs. Everyday synonyms
+are rewritten onto existing keywords. Near-miss names may be suggested; they
+do not retrieve evidence. Navigation help runs locally. Opted-in
 Gemini requests generate cited claims, then a separate model pass checks support
 against each claim's cited records. Model review remains fallible. Failure
 returns the cited summaries. Official guidance takes priority for disease queries.

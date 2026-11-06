@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { researchCollection } from "../src/lib/research-collection.ts";
 import { plainEvidence } from "../src/lib/plain-evidence.ts";
-import { claimQuestionState, ingredientLanguage, isGettingStartedQuestion, studyRelationLanguage } from "../src/lib/consumer-language.ts";
+import { claimQuestionState, ingredientLanguage, isGettingStartedQuestion, studyRelationLanguage, verdictLanguage } from "../src/lib/consumer-language.ts";
 import { identifyIngredient } from "../src/lib/matching.ts";
 import { taxa } from "../src/lib/catalog.ts";
 import { analyzeClaim } from "../src/lib/claim-analysis.ts";
@@ -58,4 +58,9 @@ test("an unsupported effect is not presented as an unclear plant name", () => {
   assert.equal(claimQuestionState(analyzeClaim("Cinnamon lowers blood sugar")), "plant-name");
   assert.equal(claimQuestionState(analyzeClaim("Ginger lowers blood pressure and blood glucose")), "one-effect");
   assert.equal(claimQuestionState(analyzeClaim("Bitter leaf lowers blood sugar")), "ready");
+});
+
+test("a near-miss name is offered as a question, not as a confirmed match", () => {
+  const language = verdictLanguage(analyzeClaim("Does bitterleef lower sugar?"));
+  assert.match(language.found, /Did you mean Bitter leaf/);
 });

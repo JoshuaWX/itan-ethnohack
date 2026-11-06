@@ -59,8 +59,12 @@ export async function POST(request: Request) {
   const retrievalQuestion = awarenessFollowUp && path === "/awareness#outbreak" ? `${question} cholera` : awarenessFollowUp && path === "/awareness#seasonal" ? `${question} malaria` : question;
   const { records, ambiguous, publicTopic } = retrieveEvidence(retrievalQuestion, { taxonIds: focus, priorIds });
   const analysis = analyzeClaim(question);
-  const assessment = analysis.outcome && analysis.direction && !analysis.needsClarification
-    ? { outcome: analysis.outcome.label, studies: analysis.records.map(({ record, relation, explanation }) => ({ id: record.id, relation, explanation })) }
+  const assessment = analysis.verdict.level !== "blocked" && analysis.verdict.level !== "needs-clarification"
+    ? {
+        outcome: analysis.outcome?.label,
+        verdict: analysis.verdict.level,
+        studies: analysis.records.map(({ record, relation, explanation }) => ({ id: record.id, relation, explanation })),
+      }
     : undefined;
   const result = { records, ambiguous, version: evidenceVersion, assessment };
   if (!records.length) return json({ ...result, mode: "no-evidence" });

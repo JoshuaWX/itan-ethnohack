@@ -1,5 +1,15 @@
 # Decisions
 
+## Claim-to-evidence ranking — 6 November 2026
+
+Keep the auditable lexical baseline. Do not introduce embeddings on a
+19-record corpus. Rank studies by design (people, then animal/laboratory, then
+reported use) and emit an overall verdict that a single study can never
+upgrade beyond “some support”. Treat typos as confirmable suggestions, not as
+automatic identity. Map everyday phrasing onto existing keywords rather than
+adding new scientific claims. Revisit embeddings only with a larger,
+independently labelled collection.
+
 ## Public repository
 
 Keep the application, evidence sources, attribution and evaluation fixtures in

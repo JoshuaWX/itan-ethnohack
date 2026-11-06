@@ -10,11 +10,11 @@ import type { ResearchRecord } from "@/lib/research-collection";
 import type { Claim } from "@/lib/research-answer";
 import { ResultGuide } from "./result-guide";
 import { taxa } from "@/lib/catalog";
-import { isGettingStartedQuestion, studyRelationLanguage } from "@/lib/consumer-language";
-import type { Relation } from "@/lib/claim-analysis";
+import { isGettingStartedQuestion, studyRelationLanguage, verdictHeadline } from "@/lib/consumer-language";
+import type { Relation, VerdictLevel } from "@/lib/claim-analysis";
 
 type Comparison = { ids: string[]; summary: string };
-type Reply = { mode: "curated" | "generated" | "restricted" | "no-evidence"; records: ResearchRecord[]; claims?: Claim[]; reason?: string; ambiguous?: boolean; version?: string; assessment?: { outcome: string; studies: { id: string; relation: string; explanation: string }[] } };
+type Reply = { mode: "curated" | "generated" | "restricted" | "no-evidence"; records: ResearchRecord[]; claims?: Claim[]; reason?: string; ambiguous?: boolean; version?: string; assessment?: { outcome?: string; verdict?: VerdictLevel; studies: { id: string; relation: string; explanation: string }[] } };
 type Turn = { question: string; reply?: Reply; guidance?: { text: string; href: string; label: string } };
 const openEvent = "itan:ask";
 const comparisonEvent = "itan:comparison";
@@ -59,16 +59,16 @@ function ReplyView({ reply }: { reply: Reply }) {
   return <>
     {reason && <p className="status-note">{reason}</p>}
     {reply.mode === "generated" && <p className="research-meta">AI explanation based on the sources below</p>}
-    <ResultGuide found={<ul className="ask-claims">{reply.mode === "generated" ? reply.claims?.map((claim, index) => <li key={index}>{claim.text} {claim.sourceIds.map((id) => {
+    <ResultGuide found={<><p className="claim-relation">{reply.assessment?.verdict ? verdictHeadline(reply.assessment.verdict) : reply.mode === "generated" ? "AI explanation based on the sources below" : "Research summaries from this library"}</p><ul className="ask-claims">{reply.mode === "generated" ? reply.claims?.map((claim, index) => <li key={index}>{claim.text} {claim.sourceIds.map((id) => {
       const number = reply.records.findIndex((record) => record.id === id);
       return number >= 0 && <a key={id} href={reply.records[number].url} target="_blank" rel="noreferrer" aria-label={`Read source ${number + 1}`}>[{number + 1}] </a>;
-    })}</li>) : reply.records.slice(0, 3).map((record, index) => <li key={record.id}><strong>{record.type === "animal" ? "Studied in animals: " : record.type === "laboratory" ? "Laboratory tests: " : record.type === "ethnobotanical" || record.type === "traditional" ? "Traditional use: " : ""}</strong>{record.plain.finding} <a href={record.url} target="_blank" rel="noreferrer" aria-label={`Read source ${index + 1}`}>[{index + 1}]</a><p className="answer-limit">{record.plain.limitation}</p></li>)}</ul>}
+    })}</li>) : reply.records.slice(0, 3).map((record, index) => <li key={record.id}><strong>{record.type === "animal" ? "Studied in animals: " : record.type === "laboratory" ? "Laboratory tests: " : record.type === "ethnobotanical" || record.type === "traditional" ? "Traditional use: " : ""}</strong>{record.plain.finding} <a href={record.url} target="_blank" rel="noreferrer" aria-label={`Read source ${index + 1}`}>[{index + 1}]</a><p className="answer-limit">{record.plain.limitation}</p></li>)}</ul></>}
       meaning={reply.ambiguous ? "This name can refer to different plants. Choose a plant below before drawing conclusions." : "Each finding applies to the people, plant parts and preparations studied. It may not apply to a product you have."}
       unknown="These records cannot tell us whether a product is suitable or safe for you. Expert review of our summaries is still pending."
     ><div className="research-links">{plants.map((plant) => <Link key={plant.id} href={`/plants/${plant.id}`}>About {plant.common} ↗</Link>)}{!plants.length && <Link href="/awareness">Read official health guidance ↗</Link>}</div></ResultGuide>
     <details className="ask-source-details"><summary>Read the studies and source details ({reply.records.length})</summary>
       <p className="research-meta">Research edition {reply.version ?? "saved with this demo"}. Original sources checked; botanist or pharmacist review pending.</p>
-      {reply.assessment && <details className="claim-method"><summary>How these studies relate to the question</summary><p>Effect mentioned: {reply.assessment.outcome}.</p>{reply.assessment.studies.filter((row) => reply.records.some(({ id }) => id === row.id)).map((row) => <p key={row.id}><strong>{studyRelationLanguage(row.relation as Relation)}</strong> · {row.explanation}</p>)}<Link href="/claims">Check a plant claim ↗</Link></details>}
+      {reply.assessment && <details className="claim-method"><summary>How these studies relate to the question</summary>{reply.assessment.outcome && <p>Effect mentioned: {reply.assessment.outcome}.</p>}{reply.assessment.verdict && <p>Overall reading: {verdictHeadline(reply.assessment.verdict)}.</p>}{reply.assessment.studies.filter((row) => reply.records.some(({ id }) => id === row.id)).map((row) => <p key={row.id}><strong>{studyRelationLanguage(row.relation as Relation)}</strong> · {row.explanation}</p>)}<Link href="/claims">Check a plant claim ↗</Link></details>}
       {reply.records.map((record, index) => <ResearchCard key={record.id} record={record} number={index + 1} />)}
     </details>
   </>;

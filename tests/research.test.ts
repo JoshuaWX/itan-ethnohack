@@ -17,6 +17,9 @@ const retrievalCases = [
   ["Has turmeric been studied for cancer?", []],
   ["Does ginger cure cancer?", []],
   ["Has guava been studied in humans?", []],
+  ["What is known about bitter leaf?", ["southwest-diabetes-survey", "kwara-survey", "north-central-survey", "bitter-leaf-human-glucose", "bitter-leaf-rat-glucose", "bitter-leaf-metformin"]],
+  ["Does zobo lower BP?", ["roselle-blood-pressure"]],
+  ["Does paw paw leaf increase platelets?", ["papaya-human-platelets"]],
 ] as const;
 
 test("retrieves and ranks studies for independently phrased queries, including unsupported topics", () => {

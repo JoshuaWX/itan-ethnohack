@@ -66,9 +66,10 @@ worker/cache once in browser developer tools. Production offline fallback remain
 ## Structure and data
 
 - `/claims` runs botanical entity and outcome recognition followed by
-  source-specific study relations. `claim-analysis.ts` uses explicit outcome
-  annotations and scope rules. It distinguishes a direction match within a
-  study from applicability to a human, preparation or finished product.
+  source-specific study relations and an overall verdict. `claim-analysis.ts`
+  uses explicit outcome annotations and scope rules. It distinguishes a
+  direction match within a study from applicability to a human, preparation or
+  finished product, then ranks people / animal-or-lab / traditional evidence.
 - The corpus now contains 19 records across eight taxa. Bitter leaf, neem and
   pawpaw have sourced Nigerian names and ethnobotanical context. All eight
   records have credited photos, including pawpaw. Broken images use a labeled
@@ -83,9 +84,10 @@ worker/cache once in browser developer tools. Production offline fallback remain
   Common names produce candidates, not verified physical identifications.
 - `src/lib/catalog-server.ts` reads published Supabase taxa with a labeled
   versioned fallback. `src/lib/research-collection.ts` is the evidence corpus.
-  `research-retrieval.ts` ranks it using names, topics, study type and prior
-  source IDs. `research-answer.ts` validates claim citations and uses a separate
-  model pass to check each claim against its cited records.
+  `research-retrieval.ts` ranks it using names, compact spellings, topics,
+  study type and prior source IDs. Everyday synonyms are rewritten onto
+  existing keywords. `research-answer.ts` validates claim citations and uses a
+  separate model pass to check each claim against its cited records.
 - `supabase/migrations` holds schema, seeds, policies and the provider quota.
   The new migration removes the anonymous quota RPC. The replacement is
   restricted to `service_role` and atomically reserves a global and client budget.
@@ -140,16 +142,18 @@ With Node.js 24, run `npm test` and `npm run build`. Use the following commands
 for the retrieval fixtures and to generate the synthetic OCR labels.
 
 ```powershell
-node --experimental-strip-types scripts/audit-retrieval.mjs
-node --experimental-strip-types scripts/audit-retrieval.mjs holdout
+npm test
+npm run audit:retrieval
+npm run audit:retrieval -- holdout
+npm run audit:claims
 node scripts/audit-labels.mjs
 ```
 
-The 36 regression questions guided the retrieval fixes. The separate 16-case
-set returned the expected records on 12 questions. All four misses returned
-no records. The configured local app reached both providers, and browser
-checks covered manual correction, comparison and offline fallback. Physical
-phone camera and installation checks and specialist validation are pending.
+The 36 regression questions and the 16-case holdout both return the expected
+records after the 2.1.0 retrieval changes. A separate 34-question claim set
+and 18 everyday retrieval questions also pass. These are developer-authored
+checks, not independent scientific labels. Physical phone camera and
+installation checks and specialist validation are pending.
 
 ## First-time-user checks (not yet conducted)
 

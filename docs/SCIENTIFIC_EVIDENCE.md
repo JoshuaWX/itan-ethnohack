@@ -53,13 +53,12 @@ separately from the original claim. Source verification is recorded independentl
 of the still-pending specialist review. See the dated research log for access
 and reuse checks.
 
-Edition 2.0.1 adds original plain-language companions in `src/lib/plain-evidence.ts`.
-They retain the same source IDs through their parent records and do not add new
-evidence. The scientific wording remains available in expanded details. The
-companions have been checked for consistency with the existing summaries; they
-have not received independent botanist or pharmacist review. Nonsignificant
-findings are presented as no clear change under the study conditions, rather
-than proof of no effect.
+Edition 2.1.0 keeps those companions and adds an overall verdict layer in
+`claim-analysis.ts`. The verdict is derived from the same source-checked
+records: it distinguishes studies in people from animal, laboratory and
+traditional sources, and it does not treat a missing result as proof of no
+effect. Near-miss plant names are offered for confirmation only. Specialist
+review of all records remains pending.
 
 | Claim ID | Exact claim | Primary source and location | Study / evidence type | Appraisal and limitations | Reviewer / status |
 | --- | --- | --- | --- | --- | --- |
