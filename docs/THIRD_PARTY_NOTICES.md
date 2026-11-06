@@ -21,6 +21,12 @@ images visually inspected. Independent botanical review is pending. The other
 five plant-image credits and modification notes are recorded in `src/lib/photos.ts`
 and shown in the app.
 
+## Botanical hero
+
+The flower GLB was generated for Ìtàn in Blender. The WebP poster renders the
+same model. The live scene uses Three.js under the MIT license.
+[Three.js license](https://github.com/mrdoob/three.js/blob/r187/LICENSE).
+
 ## On-device OCR
 
 `public/ocr/` bundles the Tesseract.js 7.0.0 worker and the Tesseract.js-core
