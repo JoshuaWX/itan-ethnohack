@@ -49,7 +49,11 @@ export function findInteractionEvidence(products: ComparedProduct[], medicine: s
   )));
   return records.filter((record) => {
     if (!matchedIds.has(record.taxonId)) return false;
-    if (record.type === "herb-herb") return Boolean(record.otherTaxonId) && matchedIds.has(record.otherTaxonId);
+    if (record.type === "herb-herb") {
+      const otherTaxonId = record.otherTaxonId;
+      if (!otherTaxonId) return false;
+      return matchedIds.has(otherTaxonId);
+    }
     return !medicine || record.medicine === medicine;
   });
 }

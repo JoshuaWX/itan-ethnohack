@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { compareProducts, findInteractionEvidence, interactionRecords } from "../src/lib/comparison.ts";
+import { compareProducts, findInteractionEvidence, interactionRecords, type InteractionRecord } from "../src/lib/comparison.ts";
 import { taxa } from "../src/lib/catalog.ts";
 
 test("compares aliases, ambiguity and unknown names across products", () => {
@@ -42,4 +42,23 @@ test("local-name comparison links bitter leaf to the preclinical metformin recor
   assert.equal(found.length, 1);
   assert.match(found[0].summary, /rats/);
   assert.match(found[0].source, /39710889/);
+});
+
+test("herb pair evidence requires both plants and a second plant ID", () => {
+  const { products } = compareProducts([
+    { name: "A", ingredients: ["roselle"] },
+    { name: "B", ingredients: ["guava"] },
+  ], taxa);
+  const pair: InteractionRecord = {
+    ...interactionRecords[0],
+    type: "herb-herb",
+    taxonId: "hibiscus",
+    otherTaxonId: "guava",
+  };
+  assert.deepEqual(findInteractionEvidence(products, "", [pair]), [pair]);
+  assert.deepEqual(findInteractionEvidence(products, "", [
+    { ...pair, otherTaxonId: "ginger" },
+    { ...pair, otherTaxonId: undefined },
+    { ...pair, otherTaxonId: "" },
+  ]), []);
 });
